@@ -32,7 +32,7 @@ export default function Games({ query }) {
           </Button>
         }
       >
-        <GameStrip games={[...games.slice(4), ...games.slice(0, 4)]} />
+        <GameStrip items={[...games.slice(4), ...games.slice(0, 4)].map((game) => ({ game }))} />
       </PageHero>
 
       <section className="section catalog">

@@ -9,6 +9,10 @@
 import eventJenga from '../../assets/photos/event-jenga.webp';
 import lawnTower from '../../assets/photos/lawn-tower.webp';
 import tower from '../../assets/photos/jenga-tower.webp';
+// From the БАВИСЬ-UI Figma file (hero frames). Exported small — replace with
+// full-size exports when available, the keys stay the same.
+import cornhole from '../../assets/photos/cornhole.webp';
+import ringToss from '../../assets/photos/ring-toss.webp';
 
 export const photos = {
   'event-jenga': {
@@ -27,5 +31,13 @@ export const photos = {
     // cut-out product shot — shown on a warm studio backdrop
     backdrop: 'studio',
     fit: 'contain',
+  },
+  cornhole: {
+    src: cornhole,
+    alt: 'Корнхол на газоні під гірляндами на вечірньому святі',
+  },
+  'ring-toss': {
+    src: ringToss,
+    alt: 'Кільцекид на траві під час вечірки просто неба',
   },
 };

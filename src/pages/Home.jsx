@@ -17,10 +17,20 @@ import {
 } from '../components/sections.jsx';
 
 const featured = games.filter((g) => g.featured);
-const strip = ['velyka-dzhenga', 'chotyry-v-riad', 'kubb', 'kornkhol', 'khrestyky-nulyky', 'kiltsekyd', 'kroket', 'mikado-xl'].map((s) =>
-  games.find((g) => g.slug === s),
-);
-const ticker = ['Весілля', 'Корпоративи', 'Дні народження', 'Фестивалі', 'Тімбілдинги', 'Сімейні свята', 'Дитячі свята'];
+const game = (slug) => games.find((g) => g.slug === slug);
+
+/* Oval strip across the hero: real event photos in the middle, illustrated
+   tiles towards the edges until more photography is added. */
+const strip = [
+  { game: game('kubb') },
+  { game: game('chotyry-v-riad') },
+  { game: game('kornkhol'), media: { photo: 'cornhole', position: '50% 62%' } },
+  { game: game('velyka-dzhenga'), media: { photo: 'lawn-tower', position: '50% 58%' } },
+  { game: game('kiltsekyd'), media: { photo: 'ring-toss', position: '50% 70%' } },
+  { game: game('kroket') },
+  { game: game('khrestyky-nulyky') },
+  { game: game('mikado-xl') },
+];
 
 function HomeHero() {
   return (
@@ -32,24 +42,12 @@ function HomeHero() {
       accent="для вашої події"
       text="Оренда великих дерев’яних ігор для весіль, корпоративів і свят у Львові та області. Привеземо, встановимо й покажемо, як грати."
       actions={
-        <>
-          <Button to="/games" variant="light">
-            Обрати гру
-          </Button>
-          <Button to="/contacts" variant="outline-light">
-            Забронювати ігри
-          </Button>
-        </>
+        <Button to="/games" variant="light">
+          Обрати гру
+        </Button>
       }
     >
-      <GameStrip games={strip} />
-      <div className="hero-ticker" aria-hidden="true">
-        <div className="hero-ticker__row">
-          {[...ticker, ...ticker].map((t, i) => (
-            <span key={i}>{t}</span>
-          ))}
-        </div>
-      </div>
+      <GameStrip items={strip} />
     </PageHero>
   );
 }

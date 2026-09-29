@@ -33,16 +33,20 @@ export function PageHero({ media, label, title, accent, br = true, text, actions
 
 /* ------------------------------------------------ Arch strip of games */
 
-/** Row of arch-shaped game tiles that runs off both edges (reference hero strip). */
-export function GameStrip({ games }) {
+/**
+ * Row of oval game tiles that runs off both edges (reference hero strip).
+ * items: [{ game, media? }] — `media` overrides the game's own photo/illustration,
+ * e.g. an event photo that only suits this strip.
+ */
+export function GameStrip({ items }) {
   return (
     <div className="hero-strip" aria-label="Ігри з колекції">
       <ul className="hero-strip__list" role="list">
-        {games.map((g) => (
-          <li key={g.slug}>
-            <a className="hero-strip__arch" href={href(`/games/${g.slug}`)}>
-              <GameMedia game={g} alt="" />
-              <span className="hero-strip__name">{g.name}</span>
+        {items.map(({ game, media }) => (
+          <li key={game.slug}>
+            <a className="hero-strip__arch" href={href(`/games/${game.slug}`)}>
+              {media ? <Media {...media} alt="" eager /> : <GameMedia game={game} alt="" eager />}
+              <span className="hero-strip__name">{game.name}</span>
             </a>
           </li>
         ))}
