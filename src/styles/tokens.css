@@ -1,0 +1,65 @@
+/*
+ * Design tokens — Бавись × Calmlyss reference.
+ *
+ * Colour roles follow the reference's warm system (cream grounds, deep brown
+ * type, mid-brown buttons, terracotta accent) retuned to the Бавись logo brown.
+ * Type is Comfortaa only, in three weights: 300 for the accent voice of a
+ * headline, 500 for text, 700 for headings, labels and buttons.
+ */
+:root {
+  /* colour */
+  --bg: #f9f6f3;            /* warm cream — alternating section ground */
+  --white: #ffffff;
+  --deep: #2b1003;          /* headings, dark sections, footer */
+  --brand: #5e2400;         /* logo brown */
+  --primary: #866452;       /* primary buttons, accent words on light */
+  --ink: #6b584e;           /* body copy */
+  --accent: #c78460;        /* terracotta — current nav, icons, meta */
+  --accent-soft: #efc6a8;   /* accent words on dark */
+  --wood: #d9a86f;
+  --stroke: #e6dfd8;        /* input and card hairlines */
+  --dash: #d8cfc6;          /* dashed dividers */
+  --error: #b3261e;
+  --on-dark: rgba(255, 255, 255, 0.78);
+  --on-dark-line: rgba(255, 255, 255, 0.14);
+
+  /* type */
+  --font: 'Comfortaa', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-display: clamp(2.5rem, 1.2rem + 4.2vw, 4.5rem);   /* 40 → 72  hero */
+  --fs-h1: clamp(2.25rem, 1.3rem + 3vw, 3.75rem);        /* 36 → 60  page titles */
+  --fs-h2: clamp(1.875rem, 1.25rem + 2vw, 3rem);         /* 30 → 48  sections */
+  --fs-h3: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);    /* 22 → 28  sub-sections */
+  --fs-h4: clamp(1.25rem, 1.15rem + 0.35vw, 1.5rem);     /* 20 → 24  card titles */
+  --fs-lead: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /* 17 → 19 */
+  --fs-body: 1rem;                                        /* 16 */
+  --fs-sm: 0.875rem;                                      /* 14 */
+  --fs-xs: 0.75rem;                                       /* 12  labels */
+  --lh-heading: 1.15;
+  --lh-body: 1.7;
+  --w-light: 300;
+  --w-text: 500;
+  --w-bold: 700;
+
+  /* space */
+  --s-1: 0.5rem;
+  --s-2: 0.75rem;
+  --s-3: 1rem;
+  --s-4: 1.25rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 2.5rem;
+  --s-8: 3rem;
+  --s-9: 4rem;
+  --s-10: 5rem;
+  --section: clamp(4rem, 2.6rem + 4.6vw, 7rem);  /* 64 → 112 */
+  --gutter: clamp(1.25rem, 0.4rem + 3.6vw, 5rem); /* 20 → 80 */
+  --container: 80rem;                             /* 1280 */
+  --header-h: 6rem;
+
+  /* shape */
+  --r-sm: 0.5rem;
+  --r-md: 1rem;
+  --r-lg: 1.5rem;
+  --r-pill: 100rem;
+  --shadow: 0 30px 60px rgba(43, 16, 3, 0.14);
+}
