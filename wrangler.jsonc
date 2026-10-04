@@ -1,0 +1,13 @@
+// Cloudflare Workers: serve the prerendered site from dist/ as static assets.
+// /games → games.html, /games/velyka-dzhenga → games/velyka-dzhenga.html (html_handling),
+// unknown addresses → 404.html with status 404. Build: `npm run build`, deploy: `npx wrangler deploy`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bavys-landing",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

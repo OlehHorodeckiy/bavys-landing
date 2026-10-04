@@ -7,7 +7,7 @@
 
 React 19 + Vite. Шрифт лише **Comfortaa** (300 для акцентних слів заголовків, 500 для тексту, 700 для заголовків і кнопок).
 
-**Сайт:** https://bavyslviv.com.ua (Cloudflare Pages)
+**Сайт:** https://bavyslviv.com.ua (Cloudflare)
 
 ## Запуск
 
@@ -55,16 +55,12 @@ scripts/       prerender.mjs (HTML усіх сторінок, 404.html, sitemap.
 .claude/figma-export/   скрипти перенесення між сайтом і Фігмою; pending.md = зміни у Фігмі, ще не перенесені в код
 ```
 
-## Публікація (Cloudflare Pages)
+## Публікація (Cloudflare)
 
-Проєкт Cloudflare Pages підключений до цього репозиторію: кожен push у `main` публікує сайт, кожна інша
-гілка отримує своє посилання-прев’ю. Налаштування збирання:
-
-- Build command: `npm run build`
-- Build output directory: `dist`
-- Node: 22 (файл `.node-version`)
-
-Cloudflare сам віддає `/games` з `games.html` і показує `404.html` зі статусом 404 для неіснуючих адрес.
+Проєкт у Cloudflare (Workers & Pages → `bavys-landing`) підключений до цього репозиторію: кожен push у
+`main` збирає (`npm run build`) і публікує сайт (`npx wrangler deploy`). Що й як віддавати, описано в
+`wrangler.jsonc`: статичні файли з `dist/`, `/games` відкриває `games.html`, неіснуючі адреси показують
+`404.html` зі статусом 404. Node 22 (файл `.node-version`).
 Робоча гілка: `claude/wooden-games-rental-design-zg50rp`; коли зміни готові, вона зливається в `main`.
 
 ### Пошук Google
@@ -99,6 +95,6 @@ Cloudflare сам віддає `/games` з `games.html` і показує `404.h
 ## Бекапи й відкат
 
 - Код зберігається на GitHub і локально; перед кожною публікацією ставиться тег `vРРРР-ММ-ДД`.
-- Відкат: у Cloudflare Pages → Deployments вибрати попередню публікацію → Rollback, або `git revert` і push у `main`.
+- Відкат: у Cloudflare (проєкт `bavys-landing` → Deployments) повернути попередню версію, або `git revert` і push у `main`.
 - Відкинутий варіант hero збережено в гілці `backup/home-hero-1f77354`.
 - Не в git: оригінали зображень з Фігми (`.claude/figma-export/raw/`) і сам дизайн (версії у Фігмі).
