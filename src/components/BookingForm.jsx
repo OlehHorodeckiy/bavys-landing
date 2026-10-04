@@ -75,6 +75,8 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const first = useRef(null);
+  const [minDate, setMinDate] = useState(undefined); // set in the browser, so prerendered HTML has no stale date
+  useEffect(() => setMinDate(today()), []);
   const honey = useRef(null);
   const gameName = game ? findGame(game)?.name : null;
   const id = (k) => `bf-${variant}-${k}`;
@@ -154,7 +156,7 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
           <input id={id('phone')} type="tel" autoComplete="tel" inputMode="tel" placeholder="+38 (0__) ___-__-__" value={values.phone} onChange={set('phone')} {...err('phone')} />
         </Field>
         <Field id={id('date')} label="Дата події" icon="calendar">
-          <input id={id('date')} type="date" min={today()} value={values.date} onChange={set('date')} />
+          <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} />
         </Field>
         <Field id={id('message')} label="Коментар">
           <textarea id={id('message')} rows={3} placeholder="Які ігри вас цікавлять, формат свята, побажання щодо часу" value={values.message} onChange={set('message')} />

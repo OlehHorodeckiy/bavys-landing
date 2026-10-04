@@ -7,31 +7,34 @@
 
 React 19 + Vite. Шрифт лише **Comfortaa** (300 для акцентних слів заголовків, 500 для тексту, 700 для заголовків і кнопок).
 
-**Сайт:** https://olehhorodeckiy.github.io/bavys-landing/
+**Сайт:** публікується на Cloudflare Pages (адреса з’явиться після підключення домену).
 
 ## Запуск
 
 ```bash
 npm install
 npm run dev -- --port 5174   # http://127.0.0.1:5174
-npm run build                # статичний білд у dist/
-npm run preview
+npm run build                # збірка + готовий HTML кожної сторінки у dist/
+npm run preview              # dist/ так, як його віддає Cloudflare Pages: http://127.0.0.1:4173
 ```
 
-Маршрути працюють через hash (`#/games/velyka-dzhenga`), а шляхи у збірці відносні (`base: './'` у
-`vite.config.js`), тож `dist/` працює на будь-якому статичному хостингу і в будь-якій підпапці.
+Адреси звичайні: `/games/velyka-dzhenga`, `/blog/…`, `/contacts`. Під час збирання
+`scripts/prerender.mjs` малює кожну сторінку в окремий HTML (`dist/games/velyka-dzhenga.html`) з її текстом,
+заголовком, описом і розміткою schema.org, тож Google бачить усі сторінки окремо. У браузері React
+підхоплює цей HTML і далі перемикає сторінки без перезавантаження (`src/router.js`).
+Старі посилання виду `/#/games/kornkhol` автоматично ведуть на нові адреси.
 
 ## Сторінки
 
-| Маршрут | Сторінка |
+| Адреса | Сторінка |
 |---|---|
-| `#/` | Головна: hero з вежею і стрічкою арок · про нас + цифри · ігри · як замовити · для яких подій · галерея з банером |
-| `#/games` | Каталог з чипами подій (на телефоні перші 8 ігор і «Показати ще ігри») |
-| `#/games/:slug` | Сторінка гри: перший екран з фото й фактами · що це за гра + правила · деталі · банер · інші ігри |
-| `#/gallery` | Галерея з чипами |
-| `#/blog`, `#/blog/:slug` | Блог і стаття |
-| `#/about` | Про компанію |
-| `#/contacts` | Контакти + форма заявки |
+| `/` | Головна: hero з вежею і стрічкою арок · про нас + цифри · ігри · як замовити · для яких подій · галерея з банером |
+| `/games` | Каталог з чипами подій (на телефоні перші 8 ігор і «Показати ще ігри») |
+| `/games/:slug` | Сторінка гри: перший екран з фото й фактами · що це за гра + правила · деталі · банер · інші ігри |
+| `/gallery` | Галерея з чипами |
+| `/blog`, `/blog/:slug` | Блог і стаття |
+| `/about` | Про компанію |
+| `/contacts` | Контакти + форма заявки |
 
 Кожна сторінка має версію 1440 і мобільну 390 (стилі для телефонів зібрані в `src/styles/mobile.css`).
 Кнопки «Забронювати» по всьому сайту відкривають попап із формою (на телефоні це шторка знизу).
@@ -46,13 +49,29 @@ src/
   pages/       Home, Games, Game, Gallery, Blog, Article, About, Contacts, NotFound (+ Lab лише в dev)
   styles/      tokens → base → components → sections → pages → mobile
   analytics.js Google Analytics 4
+  seo.js       заголовки, описи, картинки для поширення й schema.org для кожної сторінки
+  entry-server.jsx  рендер сторінки в HTML під час збирання
+scripts/       prerender.mjs (HTML усіх сторінок, 404.html, sitemap.xml, robots.txt), serve.mjs (локальний перегляд dist)
 .claude/figma-export/   скрипти перенесення між сайтом і Фігмою; pending.md = зміни у Фігмі, ще не перенесені в код
 ```
 
-## Публікація (GitHub Pages)
+## Публікація (Cloudflare Pages)
 
-Кожен push у `main` збирає й публікує сайт (`.github/workflows/deploy.yml`, вкладка Actions).
+Проєкт Cloudflare Pages підключений до цього репозиторію: кожен push у `main` публікує сайт, кожна інша
+гілка отримує своє посилання-прев’ю. Налаштування збирання:
+
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Node: 22 (файл `.node-version`)
+
+Cloudflare сам віддає `/games` з `games.html` і показує `404.html` зі статусом 404 для неіснуючих адрес.
 Робоча гілка: `claude/wooden-games-rental-design-zg50rp`; коли зміни готові, вона зливається в `main`.
+
+### Пошук Google
+
+У `.env.production` вкажіть публічну адресу: `VITE_SITE_URL=https://ваш-домен`. Тоді збірка додає
+канонічні посилання, картинки для поширення й `sitemap.xml` (без неї вони пропускаються).
+Після публікації: підтвердити домен у Google Search Console і надіслати `https://ваш-домен/sitemap.xml`.
 
 ## Заявки на пошту
 
@@ -68,7 +87,7 @@ src/
 ## Аналітика (Google Analytics 4)
 
 1. Створіть ресурс GA4 і веб-потік з адресою сайту, скопіюйте ID виду `G-XXXXXXXXXX`.
-2. Запишіть його у `.env.production` у корені репозиторію: `VITE_GA_ID=G-XXXXXXXXXX`, закомітьте, злийте в `main`.
+2. Запишіть його у `.env.production`: `VITE_GA_ID=G-XXXXXXXXXX`, закомітьте, злийте в `main`.
 3. У налаштуваннях потоку → Enhanced measurement вимкніть «Page changes based on browser history events»
    (перегляди сторінок сайт надсилає сам, інакше вони рахуватимуться двічі).
 4. Позначте подію `generate_lead` як ключову (Admin → Events).
@@ -80,6 +99,6 @@ src/
 ## Бекапи й відкат
 
 - Код зберігається на GitHub і локально; перед кожною публікацією ставиться тег `vРРРР-ММ-ДД`.
-- Відкат: `git checkout <тег>` і push у `main`, або в Actions перезапустити (Re-run) потрібну публікацію.
+- Відкат: у Cloudflare Pages → Deployments вибрати попередню публікацію → Rollback, або `git revert` і push у `main`.
 - Відкинутий варіант hero збережено в гілці `backup/home-hero-1f77354`.
 - Не в git: оригінали зображень з Фігми (`.claude/figma-export/raw/`) і сам дизайн (версії у Фігмі).

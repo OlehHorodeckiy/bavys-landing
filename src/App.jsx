@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useRoute } from './router.js';
 import { trackPage } from './analytics.js';
+import { pageMeta } from './seo.js';
 import { findGame } from './data/games.js';
-import { findPost } from './data/posts.js';
 import Header, { MobileBar } from './components/Header.jsx';
 import { useScrollReveal } from './components/motion.jsx';
 import Footer from './components/Footer.jsx';
@@ -18,24 +18,37 @@ import Contacts from './pages/Contacts.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Lab from './pages/Lab.jsx';
 
-const TITLE = 'Бавись — оренда дерев’яних ігор у Львові';
-
 function resolve({ segments, query }) {
   const [section, slug] = segments;
-  if (!section) return { page: <Home />, title: TITLE };
-  if (section === 'games' && slug) return { page: <Game slug={slug} />, title: `${findGame(slug)?.name ?? 'Гра'} — Бавись` };
-  if (section === 'games') return { page: <Games query={query} />, title: 'Каталог ігор — Бавись' };
-  if (section === 'gallery') return { page: <Gallery />, title: 'Галерея — Бавись' };
-  if (section === 'blog' && slug) return { page: <Article slug={slug} />, title: `${findPost(slug)?.title ?? 'Стаття'} — Бавись` };
-  if (section === 'blog') return { page: <Blog />, title: 'Блог — Бавись' };
-  if (section === 'about') return { page: <About />, title: 'Про компанію — Бавись' };
-  if (section === 'contacts') return { page: <Contacts />, title: 'Контакти й бронювання — Бавись' };
-  return { page: <NotFound />, title: 'Сторінку не знайдено — Бавись' };
+  if (!section) return <Home />;
+  if (section === 'games' && slug) return <Game slug={slug} />;
+  if (section === 'games') return <Games query={query} />;
+  if (section === 'gallery') return <Gallery />;
+  if (section === 'blog' && slug) return <Article slug={slug} />;
+  if (section === 'blog') return <Blog />;
+  if (section === 'about') return <About />;
+  if (section === 'contacts') return <Contacts />;
+  return <NotFound />;
+}
+
+/** Keep <head> in step while browsing (the prerendered HTML already has it for the first page). */
+function setHead({ title, description, noindex }) {
+  document.title = title;
+  const set = (sel, attr, value) => {
+    const el = document.head.querySelector(sel);
+    if (el) el.setAttribute(attr, value);
+  };
+  set('meta[name="description"]', 'content', description);
+  set('meta[property="og:title"]', 'content', title);
+  set('meta[property="og:description"]', 'content', description);
+  set('meta[name="robots"]', 'content', noindex ? 'noindex' : 'index, follow');
 }
 
 export default function App() {
   const route = useRoute();
-  const { page, title } = resolve(route);
+  const page = resolve(route);
+  const meta = pageMeta(route.path);
+  const { title } = meta;
   const [section, slug] = route.segments;
   // Booking buttons on a game page quietly add that game to the request.
   const bookGame = section === 'games' && findGame(slug) ? slug : true;
@@ -43,11 +56,11 @@ export default function App() {
   useScrollReveal(pageKey);
 
   useEffect(() => {
-    document.title = title;
-  }, [title]);
+    setHead(meta);
+  }, [route.path]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    trackPage(route.path, title);
+    trackPage(title);
   }, [pageKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // design lab (dev server only): bare page, no header or footer

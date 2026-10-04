@@ -8,13 +8,13 @@ export default function NotFound() {
         <Media photo="lawn-strip" alt="" eager />
       </div>
       <div className="container not-found__inner">
-        <p className="not-found__code" aria-label="404">
+        <div className="not-found__code" role="img" aria-label="404">
           <span aria-hidden="true">4</span>
           <span className="not-found__tower" aria-hidden="true">
             <Media photo="jenga-404" alt="" eager />
           </span>
           <span aria-hidden="true">4</span>
-        </p>
+        </div>
         <Heading as="h1" title="Схоже, вежа" accent="впала" className="not-found__title" />
         <p className="not-found__text">Такої сторінки немає. Але ігри нікуди не зникли, повертайтеся до каталогу.</p>
         <div className="not-found__actions">

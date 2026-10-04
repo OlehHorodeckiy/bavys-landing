@@ -1,16 +1,23 @@
+import { useEffect, useState } from 'react';
 import { blogCategory, findPost, posts } from '../data/posts.js';
+import { href } from '../router.js';
+import { SITE_URL } from '../seo.js';
 import Icon from '../components/Icon.jsx';
 import { Button, Chip, Heading, IconButton, Media, Pill, SectionHead } from '../components/ui.jsx';
 import { CtaBanner, PostCard } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
 
 export default function Article({ slug }) {
+  // the page address for the share links: the public one when known, else read in the browser after load
+  const [url, setUrl] = useState(SITE_URL ? SITE_URL + href(`/blog/${slug}`) : '');
+  useEffect(() => {
+    if (!SITE_URL) setUrl(window.location.href);
+  }, [slug]);
   const post = findPost(slug);
   if (!post) return <NotFound />;
 
   const cat = blogCategory(post.category);
   const relatedPosts = posts.filter((p) => p.slug !== post.slug).sort((a, b) => (b.category === post.category) - (a.category === post.category)).slice(0, 3);
-  const url = typeof window !== 'undefined' ? window.location.href : '';
   const share = [
     { id: 'facebook', label: 'Поділитися у Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
     { id: 'telegram', label: 'Поділитися в Telegram', href: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(post.title)}` },

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
-// Relative asset paths: the build works on GitHub Pages (/bavys-landing/) and on a
-// custom domain alike; the hash router needs no server rewrites.
+// The site sits at the root of its domain with clean URLs (/games/velyka-dzhenga),
+// so asset paths are absolute. Every page is prerendered after the build (scripts/prerender.mjs).
 export default defineConfig({
-  base: './',
+  base: '/',
 });

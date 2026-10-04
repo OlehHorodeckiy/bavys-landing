@@ -14,3 +14,6 @@ yarn-error.log*
 .claude/figma-export/dump*.json
 .claude/figma-export/*.jpg
 .claude/figma-export/*.png
+
+# prerender renderer (build output)
+dist-ssr/
