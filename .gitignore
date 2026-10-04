@@ -17,3 +17,6 @@ yarn-error.log*
 
 # prerender renderer (build output)
 dist-ssr/
+
+# local wrangler dev state
+.wrangler/
