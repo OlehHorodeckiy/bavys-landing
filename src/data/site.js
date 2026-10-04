@@ -1,7 +1,7 @@
 /**
  * Company details, navigation and the shared event taxonomy.
- * Phone, e-mail and Instagram are real; the Telegram / Facebook
- * links are still placeholders.
+ * Phone, e-mail and Instagram are real. Telegram / Facebook were removed until the
+ * company has them: add them back to `socials` and they appear in the footer and on contacts.
  */
 export const company = {
   name: 'Бавись',
@@ -20,8 +20,6 @@ export const company = {
   addressNote: 'Склад і видача ігор — за попереднім записом. Доставляємо по Львову та області.',
   socials: [
     { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/bavys.lviv?stkn=MWFzN2VhMXcwY2Q3YQ%3D%3D' },
-    { id: 'telegram', label: 'Telegram', href: 'https://t.me/' },
-    { id: 'facebook', label: 'Facebook', href: 'https://facebook.com/' },
   ],
 };
 
