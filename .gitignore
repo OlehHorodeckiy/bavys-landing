@@ -6,3 +6,11 @@ dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# local Claude / Figma export working files (Chrome profiles, raw images, dumps, previews)
+.claude/settings.local.json
+.claude/figma-export/hprof*/
+.claude/figma-export/raw/
+.claude/figma-export/dump*.json
+.claude/figma-export/*.jpg
+.claude/figma-export/*.png
