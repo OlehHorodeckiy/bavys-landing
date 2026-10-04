@@ -6,6 +6,14 @@
   box-sizing: border-box;
 }
 
+/* Line height is set as a ratio in --lh (inherited like a unitless
+   line-height) and resolved per element to an even whole pixel. */
+*,
+*::before,
+*::after {
+  line-height: round(calc(1em * var(--lh, 1.7)), 2px);
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -20,7 +28,7 @@ body {
   font-family: var(--font);
   font-size: var(--fs-body);
   font-weight: var(--w-text);
-  line-height: var(--lh-body);
+  --lh: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -45,6 +53,7 @@ input,
 select,
 textarea {
   font: inherit;
+  line-height: round(calc(1em * var(--lh, 1.7)), 2px);
   color: inherit;
 }
 
@@ -70,7 +79,7 @@ h4 {
   color: var(--deep);
   font-family: var(--font);
   font-weight: var(--w-bold);
-  line-height: var(--lh-heading);
+  --lh: var(--lh-heading);
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
@@ -166,6 +175,8 @@ main:focus {
   position: absolute;
   width: 1px;
   height: 1px;
+  padding: 0;
+  border: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;

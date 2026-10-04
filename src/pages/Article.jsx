@@ -1,8 +1,7 @@
 import { blogCategory, findPost, posts } from '../data/posts.js';
-import { findGame } from '../data/games.js';
 import Icon from '../components/Icon.jsx';
-import { Button, Chip, Heading, IconButton, Media, SectionHead } from '../components/ui.jsx';
-import { CtaBanner, GameGrid, PageHero, PostCard } from '../components/sections.jsx';
+import { Button, Chip, Heading, IconButton, Media, Pill, SectionHead } from '../components/ui.jsx';
+import { CtaBanner, PostCard } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
 
 export default function Article({ slug }) {
@@ -10,7 +9,6 @@ export default function Article({ slug }) {
   if (!post) return <NotFound />;
 
   const cat = blogCategory(post.category);
-  const relatedGames = post.relatedGames.map(findGame).filter(Boolean);
   const relatedPosts = posts.filter((p) => p.slug !== post.slug).sort((a, b) => (b.category === post.category) - (a.category === post.category)).slice(0, 3);
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const share = [
@@ -18,13 +16,18 @@ export default function Article({ slug }) {
     { id: 'telegram', label: 'Поділитися в Telegram', href: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(post.title)}` },
   ];
   const [first, second, ...rest] = post.sections;
+  // «Як обрати ігри для весілля: 5 порад…» → bold part up to the colon, the rest in the accent
+  const colon = post.title.indexOf(':');
+  const [title, accent] = colon > 0 ? [post.title.slice(0, colon + 1), post.title.slice(colon + 2)] : [post.title, null];
 
   return (
     <>
-      <PageHero media={post.media.photo ? post.media : null} label={`Блог · ${cat?.label}`} title={post.title} size="short" className="hero--article" />
-
       <section className="section article">
         <div className="container article__grid">
+          <header className="article__head">
+            <Pill tone="cream">{`Блог · ${cat?.label}`}</Pill>
+            <Heading as="h1" title={title} accent={accent} br className="article__title" />
+          </header>
           <aside className="article__side">
             <div className="article-meta">
               <h2 className="article-meta__title">Про статтю</h2>
@@ -68,7 +71,7 @@ export default function Article({ slug }) {
               </section>
             ))}
             <figure className="article__figure">
-              <Media {...post.media} alt="" />
+              <Media {...(post.figure || post.media)} alt={post.figure?.caption || ''} />
             </figure>
             {post.quote ? (
               <blockquote className="article__quote">
@@ -91,20 +94,6 @@ export default function Article({ slug }) {
           </article>
         </div>
       </section>
-
-      {relatedGames.length ? (
-        <section className="section section--cream article-games">
-          <div className="container">
-            <div className="split-head split-head--center">
-              <Heading as="h2" title="Ігри" accent="зі статті" className="section-head__title" />
-              <Button to="/games" variant="outline" disc={false}>
-                Весь каталог <Icon name="arrowRight" size={16} />
-              </Button>
-            </div>
-            <GameGrid games={relatedGames} />
-          </div>
-        </section>
-      ) : null}
 
       <section className="section article-related">
         <div className="container">

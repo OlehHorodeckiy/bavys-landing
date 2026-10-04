@@ -1,11 +1,9 @@
-import { useEffect } from 'react';
 import { company } from '../data/site.js';
-import { findGame } from '../data/games.js';
 import { href } from '../router.js';
 import Icon from '../components/Icon.jsx';
 import BookingForm from '../components/BookingForm.jsx';
 import { Heading, IconButton } from '../components/ui.jsx';
-import { PageHero } from '../components/sections.jsx';
+import { PageTitle } from '../components/sections.jsx';
 
 const links = [
   { path: '/games', icon: 'blocks', title: 'Переглянути', accent: 'ігри', text: 'Уся колекція з правилами та деталями.' },
@@ -14,28 +12,15 @@ const links = [
   { path: '/blog', icon: 'chat', title: 'Читати', accent: 'блог', text: 'Поради, як обрати ігри для події.' },
 ];
 
-export default function Contacts({ query }) {
-  const preselected = findGame(query.game) ? query.game : undefined;
-
-  useEffect(() => {
-    if (preselected) document.getElementById('booking')?.scrollIntoView({ block: 'start' });
-  }, [preselected]);
-
+export default function Contacts() {
   return (
     <>
-      <PageHero
-        media={{ photo: 'event-jenga', position: '75% 35%' }}
-        label="Контакти й бронювання"
-        title="Розкажіть"
-        accent="про вашу подію"
-        text="Залиште заявку або зателефонуйте — ми відповідаємо на кожне звернення й допомагаємо підібрати ігри під ваше свято."
-        size="short"
-      />
+      <PageTitle title="Розкажіть" accent="про вашу подію" />
 
-      <section className="section section--cream contacts">
+      <section className="section contacts">
         <div className="container contacts__grid">
           <div className="contacts__form" id="booking">
-            <BookingForm key={preselected || 'none'} initialGame={preselected} />
+            <BookingForm variant="page" />
           </div>
 
           <aside className="contacts__info" aria-label="Контактна інформація">

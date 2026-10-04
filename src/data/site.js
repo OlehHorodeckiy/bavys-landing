@@ -1,15 +1,17 @@
 /**
  * Company details, navigation and the shared event taxonomy.
- * Phone, e-mail and social links are carried over from the previous landing page
- * and still need their real values.
+ * Phone, e-mail and Instagram are real; the Telegram / Facebook
+ * links are still placeholders.
  */
 export const company = {
   name: 'Бавись',
   city: 'Львів',
   region: 'Львів та область',
-  phone: '+38 (000) 000-00-00',
-  phoneHref: 'tel:+380000000000',
-  email: 'hello@bavys.lviv.ua',
+  phone: '+38 (063) 993-16-76',
+  phoneHref: 'tel:+380639931676',
+  email: 'solomiya.maksymovych@gmail.com',
+  /** inbox that receives the booking requests (not shown on the site) */
+  leadsEmail: 'solomiya.maksymovych@gmail.com',
   hours: [
     { label: 'Пн — Пт', value: '09:00 — 20:00' },
     { label: 'Сб — Нд', value: '10:00 — 18:00' },
@@ -17,7 +19,7 @@ export const company = {
   address: 'Львів',
   addressNote: 'Склад і видача ігор — за попереднім записом. Доставляємо по Львову та області.',
   socials: [
-    { id: 'instagram', label: 'Instagram', href: 'https://instagram.com/' },
+    { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/bavys.lviv?stkn=MWFzN2VhMXcwY2Q3YQ%3D%3D' },
     { id: 'telegram', label: 'Telegram', href: 'https://t.me/' },
     { id: 'facebook', label: 'Facebook', href: 'https://facebook.com/' },
   ],
@@ -62,39 +64,39 @@ export const gameFilters = [
 export const useCases = [
   {
     id: 'wedding',
+    photo: 'occ-wedding',
     title: 'Весілля',
     note: 'Зона відпочинку для гостей між тостами',
-    media: { photo: 'event-jenga', position: '72% 50%' },
   },
   {
     id: 'corporate',
+    photo: 'occ-corporate',
     title: 'Корпоративи',
     note: 'Командні ігри на 20–300 гостей',
-    media: { photo: 'tower' },
   },
   {
     id: 'birthday',
+    photo: 'occ-birthday',
     title: 'Дні народження',
     note: 'Для дітей і дорослих в одному просторі',
-    media: { art: 'kids' },
   },
   {
     id: 'festival',
+    photo: 'occ-festival',
     title: 'Фестивалі',
     note: 'Ігрові острівці, що збирають натовп',
-    media: { photo: 'lawn-tower', position: '50% 70%' },
   },
   {
     id: 'teambuilding',
+    photo: 'occ-teambuilding',
     title: 'Тімбілдинг',
     note: 'Стратегія, азарт і спільна перемога',
-    media: { art: 'kubb' },
   },
   {
     id: 'family',
+    photo: 'occ-family',
     title: 'Сімейні свята',
     note: 'Ігри, у які грають усі покоління',
-    media: { art: 'croquet' },
   },
 ];
 

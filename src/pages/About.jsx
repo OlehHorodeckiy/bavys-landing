@@ -1,89 +1,94 @@
 import Icon from '../components/Icon.jsx';
-import { Button, Heading, Media, Pill } from '../components/ui.jsx';
-import { AdvantagesSection, CtaBanner, PageHero, StatsRow, StepsSection } from '../components/sections.jsx';
+import { Heading, Logo, Media, Pill } from '../components/ui.jsx';
+import { CtaBanner, PageTitle, StepsTiles } from '../components/sections.jsx';
+import { games, rental } from '../data/games.js';
 
 const service = [
-  'Доставка по Львову та області у зручний для локації час',
-  'Монтаж і розстановка ігрової зони під ваш простір',
-  'Пояснення правил гостям або адміністратор на місці',
-  'Чисті, відшліфовані ігри у фірмовому пакуванні',
-  'Демонтаж і вивіз після завершення свята',
+  { icon: 'truck', text: 'Доставка по Львову та області у зручний для локації час' },
+  { icon: 'blocks', text: 'Монтаж і розстановка ігрової зони під ваш простір' },
+  { icon: 'chat', text: 'Пояснення правил гостям або адміністратор на місці' },
+  { icon: 'sparkle', text: 'Чисті, відшліфовані ігри у фірмовому пакуванні' },
+  { icon: 'calendar', text: 'Демонтаж і вивіз після завершення свята' },
+  { icon: 'phone', text: 'Один адміністратор на зв’язку від заявки до кінця свята' },
+];
+
+// real numbers only: the catalog size, the rental price, where we work
+const facts = [
+  { value: String(games.length), text: 'дерев’яних ігор у колекції' },
+  { value: rental.price.split(' / ')[0], text: 'за гру на добу' },
+  { value: 'Львів', text: 'та область, з доставкою' },
 ];
 
 export default function About() {
   return (
     <>
-      <PageHero
-        media={{ photo: 'event-jenga', position: '40% 40%' }}
-        label="Про компанію"
-        title="Бавись — це"
-        accent="про гру разом"
-        text="Ми — команда зі Львова, яка вірить, що найкращі свята — ті, де гості не сидять за столами, а грають, сміються і знайомляться."
-        actions={
-          <Button to="/games" variant="light">
-            Наші ігри
-          </Button>
-        }
-      />
+      <section className="about-intro">
+        <div className="about-intro__bg" aria-hidden="true">
+          <Media photo="lawn-strip" alt="" eager />
+        </div>
+        <PageTitle
+          label="Про компанію"
+          title="Бавись — це"
+          accent="про гру разом"
+          text="Ми команда зі Львова, яка вірить, що найкращі свята там, де гості не сидять за столами, а грають, сміються і знайомляться."
+        />
+        <div className="container about-intro__photos">
+          {['gal-guests-tent', 'gal-cornhole-evening', 'gal-festival-table'].map((p) => (
+            <div className="about-intro__photo" key={p}>
+              <Media photo={p} />
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="section section--cream about-story">
         <div className="container about-story__grid">
-          <div className="collage">
-            <div className="collage__item collage__item--tall">
-              <Media photo="event-jenga" position="80% 50%" />
-            </div>
-            <div className="collage__item">
-              <Media photo="tower" />
-            </div>
-            <div className="collage__item">
-              <Media photo="lawn-tower" position="50% 75%" />
-            </div>
+          <div className="about-story__logo" aria-hidden="true">
+            <Logo />
           </div>
           <div className="about-story__copy">
             <Pill>Наша історія</Pill>
-            <Heading as="h2" title="Із любові" accent="до дерев’яних ігор" br className="section-head__title" />
+            <Heading as="h2" title="Із любові" accent="до дерев’яних ігор" br className="about-story__title" />
             <p>
-              Бавись починався з кількох великих ігор, які ми робили для свят друзів. Гості не відходили від них до ночі — і
-              ми зрозуміли, що це варто робити для всіх.
+              Бавись починався з кількох великих ігор, які ми робили для свят друзів. Гості не відходили від них до ночі, і ми
+              зрозуміли, що це варто робити для всіх.
             </p>
             <p>
-              Сьогодні в нашій колекції — десятки дерев’яних ігор для дорослих і дітей, а за плечима — весілля, корпоративи,
-              фестивалі та сімейні свята по всій Львівщині. Ми дбаємо про кожну гру так, ніби вона їде на наше власне свято.
+              Сьогодні в нашій колекції {games.length} дерев’яних ігор для дорослих і дітей. Ми дбаємо про кожну так, ніби
+              вона їде на наше власне свято.
             </p>
-          </div>
-        </div>
-        <div className="container">
-          <StatsRow />
-        </div>
-      </section>
-
-      <AdvantagesSection tone="dark" label="Як ми працюємо" title="Принципи," accent="яких ми тримаємось" text="Великий сервіс для великих ігор: ми відповідаємо за результат, а не лише за доставку." />
-
-      <section className="section about-service">
-        <div className="container about-service__grid">
-          <div className="about-service__copy">
-            <Pill tone="cream">Сервіс</Pill>
-            <Heading as="h2" title="Що входить" accent="в оренду" br className="section-head__title" />
-            <p>Ви отримуєте не набір коробок, а готову ігрову зону. Ось що ми робимо для кожної події.</p>
-            <ul className="checklist" role="list">
-              {service.map((s) => (
-                <li key={s}>
-                  <Icon name="motif" size={20} />
-                  {s}
+            <ul className="about-facts" role="list">
+              {facts.map((f) => (
+                <li key={f.value}>
+                  <strong>{f.value}</strong>
+                  <span>{f.text}</span>
                 </li>
               ))}
             </ul>
-            <Button to="/contacts">Обговорити подію</Button>
-          </div>
-          <div className="about-service__media">
-            <Media photo="lawn-tower" position="50% 70%" />
           </div>
         </div>
       </section>
 
-      <StepsSection label="Бронювання" />
+      <section className="section about-service">
+        <div className="container">
+          <Heading as="h2" title="Що входить" accent="в оренду" reveal className="about-service__title" />
+          <p className="about-service__text">Ви отримуєте не набір коробок, а готову ігрову зону.</p>
+          <ul className="service-tiles" role="list">
+            {service.map((s) => (
+              <li key={s.text}>
+                <span className="service-tiles__icon">
+                  <Icon name={s.icon} size={18} />
+                </span>
+                <p>{s.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-      <CtaBanner />
+      <StepsTiles tone="cream" />
+
+      <CtaBanner tone="white" />
     </>
   );
 }

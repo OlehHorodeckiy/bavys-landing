@@ -6,6 +6,7 @@ import Icon from './Icon.jsx';
 import GameArt from './GameArt.jsx';
 import { photos } from '../data/media.js';
 import { href as toHref } from '../router.js';
+import { openBooking } from './booking.js';
 
 /* ------------------------------------------------------------------ Logo */
 
@@ -22,13 +23,20 @@ export function Logo({ className = '' }) {
  *   outline  — hairline outline, no disc (secondary actions)
  *   outline-light — white hairline on dark
  *   nav      — white pill without a disc (header CTA)
+ * book: true or a game slug — the button opens the booking popup.
  */
-export function Button({ to, query, href, children, variant = 'primary', disc, icon = 'arrowUpRight', type = 'button', onClick, className = '', full = false, ...rest }) {
+export function Button({ to, query, href, book, children, variant = 'primary', disc, icon = 'arrowUpRight', type = 'button', onClick, className = '', full = false, ...rest }) {
   const showDisc = disc ?? (variant === 'primary' || variant === 'light');
   const cls = `btn btn--${variant} ${showDisc ? 'btn--disc' : ''} ${full ? 'btn--full' : ''} ${className}`;
   const inner = (
     <>
-      <span className="btn__label">{children}</span>
+      {/* two copies of the label: on hover the first rolls up, the second in (Calmlyss) */}
+      <span className="btn__label">
+        <span className="btn__roll">{children}</span>
+        <span className="btn__roll btn__roll--next" aria-hidden="true">
+          {children}
+        </span>
+      </span>
       {showDisc ? (
         <span className="btn__disc" aria-hidden="true">
           <Icon name={icon} size={16} strokeWidth={1.8} />
@@ -36,6 +44,17 @@ export function Button({ to, query, href, children, variant = 'primary', disc, i
       ) : null}
     </>
   );
+  if (book) {
+    const open = (e) => {
+      onClick?.(e);
+      openBooking(typeof book === 'string' ? book : undefined);
+    };
+    return (
+      <button className={cls} type="button" aria-haspopup="dialog" onClick={open} {...rest}>
+        {inner}
+      </button>
+    );
+  }
   const link = to ? toHref(to, query) : href;
   if (link) {
     return (
@@ -71,9 +90,9 @@ export function IconButton({ icon, label, href, onClick, variant = 'outline', si
 /* ----------------------------------------------------------- Label pill */
 
 /** The small uppercase label with a dot that sits above every heading. */
-export function Pill({ children, tone = 'white', className = '' }) {
+export function Pill({ children, tone = 'white', className = '', ...rest }) {
   return (
-    <p className={`pill pill--${tone} ${className}`}>
+    <p className={`pill pill--${tone} ${className}`} {...rest}>
       <span className="pill__dot" aria-hidden="true" />
       {children}
     </p>
@@ -86,10 +105,47 @@ export function Pill({ children, tone = 'white', className = '' }) {
  * Headline with a lighter, coloured accent — Comfortaa's answer to the
  * reference's serif-italic second voice.
  */
-export function Heading({ as: Tag = 'h2', title, accent, accentFirst = false, br = false, className = '' }) {
+/**
+ * Splits text into per-letter spans for the hero entrance (letters rise one by
+ * one). Words stay unbroken; `start` continues the stagger across parts.
+ */
+function Chars({ text, start }) {
+  let i = start;
+  const words = text.split(' ');
+  return words.map((word, w) => (
+    <span key={w}>
+      <span className="reveal-word">
+        {[...word].map((ch) => (
+          <span className="reveal-char" style={{ '--i': i++ }} key={i}>
+            {ch}
+          </span>
+        ))}
+      </span>
+      {w < words.length - 1 ? ' ' : null}
+    </span>
+  ));
+}
+
+export function Heading({ as: Tag = 'h2', id, title, accent, accentFirst = false, br = false, reveal = false, className = '' }) {
+  if (reveal && !accentFirst) {
+    const offset = (title || '').replace(/ /g, '').length;
+    return (
+      <Tag id={id} className={`${className} reveal-chars`} data-reveal="85" aria-label={[title, accent].filter(Boolean).join(' ')}>
+        <span aria-hidden="true">
+          {title ? <Chars text={title} start={0} /> : null}
+          {accent ? (br ? <br /> : ' ') : null}
+          {accent ? (
+            <span className="accent">
+              <Chars text={accent} start={offset} />
+            </span>
+          ) : null}
+        </span>
+      </Tag>
+    );
+  }
   const acc = accent ? <span className="accent">{accent}</span> : null;
   return (
-    <Tag className={className}>
+    <Tag id={id} className={className}>
       {accentFirst ? acc : null}
       {accentFirst && title ? ' ' : null}
       {title}
@@ -99,12 +155,22 @@ export function Heading({ as: Tag = 'h2', title, accent, accentFirst = false, br
   );
 }
 
-export function SectionHead({ label, labelTone, title, accent, br, text, align = 'center', as = 'h2', children, className = '' }) {
+/** `reveal`: the label and text rise in on scroll, the title letter by letter. */
+export function SectionHead({ label, labelTone, title, accent, br, text, align = 'center', as = 'h2', reveal = true, children, className = '' }) {
+  const rv = (delay) => (reveal ? { className: 'rv', 'data-reveal': '90', style: delay ? { '--rv-delay': delay } : undefined } : {});
   return (
     <div className={`section-head section-head--${align} ${className}`}>
-      {label ? <Pill tone={labelTone}>{label}</Pill> : null}
-      <Heading as={as} title={title} accent={accent} br={br} className="section-head__title" />
-      {text ? <p className="section-head__text">{text}</p> : null}
+      {label ? (
+        <Pill tone={labelTone} {...rv()} className={reveal ? 'rv' : ''}>
+          {label}
+        </Pill>
+      ) : null}
+      <Heading as={as} title={title} accent={accent} br={br} reveal={reveal} className="section-head__title" />
+      {text ? (
+        <p {...rv('0.4s')} className={`section-head__text ${reveal ? 'rv' : ''}`}>
+          {text}
+        </p>
+      ) : null}
       {children}
     </div>
   );
@@ -148,13 +214,17 @@ export function Media({ photo, art, position, className = '', eager = false, alt
   if (p) {
     return (
       <div className={`media ${p.backdrop ? `media--${p.backdrop}` : ''} ${className}`}>
-        <img
-          src={p.src}
-          alt={alt ?? p.alt}
-          loading={eager ? 'eager' : 'lazy'}
-          decoding="async"
-          style={{ objectPosition: position || undefined, objectFit: p.fit || undefined }}
-        />
+        <picture>
+          {/* a phone crop of the same scene, when the Figma mobile frame uses one */}
+          {p.mobile ? <source media="(max-width: 767px)" srcSet={p.mobile} /> : null}
+          <img
+            src={p.src}
+            alt={alt ?? p.alt}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            style={{ objectPosition: position || undefined, objectFit: p.fit || undefined }}
+          />
+        </picture>
       </div>
     );
   }

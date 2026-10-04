@@ -1,211 +1,165 @@
-import { useMemo, useState } from 'react';
-import { games } from '../data/games.js';
-import { company, eventTypes } from '../data/site.js';
+import { useEffect, useRef, useState } from 'react';
+import { findGame } from '../data/games.js';
+import { company } from '../data/site.js';
 import Icon from './Icon.jsx';
-import { Button, Heading, Pill } from './ui.jsx';
+import { Button, Heading } from './ui.jsx';
+import { track } from '../analytics.js';
 
 /**
- * Booking request form. The primary conversion of the whole site:
- * request → company inbox → administrator calls the customer back.
+ * Booking request form: the one conversion of the whole site, used in the
+ * booking popup and on the contacts page. Name, phone, date and a free comment;
+ * no game picker (the comment asks which games). When the form is opened from a
+ * game page that game is quietly added to the request.
  *
- * Delivery: if VITE_FORM_ENDPOINT is set (Formspree, Web3Forms, a Google Apps
- * Script webhook — anything that accepts a JSON POST and forwards it to Gmail),
- * the request is posted there. Without it the form falls back to opening the
- * visitor's mail app with the request pre-filled to company.email.
+ * Delivery: the request is posted as JSON to FormSubmit, which e-mails it to
+ * company.leadsEmail as a table (no account or key; the very first request sends
+ * an activation link to that inbox, and requests arrive once it is clicked).
+ * VITE_FORM_ENDPOINT overrides the endpoint with any service that takes the same
+ * JSON POST. The hidden _honey field catches bots: FormSubmit drops filled ones.
  */
-const ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT;
-
-const guestOptions = ['до 30', '30–60', '60–100', '100–200', '200+'];
-const typeOptions = [...eventTypes.filter((t) => t.id !== 'outdoor').map((t) => t.label), 'Інше'];
+const ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || `https://formsubmit.co/ajax/${company.leadsEmail}`;
 
 const today = () => new Date().toISOString().slice(0, 10);
+
+/** 2026-10-04 → 04.10.2026 */
+const formatDate = (iso) => (iso ? iso.split('-').reverse().join('.') : 'не вказана');
 
 function validate(v) {
   const errors = {};
   if (!v.name.trim()) errors.name = 'Вкажіть, як до вас звертатися';
   if (v.phone.replace(/\D/g, '').length < 10) errors.phone = 'Вкажіть номер телефону, щоб ми могли зателефонувати';
-  if (v.email && !/^\S+@\S+\.\S+$/.test(v.email)) errors.email = 'Перевірте адресу e-mail';
   return errors;
 }
 
-function toText(v, selected) {
-  const names = games.filter((g) => selected.includes(g.slug)).map((g) => g.name);
-  return [
-    `Ім'я: ${v.name}`,
-    `Телефон: ${v.phone}`,
-    `E-mail: ${v.email || '—'}`,
-    `Тип події: ${v.type || '—'}`,
-    `Дата: ${v.date || '—'}`,
-    `Локація: ${v.location || '—'}`,
-    `Кількість гостей: ${v.guests || '—'}`,
-    `Обрані ігри: ${names.length ? names.join(', ') : 'допоможіть обрати'}`,
-    '',
-    v.message || '',
-  ].join('\n');
+/** One request as the rows of the e-mail table (FormSubmit keeps the key order). */
+function toPayload(v, gameName, honey) {
+  return {
+    _subject: `Заявка на оренду ігор: ${v.name}`,
+    _template: 'table',
+    _captcha: 'false',
+    _honey: honey,
+    'Ім’я': v.name,
+    Телефон: v.phone,
+    'Дата події': formatDate(v.date),
+    ...(gameName ? { 'Сторінка гри': gameName } : {}),
+    Коментар: v.message || 'без коментаря',
+  };
 }
 
-function Field({ id, label, required, error, hint, children }) {
+function Field({ id, label, required, error, icon, children }) {
   return (
-    <div className={`field ${error ? 'has-error' : ''}`}>
+    <div className={`field ${error ? 'has-error' : ''} ${icon ? 'field--icon' : ''}`}>
       <label className="field__label" htmlFor={id}>
         {label}
         {required ? <span aria-hidden="true"> *</span> : null}
       </label>
-      {children}
+      <div className="field__control">
+        {icon ? <Icon name={icon} size={18} className="field__icon" /> : null}
+        {children}
+      </div>
       {error ? (
         <p className="field__error" id={`${id}-error`}>
           {error}
         </p>
-      ) : hint ? (
-        <p className="field__hint">{hint}</p>
       ) : null}
     </div>
   );
 }
 
-export default function BookingForm({ initialGame }) {
-  const [values, setValues] = useState({ name: '', phone: '', email: '', type: '', date: '', location: '', guests: '', message: '' });
-  const [selected, setSelected] = useState(() => (initialGame ? [initialGame] : []));
+/**
+ * variant: 'modal' (popup, «Забронювати ігри») | 'page' (contacts, «Надішліть заявку»)
+ * onDone: called by the success state's button (the popup closes itself).
+ */
+export default function BookingForm({ game, variant = 'page', onDone }) {
+  const [values, setValues] = useState({ name: '', phone: '', date: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
+  const first = useRef(null);
+  const honey = useRef(null);
+  const gameName = game ? findGame(game)?.name : null;
+  const id = (k) => `bf-${variant}-${k}`;
+
+  useEffect(() => {
+    if (variant === 'modal') first.current?.focus();
+  }, [variant]);
 
   const set = (key) => (e) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
     if (errors[key]) setErrors((er) => ({ ...er, [key]: undefined }));
   };
 
-  const toggle = (slug) => setSelected((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
-
-  const selectedNames = useMemo(() => games.filter((g) => selected.includes(g.slug)).map((g) => g.name), [selected]);
-
   const onSubmit = async (e) => {
     e.preventDefault();
     const found = validate(values);
     setErrors(found);
     if (Object.keys(found).length) {
-      document.getElementById(`bf-${Object.keys(found)[0]}`)?.focus();
+      document.getElementById(id(Object.keys(found)[0]))?.focus();
       return;
     }
-    const subject = `Заявка на оренду ігор — ${values.name}`;
-    const body = toText(values, selected);
-
-    if (ENDPOINT) {
-      setStatus('sending');
-      try {
-        const res = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ subject, ...values, games: selectedNames, message_text: body }),
-        });
-        if (!res.ok) throw new Error(String(res.status));
-        setStatus('sent');
-      } catch {
-        setStatus('error');
-      }
-      return;
+    setStatus('sending');
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '')),
+      });
+      const data = await res.json().catch(() => ({}));
+      // FormSubmit answers 200 with success "false" (e.g. before activation)
+      if (!res.ok || String(data.success) === 'false') throw new Error(data.message || String(res.status));
+      setStatus('sent');
+      track('generate_lead', { form: variant, game: gameName || '' });
+    } catch {
+      setStatus('error');
     }
-
-    window.location.href = `mailto:${company.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setStatus('sent');
   };
 
   if (status === 'sent') {
     return (
-      <div className="booking-success" role="status" aria-live="polite">
+      <div className={`booking-success booking-success--${variant}`} role="status" aria-live="polite">
         <span className="booking-success__icon">
-          <Icon name="check" size={32} strokeWidth={2} />
+          <Icon name="check" size={36} strokeWidth={2.5} />
         </span>
-        <Heading as="h2" title="Дякуємо!" accent="Заявку отримано" br className="booking-success__title" />
-        <p>
-          Ваша заявка надійшла до нас. Адміністратор зв’яжеться з вами найближчим часом, щоб уточнити деталі й підтвердити
-          наявність ігор на вашу дату.
-        </p>
-        {selectedNames.length ? (
-          <p className="booking-success__games">
-            <strong>Обрані ігри:</strong> {selectedNames.join(', ')}
-          </p>
-        ) : null}
-        <div className="booking-success__actions">
-          <Button to="/games">Переглянути ще ігри</Button>
-          <Button variant="outline" onClick={() => setStatus('idle')}>
-            Змінити заявку
-          </Button>
-        </div>
+        <h2 className="booking-success__title" id={variant === 'modal' ? 'booking-title' : undefined}>Дякуємо! Заявку надіслано</h2>
+        <p>Адміністратор зателефонує вам протягом доби, щоб уточнити дату й ігри.</p>
+        <Button to="/games" onClick={onDone}>
+          Переглянути ігри
+        </Button>
       </div>
     );
   }
 
-  const err = (k) => (errors[k] ? { 'aria-invalid': true, 'aria-describedby': `bf-${k}-error` } : {});
+  const err = (k) => (errors[k] ? { 'aria-invalid': true, 'aria-describedby': `${id(k)}-error` } : {});
+  const modal = variant === 'modal';
 
   return (
-    <form className="booking-form" onSubmit={onSubmit} noValidate>
+    <form className={`booking-form booking-form--${variant}`} onSubmit={onSubmit} noValidate>
       <div className="booking-form__head">
-        <Pill tone="white">Заявка</Pill>
-        <Heading as="h2" title="Надішліть" accent="заявку" className="booking-form__title" />
-        <p>Без передоплати. Адміністратор зателефонує протягом доби, підбере ігри та підтвердить бронь.</p>
+        <Heading
+          as="h2"
+          id={modal ? 'booking-title' : undefined}
+          title={modal ? 'Забронювати' : 'Надішліть'}
+          accent={modal ? 'ігри' : 'заявку'}
+          className="booking-form__title"
+        />
+        <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
       </div>
+
+      <input ref={honey} type="text" name="_honey" className="visually-hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
       <div className="booking-form__grid">
-        <Field id="bf-name" label="Ім’я" required error={errors.name}>
-          <input id="bf-name" type="text" autoComplete="name" value={values.name} onChange={set('name')} {...err('name')} />
+        <Field id={id('name')} label="Ім’я" required error={errors.name}>
+          <input ref={first} id={id('name')} type="text" autoComplete="name" placeholder="Як до вас звертатись" value={values.name} onChange={set('name')} {...err('name')} />
         </Field>
-        <Field id="bf-phone" label="Телефон" required error={errors.phone}>
-          <input id="bf-phone" type="tel" autoComplete="tel" inputMode="tel" placeholder="+38 (0__) ___-__-__" value={values.phone} onChange={set('phone')} {...err('phone')} />
+        <Field id={id('phone')} label="Телефон" required error={errors.phone}>
+          <input id={id('phone')} type="tel" autoComplete="tel" inputMode="tel" placeholder="+38 (0__) ___-__-__" value={values.phone} onChange={set('phone')} {...err('phone')} />
         </Field>
-        <Field id="bf-email" label="E-mail" error={errors.email}>
-          <input id="bf-email" type="email" autoComplete="email" value={values.email} onChange={set('email')} {...err('email')} />
+        <Field id={id('date')} label="Дата події" icon="calendar">
+          <input id={id('date')} type="date" min={today()} value={values.date} onChange={set('date')} />
         </Field>
-        <Field id="bf-type" label="Тип події">
-          <div className="select">
-            <select id="bf-type" value={values.type} onChange={set('type')}>
-              <option value="">Оберіть тип події</option>
-              {typeOptions.map((t) => (
-                <option key={t}>{t}</option>
-              ))}
-            </select>
-            <Icon name="arrowRight" size={16} className="select__icon" />
-          </div>
-        </Field>
-        <Field id="bf-date" label="Дата події">
-          <input id="bf-date" type="date" min={today()} value={values.date} onChange={set('date')} />
-        </Field>
-        <Field id="bf-guests" label="Кількість гостей">
-          <div className="select">
-            <select id="bf-guests" value={values.guests} onChange={set('guests')}>
-              <option value="">Орієнтовно</option>
-              {guestOptions.map((g) => (
-                <option key={g}>{g}</option>
-              ))}
-            </select>
-            <Icon name="arrowRight" size={16} className="select__icon" />
-          </div>
-        </Field>
-        <Field id="bf-location" label="Локація" hint="Місто, заклад або адреса">
-          <input id="bf-location" type="text" placeholder="Львів, ресторан / заміський комплекс" value={values.location} onChange={set('location')} />
+        <Field id={id('message')} label="Коментар">
+          <textarea id={id('message')} rows={3} placeholder="Які ігри вас цікавлять, формат свята, побажання щодо часу" value={values.message} onChange={set('message')} />
         </Field>
       </div>
-
-      <fieldset className="field game-picker">
-        <legend className="field__label">
-          Обрані ігри <span className="game-picker__count">{selected.length ? `· ${selected.length}` : ''}</span>
-        </legend>
-        <div className="game-picker__list">
-          {games.map((g) => {
-            const on = selected.includes(g.slug);
-            return (
-              <button key={g.slug} type="button" className={`game-picker__item ${on ? 'is-on' : ''}`} aria-pressed={on} onClick={() => toggle(g.slug)}>
-                <Icon name={on ? 'check' : 'plus'} size={16} strokeWidth={2} />
-                {g.name}
-              </button>
-            );
-          })}
-        </div>
-        <p className="field__hint">Не впевнені? Залиште порожнім — адміністратор допоможе обрати.</p>
-      </fieldset>
-
-      <Field id="bf-message" label="Додаткова інформація">
-        <textarea id="bf-message" rows={5} placeholder="Формат свята, вік гостей, побажання щодо таймінгу…" value={values.message} onChange={set('message')} />
-      </Field>
 
       {status === 'error' ? (
         <p className="booking-form__error" role="alert">
@@ -214,10 +168,10 @@ export default function BookingForm({ initialGame }) {
       ) : null}
 
       <div className="booking-form__submit">
-        <Button type="submit" disabled={status === 'sending'}>
+        <Button type="submit" full disabled={status === 'sending'}>
           {status === 'sending' ? 'Надсилаємо…' : 'Надіслати заявку'}
         </Button>
-        <p className="booking-form__note">Натискаючи кнопку, ви погоджуєтесь на обробку контактних даних для зворотного зв’язку.</p>
+        <p className="booking-form__note">Натискаючи кнопку, ви погоджуєтесь на обробку контактних даних.</p>
       </div>
     </form>
   );

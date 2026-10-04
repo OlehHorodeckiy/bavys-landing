@@ -2,8 +2,9 @@
  * Reusable page sections and cards. Each maps to a pattern in the reference
  * (Calmlyss) and is reused across pages rather than rebuilt per page.
  */
-import { eventType, stats as defaultStats, steps as defaultSteps, advantages as defaultAdvantages, useCases as defaultUseCases } from '../data/site.js';
-import { placeLabel } from '../data/games.js';
+import { company, eventType, stats as defaultStats, steps as defaultSteps, advantages as defaultAdvantages, useCases as defaultUseCases } from '../data/site.js';
+import { findGame, games as allGames } from '../data/games.js';
+import { CountUp } from './motion.jsx';
 import { blogCategory } from '../data/posts.js';
 import { href } from '../router.js';
 import Icon from './Icon.jsx';
@@ -15,14 +16,14 @@ import { Button, Chip, GameMedia, Heading, Media, Pill, SectionHead } from './ui
  * Dark photographic hero — every page opens with one, the header floats on it.
  * size: 'home' (tall, left-aligned) | 'page' (centered) | 'short'
  */
-export function PageHero({ media, label, title, accent, br = true, text, actions, align = 'center', size = 'page', children, className = '' }) {
+export function PageHero({ media, label, title, accent, br = true, text, actions, align = 'center', size = 'page', reveal = false, children, className = '' }) {
   return (
     <section className={`hero hero--${size} ${className}`}>
       <div className="hero__bg">{media ? <Media {...media} eager /> : null}</div>
       <div className="hero__shade" aria-hidden="true" />
       <div className={`container hero__inner hero__inner--${align}`}>
         {label ? <Pill>{label}</Pill> : null}
-        <Heading as="h1" title={title} accent={accent} br={br} className="hero__title" />
+        <Heading as="h1" title={title} accent={accent} br={br} reveal={reveal} className="hero__title" />
         {text ? <p className="hero__text">{text}</p> : null}
         {actions ? <div className="hero__actions">{actions}</div> : null}
       </div>
@@ -31,23 +32,75 @@ export function PageHero({ media, label, title, accent, br = true, text, actions
   );
 }
 
+/* --------------------------------------------------------- Page title */
+
+/**
+ * Light first screen of the inner pages: an optional label pill, a two-tone
+ * title in one line, an optional line of text, then whatever follows (filter
+ * chips, the page content). Replaces the old dark photographic heroes.
+ */
+export function PageTitle({ label, title, accent, text, children, className = '' }) {
+  return (
+    <section className={`page-title ${className}`}>
+      <div className="container page-title__inner">
+        {label ? (
+          <Pill tone="cream" className="rv" data-reveal="90">
+            {label}
+          </Pill>
+        ) : null}
+        <Heading as="h1" title={title} accent={accent} reveal className="page-title__title" />
+        {text ? (
+          <p className="page-title__text rv" data-reveal="90" style={{ '--rv-delay': '0.3s' }}>
+            {text}
+          </p>
+        ) : null}
+        {children}
+      </div>
+    </section>
+  );
+}
+
 /* ------------------------------------------------ Arch strip of games */
 
-/** Row of arch-shaped game tiles that runs off both edges (reference hero strip). */
+/**
+ * Row of arch-shaped game tiles that loops endlessly to the left (Calmlyss hero
+ * marquee). The list is rendered twice so the loop is seamless; the copy is
+ * hidden from assistive tech and the tab order. Hovering a tile fades in a dark
+ * gradient and the game's name. A game without a catalog page yet links to the
+ * catalog.
+ */
 export function GameStrip({ games }) {
+  const tile = (g, copy) => (
+    <li key={`${copy}-${g.slug}`} aria-hidden={copy ? 'true' : undefined}>
+      <a className="hero-strip__arch" href={href(findGame(g.slug) ? `/games/${g.slug}` : '/games')} tabIndex={copy ? -1 : undefined}>
+        <GameMedia game={g} alt="" />
+        <span className="hero-strip__shade" aria-hidden="true" />
+        <span className="hero-strip__name">{g.name}</span>
+      </a>
+    </li>
+  );
   return (
     <div className="hero-strip" aria-label="Ігри з колекції">
       <ul className="hero-strip__list" role="list">
-        {games.map((g) => (
-          <li key={g.slug}>
-            <a className="hero-strip__arch" href={href(`/games/${g.slug}`)}>
-              <GameMedia game={g} alt="" />
-              <span className="hero-strip__name">{g.name}</span>
-            </a>
-          </li>
-        ))}
+        {games.map((g) => tile(g, 0))}
+        {games.map((g) => tile(g, 1))}
       </ul>
     </div>
+  );
+}
+
+/* ------------------------------------------------------- Gallery bento */
+
+/** Full-bleed photo mosaic from the Calmlyss gallery: 9 tiles, no captions. */
+export function GalleryBento({ items, className = '', ...rest }) {
+  return (
+    <ul className={`bento ${className}`} role="list" {...rest}>
+      {items.map((it) => (
+        <li className="bento__tile" key={it.photo}>
+          <Media photo={it.photo} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -60,6 +113,7 @@ export function GameCard({ game, headingLevel = 'h3' }) {
     <a className="game-card" href={href(`/games/${game.slug}`)}>
       <div className="game-card__media">
         <GameMedia game={game} alt="" />
+        {game.isNew ? <span className="game-card__badge">Новинка</span> : null}
         <div className="game-card__chips">
           <Chip dot={primary?.dot}>{primary?.label}</Chip>
           <Chip icon="users">{game.players}</Chip>
@@ -67,15 +121,6 @@ export function GameCard({ game, headingLevel = 'h3' }) {
       </div>
       <H className="game-card__title">{game.name}</H>
       <p className="game-card__text">{game.short}</p>
-      <div className="game-card__foot">
-        <span className="game-card__meta">
-          <Icon name={game.place === 'outdoor' ? 'sun' : game.place === 'indoor' ? 'home' : 'area'} size={16} />
-          {placeLabel[game.place]}
-        </span>
-        <span className="game-card__arrow" aria-hidden="true">
-          <Icon name="arrowUpRight" size={16} strokeWidth={1.8} />
-        </span>
-      </div>
     </a>
   );
 }
@@ -83,8 +128,8 @@ export function GameCard({ game, headingLevel = 'h3' }) {
 export function GameGrid({ games, headingLevel }) {
   return (
     <ul className="game-grid" role="list">
-      {games.map((g) => (
-        <li key={g.slug}>
+      {games.map((g, i) => (
+        <li key={g.slug} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.4 + (i % 3) * 0.06}s` }}>
           <GameCard game={g} headingLevel={headingLevel} />
         </li>
       ))}
@@ -131,7 +176,7 @@ export function GalleryGrid({ items, layout = 'editorial', moreTile = true }) {
         </figure>
       ))}
       {moreTile ? (
-        <a className="gallery-tile gallery-tile--more" href="https://instagram.com/" target="_blank" rel="noreferrer">
+        <a className="gallery-tile gallery-tile--more" href={company.socials[0].href} target="_blank" rel="noreferrer">
           <Icon name="instagram" size={28} />
           <strong>Більше фото з подій</strong>
           <span>у нашому Instagram</span>
@@ -143,13 +188,19 @@ export function GalleryGrid({ items, layout = 'editorial', moreTile = true }) {
 
 /* ------------------------------------------------------------ Stats row */
 
-export function StatsRow({ items = defaultStats }) {
+/** `reveal`: items rise in 0.2s apart and the numbers count up (Calmlyss). */
+export function StatsRow({ items = defaultStats, reveal = false }) {
   return (
     <div className="stats">
-      {items.map((s) => (
-        <div className="stats__item" key={s.title}>
+      {items.map((s, i) => (
+        <div
+          className={`stats__item ${reveal ? 'rv' : ''}`}
+          key={s.title}
+          data-reveal={reveal ? '90' : undefined}
+          style={reveal ? { '--rv-delay': `${0.2 * (i + 1)}s` } : undefined}
+        >
           <p className="stats__value">
-            {s.value}
+            {reveal ? <CountUp value={s.value} /> : s.value}
             {s.suffix ? <sup>{s.suffix}</sup> : null}
           </p>
           <Heading as="h3" title={s.title} accent={s.accent} className="stats__title" />
@@ -168,8 +219,8 @@ export function StepsSection({ items = defaultSteps, label = 'Як це прац
       <div className="container">
         <SectionHead label={label} title={title} accent={accent} br text={text} className="section-head--on-dark" />
         <ol className="steps">
-          {items.map((s) => (
-            <li className="steps__row" key={s.no}>
+          {items.map((s, i) => (
+            <li className="steps__row rv" key={s.no} data-reveal="90" style={{ '--rv-delay': `${0.4 + i * 0.06}s` }}>
               <span className="steps__no">{s.no}</span>
               <Heading as="h3" title={s.title} accent={s.accent} className="steps__title" />
               <p className="steps__text">{s.text}</p>
@@ -179,6 +230,80 @@ export function StepsSection({ items = defaultSteps, label = 'Як це прац
               <Button to={s.cta.path} variant="outline-light" className="steps__btn">
                 {s.cta.label}
               </Button>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------------------- How to order (illustrated) */
+
+const orderSteps = [
+  { title: 'Оберіть ігри', text: 'Перегляньте каталог і додайте ігри, що пасують вашій події.' },
+  { title: 'Надішліть заявку', text: 'Вкажіть дату, локацію та кількість гостей. Без передоплати.' },
+  { title: 'Підтверджуємо наявність', text: 'Адміністратор зателефонує, уточнить деталі й зафіксує бронь.' },
+  { title: 'Привозимо й встановлюємо', text: 'Доставляємо, розставляємо, пояснюємо правила і забираємо після свята.' },
+];
+
+/** Little interface sketches inside the step tiles (decorative). */
+function StepArt({ i }) {
+  if (i === 0) {
+    return (
+      <div className="step-art step-art--pick">
+        <span className="step-art__card"><Media photo="card-velyka-dzhenga" alt="" /></span>
+        <span className="step-art__card"><Media photo="card-kornkhol" alt="" /></span>
+        <span className="step-art__plus"><Icon name="plus" size={16} strokeWidth={2.5} /></span>
+      </div>
+    );
+  }
+  if (i === 1) {
+    return (
+      <div className="step-art step-art--form">
+        {[['calendar', '12 липня'], ['pin', 'Львів'], ['users', '60 гостей']].map(([ic, v]) => (
+          <span className="step-art__field" key={v}><Icon name={ic} size={14} />{v}</span>
+        ))}
+        <span className="step-art__btn">Надіслати заявку</span>
+      </div>
+    );
+  }
+  if (i === 2) {
+    return (
+      <div className="step-art step-art--confirm">
+        <span className="step-art__msg">
+          <span className="step-art__ok"><Icon name="check" size={16} strokeWidth={2.5} /></span>
+          <span><b>Бронь підтверджено</b><small>сьогодні о 14:20</small></span>
+        </span>
+        <span className="step-art__call"><Icon name="phone" size={20} /></span>
+      </div>
+    );
+  }
+  return (
+    <div className="step-art step-art--deliver">
+      <span className="step-art__ring" />
+      <span className="step-art__disc"><Icon name="truck" size={36} /></span>
+    </div>
+  );
+}
+
+/**
+ * «Як замовити ігри?»: four tiles with interface sketches, title and text under
+ * each. tone 'white' — white section, cream tiles (home); 'cream' — the reverse (about).
+ */
+export function StepsTiles({ tone = 'white', items = orderSteps }) {
+  return (
+    <section className={`section ${tone === 'cream' ? 'section--cream' : ''} steps-tiles steps-tiles--${tone}`} id="how">
+      <div className="container">
+        <Heading as="h2" title="Як замовити" accent="ігри?" reveal className="steps-tiles__title" />
+        <ol className="steps-tiles__list" role="list">
+          {items.map((s, i) => (
+            <li key={s.title} className="steps-tiles__item rv" data-reveal="90" style={{ '--rv-delay': `${0.3 + i * 0.06}s` }}>
+              <div className="steps-tiles__tile" aria-hidden="true">
+                <StepArt i={i} />
+              </div>
+              <h3 className="steps-tiles__name">{s.title}</h3>
+              <p className="steps-tiles__text">{s.text}</p>
             </li>
           ))}
         </ol>
@@ -216,64 +341,104 @@ export function AdvantagesSection({ items = defaultAdvantages, label = 'Чому
 
 /* -------------------------------------------------- Events / use cases */
 
-export function UseCasesSection({ items = defaultUseCases, label = 'Для яких подій', title = 'Ігри, які доречні', accent = 'на будь-якому святі', className = '' }) {
+/** Games tagged for an occasion (team building borrows the corporate set). */
+const occasionType = (id) => (id === 'teambuilding' ? 'corporate' : id);
+export const gamesForOccasion = (id) => allGames.filter((g) => g.events.includes(occasionType(id)));
+
+/** 1 гра · 2–4 гри · 5+ ігор */
+export const gamesWord = (n) => {
+  const d = n % 10;
+  const h = n % 100;
+  if (d === 1 && h !== 11) return `${n} гра`;
+  if (d >= 2 && d <= 4 && (h < 12 || h > 14)) return `${n} гри`;
+  return `${n} ігор`;
+};
+
+/**
+ * "Для яких подій": one row per occasion — photo, name, note, the games that
+ * suit it (first three + the rest as a count) and an arrow into the catalog
+ * filtered by that occasion.
+ */
+export function UseCasesSection({
+  items = defaultUseCases,
+  label = 'Для яких подій',
+  title = 'Ігри, які доречні',
+  accent = 'на будь-якому святі',
+  text = 'Оберіть подію — покажемо ігри, які на ній працюють найкраще.',
+  className = '',
+}) {
   return (
-    <section className={`section usecases-section ${className}`}>
+    <section className={`section uc-rows ${className}`}>
       <div className="container">
-        <SectionHead label={label} labelTone="cream" title={title} accent={accent} br />
+        <div className="split-head">
+          <SectionHead label={label} labelTone="cream" title={title} accent={accent} br align="left" />
+          {text ? (
+            <p className="split-head__text rv" data-reveal="90" style={{ '--rv-delay': '0.4s' }}>
+              {text}
+            </p>
+          ) : null}
+        </div>
+        <ul className="uc-rows__list" role="list">
+          {items.map((u, i) => {
+            const picks = gamesForOccasion(u.id);
+            return (
+              <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.4 + i * 0.06}s` }}>
+                <a className="uc-row" href={href('/games', { type: occasionType(u.id) })}>
+                  <span className="uc-row__thumb">
+                    <Media photo={u.photo} alt="" />
+                  </span>
+                  <span className="uc-row__no">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="uc-row__text">
+                    <span className="uc-row__title">{u.title}</span>
+                    <span className="uc-row__note">{u.note}</span>
+                  </span>
+                  <span className="uc-row__games" aria-label={gamesWord(picks.length)}>
+                    {picks.slice(0, 3).map((g) => (
+                      <Chip key={g.slug} tone="soft">
+                        {g.name}
+                      </Chip>
+                    ))}
+                    {picks.length > 3 ? <Chip tone="soft">+{picks.length - 3}</Chip> : null}
+                  </span>
+                  <span className="uc-row__arrow" aria-hidden="true">
+                    <Icon name="arrowUpRight" size={18} />
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
-      <ul className="usecases" role="list">
-        {items.map((u) => (
-          <li key={u.id}>
-            <a className="usecase" href={href('/games', { type: u.id === 'teambuilding' ? 'corporate' : u.id })}>
-              <div className="usecase__arch">
-                <Media {...u.media} alt="" />
-              </div>
-              <h3 className="usecase__title">{u.title}</h3>
-              <p className="usecase__note">{u.note}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }
 
 /* -------------------------------------------------------- CTA banner */
 
-export function CtaBanner({
-  label = 'Бронювання',
-  title = 'Зробимо ваше свято',
-  accent = 'веселішим',
-  text = 'Залиште заявку — адміністратор зв’яжеться з вами, підбере ігри під формат події та підтвердить наявність на вашу дату.',
-  query,
-  media = { photo: 'event-jenga', position: '70% 60%' },
-  secondary = true,
-  tone = 'cream',
-}) {
-  return (
-    <section className={`section section--${tone} cta-section`}>
-      <div className="container">
-        <div className="cta-banner">
-          <div className="cta-banner__bg">{media ? <Media {...media} alt="" /> : null}</div>
-          <div className="cta-banner__shade" aria-hidden="true" />
-          <div className="cta-banner__inner">
-            <Pill>{label}</Pill>
-            <Heading as="h2" title={title} accent={accent} br className="cta-banner__title" />
-            <p className="cta-banner__text">{text}</p>
-            <div className="cta-banner__actions">
-              <Button to="/contacts" query={query} variant="light">
-                Надіслати заявку
-              </Button>
-              {secondary ? (
-                <Button to="/games" variant="outline-light">
-                  Переглянути ігри
-                </Button>
-              ) : null}
-            </div>
-          </div>
+/**
+ * Booking banner: a light card with the lawn photo (Велика Дженга left, ring
+ * toss right) along its bottom, a two-tone title and one «Замовити ігри» that
+ * opens the booking popup. `bare` renders only the card (the home page puts it
+ * inside the gallery section); otherwise it comes in its own section.
+ */
+export function CtaBanner({ title = 'Плануєте свято?', accent = 'ігри беремо на себе', book = true, tone = 'white', bare = false, className = '' }) {
+  const card = (
+    <div className={`cta-banner ${className}`}>
+      <div className="cta-banner__photo" aria-hidden="true">
+        <Media photo="cta-lawn" alt="" />
+      </div>
+      <div className="cta-banner__inner">
+        <Heading as="h2" title={title} accent={accent} br reveal className="cta-banner__title" />
+        <div className="cta-banner__actions rv" data-reveal="90" style={{ '--rv-delay': '0.3s' }}>
+          <Button book={book}>Замовити ігри</Button>
         </div>
       </div>
+    </div>
+  );
+  if (bare) return card;
+  return (
+    <section className={`section section--${tone} cta-section`}>
+      <div className="container">{card}</div>
     </section>
   );
 }

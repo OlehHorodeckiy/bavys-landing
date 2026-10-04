@@ -1,24 +1,29 @@
-import { Button } from '../components/ui.jsx';
-import { PageHero } from '../components/sections.jsx';
+import { Button, Heading, Media } from '../components/ui.jsx';
 
+/** 404: «4 [falling Jenga tower] 4» on the white + lawn backdrop. */
 export default function NotFound() {
   return (
-    <PageHero
-      media={{ photo: 'event-jenga', position: '80% 50%' }}
-      label="404"
-      title="Схоже, вежа"
-      accent="впала"
-      text="Такої сторінки немає. Але ігри нікуди не зникли — повертайтеся до каталогу."
-      actions={
-        <>
-          <Button to="/games" variant="light">
-            До каталогу
-          </Button>
-          <Button to="/" variant="outline-light">
+    <section className="not-found">
+      <div className="not-found__bg" aria-hidden="true">
+        <Media photo="lawn-strip" alt="" eager />
+      </div>
+      <div className="container not-found__inner">
+        <p className="not-found__code" aria-label="404">
+          <span aria-hidden="true">4</span>
+          <span className="not-found__tower" aria-hidden="true">
+            <Media photo="jenga-404" alt="" eager />
+          </span>
+          <span aria-hidden="true">4</span>
+        </p>
+        <Heading as="h1" title="Схоже, вежа" accent="впала" className="not-found__title" />
+        <p className="not-found__text">Такої сторінки немає. Але ігри нікуди не зникли, повертайтеся до каталогу.</p>
+        <div className="not-found__actions">
+          <Button to="/games">До каталогу</Button>
+          <Button to="/" variant="outline" disc={false}>
             На головну
           </Button>
-        </>
-      }
-    />
+        </div>
+      </div>
+    </section>
   );
 }

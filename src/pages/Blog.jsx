@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { blogCategories, posts } from '../data/posts.js';
-import { Button, SectionHead } from '../components/ui.jsx';
-import { CtaBanner, FilterBar, PageHero, PostCard } from '../components/sections.jsx';
+import { CtaBanner, FilterBar, PageTitle, PostCard } from '../components/sections.jsx';
 
 export default function Blog() {
   const [cat, setCat] = useState('all');
@@ -9,21 +8,10 @@ export default function Blog() {
 
   return (
     <>
-      <PageHero
-        label="Блог"
-        title="Історії"
-        accent="компанії Бавись"
-        text="Події, у яких ми брали участь, наші партнери, нові ігри та поради, як зробити свято веселішим."
-        actions={
-          <Button to="/games" variant="light">
-            Каталог ігор
-          </Button>
-        }
-      />
+      <PageTitle title="Про ігри," accent="свята та людей" />
 
-      <section className="section section--cream blog-page">
+      <section className="section blog-page">
         <div className="container">
-          <SectionHead label="Статті" title="Про ігри," accent="свята та людей" br />
           <div className="blog-layout">
             <aside className="blog-layout__side">
               <h2 className="blog-layout__title">Теми</h2>

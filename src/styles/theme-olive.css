@@ -1,0 +1,56 @@
+/* Palette study from the moodboard (Figma 1539:1785): cream #f5f1ea, sand #e8dfd3, tan #c5a68b,
+   brown #6b4f3a, sage #7a8b6f, olive #635e37. Dev-only: switched on with #/…?palette=olive. */
+
+:root[data-palette='olive'] {
+  --bg: #f5f1ea;
+  --deep: #3f3c24;          /* headings, footer: olive taken darker */
+  --brand: #6b4f3a;         /* logo stays brown, as on the moodboard */
+  --primary: #635e37;       /* buttons, accent words on light */
+  --ink: #6b4f3a;           /* body copy */
+  --accent: #7a8b6f;        /* sage: icons, meta, current nav */
+  --accent-soft: #e8dfd3;   /* accent words on dark */
+  --wood: #c5a68b;
+  --stroke: #e8dfd3;
+  --dash: #d6ccbe;
+  --shadow: 0 30px 60px rgba(63, 60, 36, 0.14);
+}
+
+:root[data-palette='olive'] .section--dark,
+:root[data-palette='olive'] .section--glow {
+  background:
+    radial-gradient(55% 45% at 15% 0%, rgba(122, 139, 111, 0.36), transparent 70%),
+    radial-gradient(45% 55% at 95% 100%, rgba(197, 166, 139, 0.22), transparent 70%),
+    linear-gradient(180deg, #6a653c 0%, #4c4829 100%);
+}
+
+:root[data-palette='olive'] .hero {
+  background:
+    radial-gradient(50% 60% at 80% 20%, rgba(122, 139, 111, 0.4), transparent 70%),
+    radial-gradient(40% 50% at 10% 90%, rgba(197, 166, 139, 0.22), transparent 70%),
+    #4c4829;
+}
+
+:root[data-palette='olive'] .hero__shade {
+  background: linear-gradient(180deg, rgba(40, 38, 22, 0.62) 0%, rgba(40, 38, 22, 0.42) 45%, rgba(40, 38, 22, 0.66) 100%);
+}
+
+:root[data-palette='olive'] .steps {
+  background: rgba(28, 26, 14, 0.3);
+}
+
+:root[data-palette='olive'] .facts {
+  background: rgba(48, 45, 26, 0.45);
+}
+
+:root[data-palette='olive'] .advantage__icon {
+  color: #3f3c24;
+}
+
+:root[data-palette='olive'] .logo--light {
+  color: #f5f1ea;
+}
+
+/* sage meta on the olive section is too soft: sand instead */
+:root[data-palette='olive'] .steps__meta {
+  color: var(--accent-soft);
+}

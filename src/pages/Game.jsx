@@ -1,9 +1,8 @@
-import { findGame, games, placeLabel } from '../data/games.js';
-import { eventType, useCases } from '../data/site.js';
-import { href } from '../router.js';
+import { findGame, games, placeLabel, rental } from '../data/games.js';
+import { eventType } from '../data/site.js';
 import Icon from '../components/Icon.jsx';
-import { Button, Chip, GameMedia, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
-import { CtaBanner, GameGrid, PageHero } from '../components/sections.jsx';
+import { Button, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
+import { CtaBanner, GameGrid } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
 
 /** "Велика Дженга" + accent "Дженга" → ["Велика", "Дженга"]. */
@@ -13,68 +12,53 @@ function splitName(game) {
   return [name, null];
 }
 
-const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ block: 'start' });
+const placeIcon = (p) => (p === 'outdoor' ? 'sun' : p === 'indoor' ? 'home' : 'area');
 
-function Facts({ game }) {
-  const facts = [
-    { icon: 'users', label: 'Гравців', value: game.players },
-    { icon: 'age', label: 'Вік', value: game.age },
-    { icon: 'timer', label: 'Тривалість', value: game.time },
-    { icon: game.place === 'outdoor' ? 'sun' : game.place === 'indoor' ? 'home' : 'area', label: 'Де грати', value: placeLabel[game.place] },
-  ];
-  return (
-    <div className="container">
-      <dl className="facts">
-        {facts.map((f) => (
-          <div className="facts__item" key={f.label}>
-            <dt>
-              <Icon name={f.icon} size={16} /> {f.label}
-            </dt>
-            <dd>{f.value}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  );
-}
-
+/**
+ * Light first screen: white backdrop with a lawn strip along the bottom, text
+ * on the left (label, two-tone name, lead, four facts in a 2×2 grid, one booking
+ * button) and the game photo on the right in a 1554:1402 box, centred on the text.
+ */
 function GameHero({ game }) {
   const [title, accent] = splitName(game);
   const label = game.events.slice(0, 2).map((e) => eventType(e)?.label).join(' · ');
-  const actions = (
-    <>
-      <Button to="/contacts" query={{ game: game.slug }} variant="light">
-        Забронювати цю гру
-      </Button>
-      <Button variant="outline-light" onClick={() => scrollTo('rules')}>
-        Як грати
-      </Button>
-    </>
-  );
-
-  if (game.hero) {
-    return (
-      <PageHero media={game.hero} label={label} title={title} accent={accent} br={false} text={game.lead} actions={actions} className="hero--game">
-        <Facts game={game} />
-      </PageHero>
-    );
-  }
-
-  /* No event photo yet — a product-style hero with the game's tile. */
+  const facts = [
+    { icon: 'users', value: `${game.players} гравців` },
+    { icon: 'wallet', value: rental.price },
+    { icon: 'calendar', value: 'Оренда на добу' },
+    { icon: placeIcon(game.place), value: placeLabel[game.place] },
+  ];
   return (
-    <section className="hero hero--product">
-      <div className="container hero-product">
-        <div className="hero__inner hero__inner--left">
-          <Pill>{label}</Pill>
-          <Heading as="h1" title={title} accent={accent} className="hero__title" />
-          <p className="hero__text">{game.lead}</p>
-          <div className="hero__actions">{actions}</div>
+    <section className="game-hero">
+      <div className="game-hero__bg" aria-hidden="true">
+        <Media photo="lawn-strip" alt="" eager />
+      </div>
+      <div className="container game-hero__grid">
+        <div className="game-hero__copy">
+          <Pill tone="cream">{label}</Pill>
+          <Heading as="h1" title={title} accent={accent} className="game-hero__title" />
+          <p className="game-hero__lead">{game.lead}</p>
+          <ul className="game-hero__facts" role="list">
+            {facts.map((f) => (
+              <li key={f.value}>
+                <Icon name={f.icon} size={16} /> {f.value}
+              </li>
+            ))}
+          </ul>
+          <Button book={game.slug} className="game-hero__cta">
+            Забронювати цю гру
+          </Button>
         </div>
-        <div className="hero-product__stage">
-          <GameMedia game={game} eager />
+        <div className="game-hero__photo">
+          <Media
+            photo={game.hero || game.photo}
+            art={game.art}
+            alt={game.name}
+            position={game.hero ? undefined : game.heroPosition || '50% 75%'}
+            eager
+          />
         </div>
       </div>
-      <Facts game={game} />
     </section>
   );
 }
@@ -83,8 +67,6 @@ export default function Game({ slug }) {
   const game = findGame(slug);
   if (!game) return <NotFound />;
 
-  const aboutMedia = game.gallery[0] || null;
-  const rulesMedia = game.gallery[2] || { photo: game.photo, art: game.art };
   const related = games
     .filter((g) => g.slug !== game.slug)
     .map((g) => ({ g, score: g.tags.filter((t) => game.tags.includes(t)).length }))
@@ -92,106 +74,63 @@ export default function Game({ slug }) {
     .slice(0, 3)
     .map(({ g }) => g);
 
+  // only real facts: the kit sheet, the rules sheet and the shared rental terms; short ones first
   const specs = [
     { icon: 'users', label: 'Кількість гравців', value: game.players },
-    { icon: 'age', label: 'Рекомендований вік', value: game.age },
-    { icon: 'ruler', label: 'Розміри гри', value: game.size },
-    { icon: 'area', label: 'Потрібне місце', value: game.space },
-    { icon: game.place === 'outdoor' ? 'sun' : 'home', label: 'Надворі / у приміщенні', value: placeLabel[game.place] },
-    { icon: 'timer', label: 'Середня тривалість партії', value: game.time },
-    { icon: 'wallet', label: 'Вартість оренди', value: game.price || 'розрахуємо під вашу подію' },
-    { icon: 'truck', label: 'Доставка й встановлення', value: 'Львів та область' },
+    { icon: placeIcon(game.place), label: 'Де грати', value: placeLabel[game.place] },
+    { icon: 'truck', label: 'Отримання', value: rental.delivery },
+    { icon: 'tag', label: 'Застава', value: rental.deposit },
+    { icon: 'calendar', label: 'Термін оренди', value: `${rental.term}. ${rental.returnBy}` },
+    { icon: 'blocks', label: 'Комплектація', value: game.kit.join(', ') },
+    { icon: 'wallet', label: 'Вартість оренди', value: `${rental.price} · ${rental.bundle}` },
+    { icon: 'chat', label: 'Інструктор на події', value: rental.instructor },
   ];
 
   return (
     <>
       <GameHero game={game} />
 
-      {/* ---------------------------------------------------- About */}
+      {/* ---------------------------------------- What it is + rules card */}
       <section className="section section--cream game-about">
         <div className="container game-about__grid">
           <div className="game-about__main">
-            <Heading as="h2" title="Що це" accent="за гра?" className="section-head__title" />
-            {aboutMedia ? (
-              <div className="game-about__media">
-                <Media {...aboutMedia} alt={game.name} />
-              </div>
-            ) : (
-              <p className="game-about__quote">{game.short}</p>
-            )}
-          </div>
-          <div className="game-about__copy">
-            {game.about.map((p) => (
-              <p key={p.slice(0, 24)}>{p}</p>
-            ))}
-            <div className="game-about__chips">
-              <Chip icon="users" tone="soft">{game.players} гравців</Chip>
-              <Chip icon="age" tone="soft">Вік {game.age}</Chip>
-              {game.price ? <Chip icon="wallet" tone="soft">{game.price}</Chip> : null}
+            <Heading as="h2" title="Що це" accent="за гра?" className="game-about__title" />
+            <p className="game-about__lead">{game.short}</p>
+            <div className="game-about__copy">
+              {game.about.map((p) => (
+                <p key={p.slice(0, 24)}>{p}</p>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------- Rules */}
-      <section className="section game-rules" id="rules">
-        <div className="container">
-          <SectionHead label="Як грати" labelTone="cream" title="Правила" accent="за одну хвилину" text="На місці адміністратор покаже все наживо, але ось коротко — щоб знати заздалегідь." />
-          <div className="game-rules__grid">
-            <ol className="rules">
+          <div className="rules-card" id="rules">
+            <Heading as="h3" title="Правила" accent="за одну хвилину" className="rules-card__title" />
+            <p className="rules-card__note">На місці адміністратор покаже все наживо.</p>
+            <ol className="rules-card__list">
               {game.rules.map((r, i) => (
-                <li key={r.title} className="rules__item">
-                  <span className="rules__no">{String(i + 1).padStart(2, '0')}</span>
+                <li key={r.title}>
+                  <span className="rules-card__no">{String(i + 1).padStart(2, '0')}</span>
                   <div>
-                    <h3>{r.title}</h3>
+                    <h4>{r.title}</h4>
                     <p>{r.text}</p>
                   </div>
                 </li>
               ))}
             </ol>
-            <div className="game-rules__media">
-              <Media {...rulesMedia} alt={game.name} />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------------------------------------------- Events */}
-      <section className="section section--cream game-events">
-        <div className="container split-head split-head--top">
-          <SectionHead title="Для яких" accent="подій?" br align="left" text="Де ця гра працює найкраще — з нашого досвіду сотень свят." />
-          <ul className="event-list" role="list">
-            {game.events.map((id) => {
-              const t = eventType(id);
-              const uc = useCases.find((u) => u.id === id || (id === 'kids' && u.id === 'birthday'));
-              return (
-                <li key={id}>
-                  <a className="event-list__item" href={href('/games', { type: id === 'teambuilding' ? 'corporate' : id })}>
-                    <span className="event-list__dot" style={{ background: t?.dot }} aria-hidden="true" />
-                    <span className="event-list__label">{t?.label}</span>
-                    <span className="event-list__note">{uc?.note || 'Спокійна гра для дітей і батьків'}</span>
-                    <Icon name="arrowUpRight" size={18} />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
-
       {/* ---------------------------------------------------- Details */}
-      <section className="section section--dark game-details">
+      <section className="section game-details">
         <div className="container">
-          <SectionHead label="Деталі гри" title="Усе, що варто" accent="знати заздалегідь" br className="section-head--on-dark" />
-          <dl className="specs">
+          <SectionHead label="Деталі гри" labelTone="cream" title="Усе, що варто" accent="знати заздалегідь" br />
+          <dl className="spec-tiles">
             {specs.map((s) => (
-              <div className="specs__row" key={s.label}>
-                <dt>
-                  <span className="specs__icon">
-                    <Icon name={s.icon} size={20} />
-                  </span>
-                  {s.label}
-                </dt>
+              <div className="spec-tiles__item" key={s.label}>
+                <span className="spec-tiles__icon">
+                  <Icon name={s.icon} size={20} />
+                </span>
+                <dt>{s.label}</dt>
                 <dd>{s.value}</dd>
               </div>
             ))}
@@ -199,34 +138,7 @@ export default function Game({ slug }) {
         </div>
       </section>
 
-      {/* ---------------------------------------------------- Gallery */}
-      {game.gallery.length ? (
-        <section className="section game-gallery">
-          <div className="container">
-            <SectionHead label="Галерея" labelTone="cream" title="Гра" accent="на наших подіях" br />
-            <div className="game-gallery__grid">
-              {game.gallery.map((item, i) => (
-                <figure key={i} className="game-gallery__item">
-                  <Media photo={item.photo} position={item.position} alt={item.caption} />
-                  <figcaption>
-                    <Chip dot="#C78460">{item.caption}</Chip>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      <CtaBanner
-        label="Бронювання"
-        title="Хочете цю гру"
-        accent="на своїй події?"
-        text={`Натисніть «Надіслати заявку» — «${game.name}» вже буде обрана у формі. Адміністратор підтвердить наявність на вашу дату.`}
-        query={{ game: game.slug }}
-        media={game.hero || null}
-        secondary={false}
-      />
+      <CtaBanner title="Хочете цю гру" accent="на своїй події?" book={game.slug} tone="cream" />
 
       {/* ---------------------------------------------------- Related */}
       <section className="section game-related">

@@ -7,11 +7,11 @@ import { Button, Logo } from './ui.jsx';
 const isHere = (current, path) => (path === '/' ? current === '/' : current.startsWith(path));
 
 /**
- * Floating header over each page's dark hero: logo, a row of blurred pill
- * links (current page filled with the accent) and a white CTA.
- * Below 1080px the links move into a full-screen panel.
+ * Floating header over each page's light first screen: logo, plain text links
+ * (the current page gets the accent pill) and a brown «Забронювати» that opens
+ * the booking popup. Below 1080px the links move into a full-screen panel.
  */
-export default function Header({ path, bookQuery }) {
+export default function Header({ path, book }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => setOpen(false), [path]);
@@ -25,7 +25,7 @@ export default function Header({ path, bookQuery }) {
   }, [open]);
 
   return (
-    <header className="site-header">
+    <header className="site-header site-header--light">
       <div className="site-header__bar container">
         <a className="site-header__logo" href={href('/')} aria-label="Бавись — на головну">
           <Logo />
@@ -45,7 +45,7 @@ export default function Header({ path, bookQuery }) {
         </nav>
 
         <div className="site-header__actions">
-          <Button to="/contacts" query={bookQuery} variant="nav" className="site-header__cta">
+          <Button book={book} variant="nav" className="site-header__cta">
             Забронювати
           </Button>
           <button
@@ -86,7 +86,7 @@ export default function Header({ path, bookQuery }) {
         </nav>
 
         <div className="mobile-menu__foot">
-          <Button to="/contacts" query={bookQuery} variant="light" full tabIndex={open ? 0 : -1}>
+          <Button book={book} variant="light" full tabIndex={open ? 0 : -1} onClick={() => setOpen(false)}>
             Надіслати заявку
           </Button>
           <a className="mobile-menu__phone" href={company.phoneHref} tabIndex={open ? 0 : -1}>
@@ -99,7 +99,7 @@ export default function Header({ path, bookQuery }) {
 }
 
 /** Phone-only bottom bar that keeps browsing and booking one tap away. */
-export function MobileBar({ path, bookQuery }) {
+export function MobileBar({ path, book }) {
   const onContacts = path.startsWith('/contacts');
   return (
     <div className="mobile-bar" role="navigation" aria-label="Швидкі дії">
@@ -117,7 +117,7 @@ export function MobileBar({ path, bookQuery }) {
           <Button to="/games" variant="outline" disc={false}>
             Ігри
           </Button>
-          <Button to="/contacts" query={bookQuery} variant="primary">
+          <Button book={book} variant="primary">
             Забронювати
           </Button>
         </>

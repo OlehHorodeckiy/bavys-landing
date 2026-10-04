@@ -1,41 +1,44 @@
 import { useState } from 'react';
-import { gallery, galleryCategories } from '../data/gallery.js';
-import { Button } from '../components/ui.jsx';
-import { CtaBanner, FilterBar, GalleryGrid, PageHero } from '../components/sections.jsx';
+import { galleryCategories, homeGallery } from '../data/gallery.js';
+import { Media } from '../components/ui.jsx';
+import { CtaBanner, FilterBar, GalleryBento, PageTitle } from '../components/sections.jsx';
 
+/**
+ * Gallery: a light title with the chips, then the real event photos in the
+ * same full-bleed bento as the home page, no captions. A chip shows the
+ * matching photos in an even grid.
+ */
 export default function Gallery() {
   const [filter, setFilter] = useState('all');
-  const items = filter === 'all' ? gallery : gallery.filter((g) => g.tags.includes(filter));
+  const items = filter === 'all' ? homeGallery : homeGallery.filter((g) => g.tags.includes(filter));
 
   return (
     <>
-      <PageHero
-        media={{ photo: 'event-jenga', position: '85% 60%' }}
-        label="Галерея"
-        title="Живі моменти"
-        accent="з наших свят"
-        text="Справжні фото ігор і гостей на весіллях, корпоративах і фестивалях. Без постановки — так виглядає свято з Бавись."
-        actions={
-          <Button to="/games" variant="light">
-            Обрати гру
-          </Button>
-        }
-      />
+      <PageTitle title="Живі моменти" accent="з наших свят">
+        <FilterBar items={galleryCategories} value={filter} onChange={setFilter} label="Фільтр фото" className="filter-bar--chips" />
+      </PageTitle>
 
-      <section className="section section--cream gallery-page">
-        <div className="container">
-          <FilterBar items={galleryCategories} value={filter} onChange={setFilter} label="Фільтр фото" className="filter-bar--center" />
-        </div>
-        <div className="container-wide">
-          {items.length ? (
-            <GalleryGrid items={items} layout={filter === 'all' ? 'editorial' : 'uniform'} moreTile={filter === 'all'} />
-          ) : (
-            <p className="empty-state">Фото з цієї категорії з’являться зовсім скоро. А поки — зазирніть до нашого Instagram.</p>
-          )}
-        </div>
+      <section className="gallery-page">
+        {filter === 'all' ? (
+          <GalleryBento items={items} />
+        ) : items.length ? (
+          <div className="container">
+            <ul className="photo-grid" role="list">
+              {items.map((it) => (
+                <li key={it.photo}>
+                  <Media photo={it.photo} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="container">
+            <p className="empty-state">Фото з цієї категорії з’являться зовсім скоро.</p>
+          </div>
+        )}
       </section>
 
-      <CtaBanner tone="white" title="Хочете такі ж" accent="фото зі свого свята?" />
+      <CtaBanner tone="white" title="Хочете такі ж фото" accent="зі свого свята?" />
     </>
   );
 }

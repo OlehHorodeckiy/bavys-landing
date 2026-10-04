@@ -1,72 +1,61 @@
+import { useRef } from 'react';
 import { games } from '../data/games.js';
-import { posts } from '../data/posts.js';
-import { gallery } from '../data/gallery.js';
-import { eventTypes } from '../data/site.js';
-import { Button, Chip, GameMedia, MotifTag, Rule, SectionHead } from '../components/ui.jsx';
+import { inventory } from '../data/inventory.js';
+import { useFanSpread } from '../components/motion.jsx';
+import { homeGallery } from '../data/gallery.js';
+import { Button, Chip, GameMedia, Rule, SectionHead } from '../components/ui.jsx';
+import Icon from '../components/Icon.jsx';
+import { href } from '../router.js';
 import {
-  AdvantagesSection,
   CtaBanner,
-  GalleryGrid,
+  GalleryBento,
   GameGrid,
   GameStrip,
   PageHero,
-  PostCard,
   StatsRow,
-  StepsSection,
+  StepsTiles,
   UseCasesSection,
 } from '../components/sections.jsx';
 
 const featured = games.filter((g) => g.featured);
-const strip = ['velyka-dzhenga', 'chotyry-v-riad', 'kubb', 'kornkhol', 'khrestyky-nulyky', 'kiltsekyd', 'kroket', 'mikado-xl'].map((s) =>
-  games.find((g) => g.slug === s),
-);
-const ticker = ['Весілля', 'Корпоративи', 'Дні народження', 'Фестивалі', 'Тімбілдинги', 'Сімейні свята', 'Дитячі свята'];
 
 function HomeHero() {
   return (
     <PageHero
       size="home"
       align="left"
-      media={{ photo: 'event-jenga', position: '68% 50%' }}
-      title="Дерев’яні ігри"
-      accent="для вашої події"
-      text="Оренда великих дерев’яних ігор для весіль, корпоративів і свят у Львові та області. Привеземо, встановимо й покажемо, як грати."
+      reveal
+      media={{ photo: 'lawn-white' }}
+      title="Великі дерев’яні ігри"
+      accent="для подій у Львові"
+      text={'Привозимо Дженгу, корнхол та інші дерев’яні ігри на весілля, дні народження, корпоративи й сімейні свята.'}
       actions={
         <>
-          <Button to="/games" variant="light">
-            Обрати гру
-          </Button>
-          <Button to="/contacts" variant="outline-light">
-            Забронювати ігри
-          </Button>
+          <Button book>Забронювати ігри</Button>
         </>
       }
     >
-      <GameStrip games={strip} />
-      <div className="hero-ticker" aria-hidden="true">
-        <div className="hero-ticker__row">
-          {[...ticker, ...ticker].map((t, i) => (
-            <span key={i}>{t}</span>
-          ))}
-        </div>
-      </div>
+      <GameStrip games={inventory} />
     </PageHero>
   );
 }
 
 function Intro() {
   const [a, b, c] = [games[1], games[0], games[2]];
+  const fan = useRef(null);
+  useFanSpread(fan);
   return (
     <section className="section section--cream intro-section">
       <div className="container">
         <SectionHead
+          reveal
           label="Про Бавись"
           title="Великі ігри,"
           accent="справжні емоції"
           br
           text="Ми збираємо колекцію дерев’яних ігор, у які хочеться грати всім — від дітей до бабусь, від колег до нових родичів. І привозимо їх туди, де ви святкуєте."
         />
-        <div className="fan" aria-hidden="true">
+        <div className="fan rv" data-reveal="80" style={{ '--rv-delay': '0.6s' }} ref={fan} aria-hidden="true">
           <div className="fan__card fan__card--left">
             <GameMedia game={a} />
             <Chip dot="#E0A15E">Для дітей</Chip>
@@ -81,7 +70,7 @@ function Intro() {
           </div>
         </div>
         <Rule />
-        <StatsRow />
+        <StatsRow reveal />
         <div className="section-actions">
           <Button to="/about">Більше про нас</Button>
         </div>
@@ -94,29 +83,17 @@ function GamesPreview() {
   return (
     <section className="section games-preview">
       <div className="container">
-        <div className="split-head">
-          <SectionHead
-            label="Каталог"
-            labelTone="cream"
-            title="Ігри, які"
-            accent="збирають гостей"
-            br
-            align="left"
-            text="Від компактних настільних до гігантських ігор на газон — кожну привеземо підготовленою й чистою."
-          />
-          <div className="motif-tags">
-            {eventTypes.slice(0, 4).map((t) => (
-              <MotifTag key={t.id}>{t.label}</MotifTag>
-            ))}
-          </div>
-        </div>
+        <SectionHead
+          label="Каталог"
+          labelTone="cream"
+          title="Ігри, які"
+          accent="збирають гостей"
+          br
+          text="Від компактних настільних до гігантських ігор на газон — кожну привеземо підготовленою й чистою."
+        />
         <GameGrid games={featured} />
-        <Rule />
-        <div className="section-actions section-actions--split">
+        <div className="section-actions rv" data-reveal="90" style={{ '--rv-delay': '0.2s' }}>
           <Button to="/games">Переглянути всі ігри</Button>
-          <p className="section-actions__note">
-            {games.length} ігор у колекції · нові щосезону
-          </p>
         </div>
       </div>
     </section>
@@ -127,36 +104,17 @@ function GalleryPreview() {
   return (
     <section className="section section--cream gallery-preview">
       <div className="container">
-        <SectionHead label="Галерея" title="Моменти" accent="з наших подій" br />
+        <SectionHead reveal label="Галерея" title="Моменти" accent="з наших подій" br />
       </div>
-      <div className="container-wide">
-        <GalleryGrid items={gallery} />
-      </div>
-      <div className="container section-actions">
-        <Button to="/gallery">Дивитися галерею</Button>
-      </div>
-    </section>
-  );
-}
-
-function BlogPreview() {
-  const [first, second, ...rest] = posts;
-  return (
-    <section className="section blog-preview">
+      <GalleryBento items={homeGallery} className="rv" data-reveal="90" style={{ '--rv-delay': '0.4s' }} />
       <div className="container">
-        <SectionHead label="Блог" labelTone="cream" title="Історії, поради" accent="та новини" br />
-        <div className="post-grid post-grid--rows">
-          <PostCard post={first} layout="row" />
-          <PostCard post={second} layout="row" />
-        </div>
-        <div className="post-grid post-grid--cols">
-          {rest.slice(0, 3).map((p) => (
-            <PostCard key={p.slug} post={p} />
-          ))}
-        </div>
-        <div className="section-actions">
-          <Button to="/blog">Читати всі статті</Button>
-        </div>
+        <p className="gallery-preview__more rv" data-reveal="90" style={{ '--rv-delay': '0.2s' }}>
+          <a href={href('/gallery')}>
+            Дивитися всю галерею <Icon name="arrowUpRight" size={16} />
+          </a>
+        </p>
+        {/* the booking banner closes the gallery section */}
+        <CtaBanner bare />
       </div>
     </section>
   );
@@ -168,12 +126,9 @@ export default function Home() {
       <HomeHero />
       <Intro />
       <GamesPreview />
-      <StepsSection />
-      <AdvantagesSection text="Ми не просто здаємо ігри в оренду — ми відповідаємо за те, щоб на вашому святі вони працювали." />
+      <StepsTiles />
       <UseCasesSection />
       <GalleryPreview />
-      <BlogPreview />
-      <CtaBanner label="Бронювання" />
     </>
   );
 }

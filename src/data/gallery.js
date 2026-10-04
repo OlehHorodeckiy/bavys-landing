@@ -24,3 +24,20 @@ export const gallery = [
   { photo: 'event-jenga', position: '100% 100%', tags: ['events', 'games', 'corporate'], caption: 'Момент, коли вежа падає' },
   { photo: 'lawn-tower', position: '50% 62%', tags: ['outdoor', 'games', 'corporate'], caption: 'Ігрова зона просто неба' },
 ];
+
+/**
+ * Real event photos — the Calmlyss-style bento (5 columns × 3 rows, full
+ * bleed) on the home page and the gallery page; `tags` drive the gallery chips. Order = tile order: tall, square, panorama, wide, tall, square,
+ * wide, square, square. Each photo is pre-cropped to its tile.
+ */
+export const homeGallery = [
+  { photo: 'gal-jenga-guests-day', tags: ['events', 'games', 'outdoor'] },
+  { photo: 'gal-cornhole-evening', tags: ['games', 'outdoor', 'weddings'] },
+  { photo: 'gal-park-connect4-jenga', tags: ['games', 'outdoor'] },
+  { photo: 'gal-guests-tent', tags: ['events', 'corporate', 'outdoor'] },
+  { photo: 'gal-jenga-guests-night', tags: ['events', 'weddings', 'games'] },
+  { photo: 'gal-galaktyka-evening', tags: ['games', 'outdoor'] },
+  { photo: 'gal-festival-table', tags: ['events', 'corporate'] },
+  { photo: 'gal-v-odni-vorota-play', tags: ['games', 'corporate'] },
+  { photo: 'gal-connect4-evening', tags: ['games', 'outdoor'] },
+];

@@ -2,11 +2,18 @@ import { company, nav } from '../data/site.js';
 import { games } from '../data/games.js';
 import { href } from '../router.js';
 import Icon from './Icon.jsx';
-import { Button, IconButton, Logo } from './ui.jsx';
+import { Button, IconButton, Logo, Media } from './ui.jsx';
+import logoSvg from '../../assets/Group.svg?raw';
+
+/** The big «Бавись» at the bottom: glass letters (frosted fill + light edge) over the photo. */
+const GlassWordmark = () => <span className="glass-wordmark" dangerouslySetInnerHTML={{ __html: logoSvg }} />;
 
 export default function Footer() {
   return (
     <footer className="site-footer">
+      <div className="site-footer__bg" aria-hidden="true">
+        <Media photo="footer-garden" alt="" />
+      </div>
       <div className="container site-footer__grid">
         <div className="site-footer__brand">
           <Logo className="logo--light" />
@@ -57,14 +64,14 @@ export default function Footer() {
           <p>
             <Icon name="clock" size={18} /> {company.hours.map((h) => `${h.label} ${h.value}`).join(' · ')}
           </p>
-          <Button to="/contacts" variant="light" className="site-footer__cta">
+          <Button book variant="light" className="site-footer__cta">
             Надіслати заявку
           </Button>
         </div>
       </div>
 
       <div className="site-footer__wordmark container" aria-hidden="true">
-        <Logo className="logo--wordmark" />
+        <GlassWordmark />
       </div>
 
       <div className="site-footer__bottom">

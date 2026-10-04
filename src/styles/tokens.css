@@ -23,17 +23,21 @@
   --on-dark: rgba(255, 255, 255, 0.78);
   --on-dark-line: rgba(255, 255, 255, 0.14);
 
-  /* type */
+  /* type
+   * Every font size and line height lands on an even whole pixel at any
+   * viewport: fluid sizes are rounded to 2px steps, and line heights are
+   * ratios (--lh) that base.css rounds to 2px per element. Fixed sizes are
+   * even rems (12, 14, 16, 18, 20, 22, 24 …) — never 11, 13, 15, 17, 19. */
   --font: 'Comfortaa', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --fs-display: clamp(2.5rem, 1.2rem + 4.2vw, 4.5rem);   /* 40 → 72  hero */
-  --fs-h1: clamp(2.25rem, 1.3rem + 3vw, 3.75rem);        /* 36 → 60  page titles */
-  --fs-h2: clamp(1.875rem, 1.25rem + 2vw, 3rem);         /* 30 → 48  sections */
-  --fs-h3: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);    /* 22 → 28  sub-sections */
-  --fs-h4: clamp(1.25rem, 1.15rem + 0.35vw, 1.5rem);     /* 20 → 24  card titles */
-  --fs-lead: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /* 17 → 19 */
-  --fs-body: 1rem;                                        /* 16 */
-  --fs-sm: 0.875rem;                                      /* 14 */
-  --fs-xs: 0.75rem;                                       /* 12  labels */
+  --fs-display: round(clamp(2rem, 0.5rem + 5.55vw, 5.5rem), 2px);     /* 32 → 88  home hero, 88 at 1440 */
+  --fs-h1: round(clamp(2.25rem, 1.3rem + 3vw, 3.75rem), 2px);         /* 36 → 60  page titles */
+  --fs-h2: round(clamp(1.875rem, 1.25rem + 2vw, 3rem), 2px);          /* 30 → 48  sections */
+  --fs-h3: round(clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem), 2px);     /* 22 → 28  sub-sections */
+  --fs-h4: round(clamp(1.25rem, 1.15rem + 0.35vw, 1.5rem), 2px);      /* 20 → 24  card titles */
+  --fs-lead: round(clamp(1.125rem, 1rem + 0.25vw, 1.25rem), 2px);     /* 18 → 20 */
+  --fs-body: 1rem;                                                    /* 16 */
+  --fs-sm: 0.875rem;                                                  /* 14 */
+  --fs-xs: 0.75rem;                                                   /* 12  labels */
   --lh-heading: 1.15;
   --lh-body: 1.7;
   --w-light: 300;
@@ -51,8 +55,8 @@
   --s-8: 3rem;
   --s-9: 4rem;
   --s-10: 5rem;
-  --section: clamp(4rem, 2.6rem + 4.6vw, 7rem);  /* 64 → 112 */
-  --gutter: clamp(1.25rem, 0.4rem + 3.6vw, 5rem); /* 20 → 80 */
+  --section: round(clamp(4rem, 2.6rem + 3vw, 5rem), 2px);    /* 64 → 80, 80 from 1280 up (Calmlyss) */
+  --gutter: round(clamp(1.25rem, 0.4rem + 3.6vw, 5rem), 2px); /* 20 → 80 */
   --container: 80rem;                             /* 1280 */
   --header-h: 6rem;
 
@@ -62,4 +66,9 @@
   --r-lg: 1.5rem;
   --r-pill: 100rem;
   --shadow: 0 30px 60px rgba(43, 16, 3, 0.14);
+
+  /* motion — GSAP eases used by the Calmlyss reference */
+  --ease-sine-out: cubic-bezier(0.61, 1, 0.88, 1);
+  --ease-power3-out: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-power1-out: cubic-bezier(0.5, 1, 0.89, 1);
 }

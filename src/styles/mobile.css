@@ -1,0 +1,418 @@
+/*
+ * Phones (≤767px), after the Figma frames in «Бавись — мобілка» (iPhone 390).
+ * Loaded last, so these rules win over the page styles.
+ *
+ * One spacing system on every screen: 20px sides (column 350), sections 64
+ * top and bottom; inside: pill → title 16, title → text 16, text → text 16,
+ * text → block 40, card → card 24, anything → button 40. Buttons always run
+ * the full column width, the arrow disc pinned to the right edge.
+ */
+
+/* the "show more" row exists only on phones */
+.catalog__more {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* -------------------------------------------------------------- rhythm */
+  .pill {
+    margin-bottom: 1rem;
+  }
+
+  .section-head__text,
+  .page-title__text {
+    margin-top: 1rem;
+  }
+
+  .section-head,
+  .games-preview .section-head,
+  .gallery-preview .section-head,
+  .split-head,
+  .split-head--center {
+    margin-bottom: 2.5rem;
+  }
+
+  .split-head {
+    gap: 1rem;
+  }
+
+  .section-actions {
+    margin-top: 2.5rem;
+  }
+
+  /* a text link under content: 32 */
+  .gallery-preview .section-actions {
+    margin-top: 2rem;
+  }
+
+  /* title → content 40 */
+  .steps-tiles__list,
+  .uc-rows__list {
+    margin-top: 2.5rem;
+  }
+
+  .gallery-preview__more {
+    --lh: 1.5;
+  }
+
+  /* home intro: no rule between the fan and the numbers, number → title → text 16 */
+  .intro-section .rule {
+    display: none;
+  }
+
+  .intro-section .stats {
+    margin-top: 2.125rem;
+  }
+
+  .stats__title {
+    margin-top: 1.25rem;
+  }
+
+  .stats__text {
+    margin-top: 0.75rem;
+  }
+
+  /* ------------------------------------------------------ buttons, full width */
+  .hero--home .hero__actions,
+  .cta-banner__actions,
+  .not-found__actions,
+  .article__back {
+    align-self: stretch;
+  }
+
+  .hero--home .hero__actions .btn,
+  .game-hero__cta,
+  .cta-banner__actions .btn,
+  .site-footer__cta,
+  .article__back .btn,
+  .not-found__actions .btn,
+  .game-related .split-head .btn {
+    width: 100%;
+  }
+
+  .hero--home .hero__actions .btn--disc,
+  .game-hero__cta.btn--disc,
+  .cta-banner__actions .btn--disc,
+  .site-footer__cta.btn--disc,
+  .not-found__actions .btn--disc {
+    justify-content: space-between;
+  }
+
+  .article__back .btn,
+  .not-found__actions .btn:not(.btn--disc),
+  .game-related .split-head .btn {
+    justify-content: center;
+  }
+
+  /* ------------------------------------------------- home: first screen
+     text on top, the Jenga tower big and centred on the lawn under it
+     (photo hero-tower-m), the arch strip over the grass 40 from the bottom */
+  .hero--home {
+    padding-top: 7.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero--home .hero__bg img {
+    object-position: 50% 100%;
+  }
+
+  .hero--home .hero__title {
+    --lh: 1.25;
+  }
+
+  .hero--home .hero__text {
+    margin-top: 1rem;
+  }
+
+  .hero--home .hero__actions {
+    margin-top: 1.5rem;
+  }
+
+  .hero--home .hero-strip {
+    margin-top: 30.25rem;
+  }
+
+  /* --------------------------------------------- page titles and chips */
+  .page-title__inner > .pill {
+    margin-bottom: 1rem;
+  }
+
+  .page-title .filter-bar--chips {
+    align-self: stretch;
+    gap: 0.5rem;
+  }
+
+  /* ------------------------------------------------- booking banner
+     350×316 card: white with the lawn along the bottom (no games), title
+     from 70, button 24 under it across the card (20 sides) */
+  .cta-banner {
+    min-height: 0;
+    background: #fefefe url('../../assets/photos/lawn-strip.webp') 50% 50% / cover no-repeat;
+  }
+
+  .cta-banner__photo {
+    display: none;
+  }
+
+  .cta-banner__inner {
+    padding: 4.375rem 0 5.875rem;
+  }
+
+  .cta-banner__actions {
+    padding-inline: 1.25rem;
+  }
+
+  .cta-banner__title {
+    font-size: 1.75rem;
+    --lh: 1.36;
+  }
+
+  /* ------------------------------------------------------------- catalog
+     first 8 cards, then a primary full-width «Показати ще ігри» 40 under them */
+  .catalog:not(.is-expanded) .game-grid > li:nth-child(n + 9) {
+    display: none;
+  }
+
+  .catalog__more {
+    display: block;
+    margin-top: 2.5rem;
+  }
+
+  /* chips → cards 40; the button → the banner card 64 (the banner section gives it) */
+  .section.catalog {
+    padding-top: 2.5rem;
+    padding-bottom: 0;
+  }
+
+  /* ---------------------------------------------------------- game page
+     cream first screen without the lawn; the photo in its own proportions
+     ends 64 above «Що це за гра?» */
+  .game-hero {
+    padding-top: 7.5rem;
+    padding-bottom: 0;
+    background: var(--bg);
+  }
+
+  .game-hero__bg {
+    display: none;
+  }
+
+  .game-hero .pill {
+    background: var(--white);
+  }
+
+  .game-hero__title {
+    margin-top: 0;
+  }
+
+  .game-hero__lead {
+    margin-top: 1rem;
+  }
+
+  .game-hero__facts {
+    margin-top: 2.5rem;
+  }
+
+  .game-hero__cta {
+    margin-top: 2.5rem;
+  }
+
+  .game-about__lead {
+    margin-top: 2.5rem;
+  }
+
+  .game-about__copy {
+    margin-top: 1rem;
+  }
+
+  .spec-tiles {
+    margin-top: 2.5rem;
+  }
+
+  .game-hero__grid {
+    gap: 2.5rem;
+  }
+
+  /* «Інші ігри»: title, the cards 40 under it, «Весь каталог» 40 under them */
+  .game-related .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-related .split-head {
+    display: contents;
+  }
+
+  .game-related .game-grid {
+    order: 1;
+    margin-top: 2.5rem;
+  }
+
+  .game-related .split-head .btn {
+    order: 2;
+    margin-top: 2.5rem;
+  }
+
+  /* ---------------------------------------------------------------- blog
+     title → chips 40, chips → the first story 40, stories 24 apart */
+  .section.blog-page {
+    padding-top: 2.5rem;
+  }
+
+  .blog-layout {
+    gap: 2.5rem;
+  }
+
+  /* ------------------------------------------------------------ gallery
+     bento with 20 margins: columns 169 + 12 + 169, rows 190 */
+  .gallery-page .bento {
+    --gap: 0.75rem;
+    grid-auto-rows: 11.875rem;
+    margin-inline: var(--gutter);
+  }
+
+  /* --------------------------------------------------------------- about
+     intro: title → text 24, text → photos 40, photos → section end 64;
+     story: logo card 350×352, 40 to the pill, pill → title → text 16, facts 40 */
+  .about-intro {
+    padding-bottom: 4rem;
+  }
+
+  .about-intro .page-title__text {
+    margin-top: 1.5rem;
+  }
+
+  .about-intro__photos {
+    margin-top: 2.5rem;
+  }
+
+  .about-story__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 0;
+  }
+
+  .about-story__title {
+    margin-top: 0;
+  }
+
+  .about-story__copy > p:not(.pill) {
+    margin-top: 1rem;
+  }
+
+  .service-tiles {
+    margin-top: 2.5rem;
+  }
+
+  .about-facts {
+    gap: 0.75rem;
+  }
+
+  .about-facts li {
+    width: 100%;
+    min-height: 6.25rem;
+  }
+
+  /* ------------------------------------------------------------- contacts
+     title → form card 40 (card 350, inside 24 / 20, fields 310), card → list 40,
+     socials → quick links 32 */
+  .section.contacts {
+    padding-top: 2.5rem;
+  }
+
+  .contacts__grid {
+    gap: 2.5rem;
+  }
+
+  .contacts__info {
+    padding-top: 0;
+  }
+
+  .contacts__form {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .quick-links {
+    margin-top: 2rem;
+  }
+
+  /* ------------------------------------------------------------------ 404 */
+  .not-found {
+    padding-bottom: 10.75rem;
+  }
+
+  .not-found__actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* --------------------------------------------------------------- footer
+     the phone photo under a dark-green wash: 60% down to 76%, clear at the bottom */
+  .site-footer__bg::after {
+    background: linear-gradient(180deg, rgba(20, 29, 14, 0.6) 0%, rgba(20, 29, 14, 0.6) 76%, rgba(20, 29, 14, 0) 100%);
+  }
+
+  /* the big «Бавись» 16 under the button and 16 above the bottom line */
+  .site-footer__wordmark {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* --------------------------------------------------------- booking popup
+     a bottom sheet: full width, 32 top corners, grabber, 20 sides */
+  .modal {
+    place-items: end stretch;
+    padding: 2.125rem 0 0;
+  }
+
+  .modal__card {
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 1.75rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
+    border-radius: 2rem 2rem 0 0;
+    animation-name: sheet-rise;
+  }
+
+  .modal__card::before {
+    content: '';
+    position: absolute;
+    top: 0.625rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 0.125rem;
+    background: var(--stroke);
+    transform: translateX(-50%);
+  }
+
+  .modal__close {
+    top: 1.625rem;
+    right: 1.25rem;
+  }
+
+  .modal .booking-form__title {
+    padding-right: 3rem;
+    font-size: 1.75rem;
+    --lh: 1.29;
+    white-space: nowrap;
+  }
+
+  .modal .booking-form__head {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal .booking-form__head p {
+    margin-top: 0.75rem;
+  }
+
+  .booking-form .field textarea {
+    min-height: 6rem;
+  }
+}
+
+@keyframes sheet-rise {
+  from {
+    transform: translateY(100%);
+  }
+}

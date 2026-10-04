@@ -1,0 +1,613 @@
+/* Design lab — alternatives for the home "Для яких подій" section.
+   All sizes land on even pixels at 1440 (container 1280). */
+
+.lab {
+  background: var(--white);
+}
+
+.lab__label {
+  margin: 0;
+  padding: 1.5rem 5rem;
+  background: var(--deep);
+  color: var(--white);
+  font-size: 1.25rem;
+  font-weight: var(--w-bold);
+}
+
+/* ------------------------------------------------ 1. list + changing photo */
+
+.uc-split__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 35rem) minmax(0, 1fr); /* 560 + 80 + 640 */
+  gap: 5rem;
+  align-items: stretch;
+}
+
+.uc-split__list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uc-split__row {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  text-align: left;
+  transition: background-color 0.3s var(--ease-sine-out);
+}
+
+.uc-split__row:hover,
+.uc-split__row.is-active {
+  background: var(--bg);
+}
+
+.uc-split__no {
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--w-bold);
+}
+
+.uc-split__title {
+  display: block;
+  color: var(--deep);
+  font-size: 1.375rem;
+  font-weight: var(--w-bold);
+}
+
+.uc-split__row.is-active .uc-split__title {
+  color: var(--primary);
+}
+
+.uc-split__note {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+
+.uc-split__count {
+  color: var(--primary);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+.uc-split__photo {
+  position: relative;
+  display: block;
+  min-height: 30rem;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
+
+.uc-split__photo .media {
+  position: absolute;
+  inset: 0;
+}
+
+.uc-split__card {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.uc-split__card-label {
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.uc-split__card-games {
+  grid-column: 1;
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+}
+
+.uc-split__card-go {
+  display: grid;
+  grid-row: 1 / 3;
+  grid-column: 2;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--white);
+}
+
+/* ------------------------------------------------------- 2. photo tiles */
+
+.uc-tiles__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 × 408, gap 28 */
+  gap: 1.75rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uc-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 408 / 320;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  color: var(--white);
+}
+
+.uc-tile .media img {
+  transition: transform 0.6s var(--ease-sine-out);
+}
+
+.uc-tile:hover .media img {
+  transform: scale(1.05);
+}
+
+.uc-tile__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(30, 10, 2, 0) 35%, rgba(30, 10, 2, 0.8) 100%);
+}
+
+.uc-tile__count {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--deep);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+}
+
+.uc-tile__body {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.uc-tile__title {
+  font-size: var(--fs-h4);
+  font-weight: var(--w-bold);
+  --lh: 1.15;
+}
+
+.uc-tile__note {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 900px) {
+  .uc-split__grid {
+    grid-template-columns: 1fr;
+    gap: var(--s-7);
+  }
+
+  .uc-split__photo {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .uc-tiles__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .uc-tiles__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------- steps: "Як це працює" as cards */
+
+/* 4 × 302 + 3 × 24 = 1280; white cards on the dark section or on cream */
+.step-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: var(--r-lg);
+  background: var(--white);
+  transition:
+    transform 0.4s var(--ease-sine-out),
+    box-shadow 0.4s var(--ease-sine-out);
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.step-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.step-card__no {
+  color: var(--accent);
+  font-size: 3rem;
+  font-weight: var(--w-light);
+  --lh: 1;
+}
+
+.step-card__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  color: var(--primary);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+  white-space: nowrap;
+}
+
+/* .step-card prefix: beats the white heading colour of dark sections */
+.step-card .step-card__title {
+  margin-top: 2rem;
+  color: var(--deep);
+  font-size: var(--fs-h4);
+}
+
+.step-card .step-card__title .accent {
+  color: var(--primary);
+}
+
+.step-card .step-card__text {
+  margin: 0.75rem 0 2rem;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+
+/* full-width button pinned to the bottom of the card */
+.step-card__btn {
+  align-self: stretch;
+  margin-top: auto;
+}
+
+@media (max-width: 1100px) {
+  .step-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .step-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------ steps2 · A: timeline on cream (4 × 302 + 3 × 24) */
+.steps-line__list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the line runs through the centres of the dots */
+.steps-line__list::before {
+  content: '';
+  position: absolute;
+  top: 1.75rem;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: var(--stroke);
+}
+
+.steps-line__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.steps-line__dot {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 1.125rem;
+  font-weight: var(--w-bold);
+}
+
+.steps-line__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 2rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--primary);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+}
+
+.steps-line__title {
+  margin-top: 1.25rem;
+  color: var(--deep);
+  font-size: var(--fs-h4);
+}
+
+.steps-line__title .accent {
+  color: var(--primary);
+}
+
+.steps-line__text {
+  margin: 0.75rem 0 0;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+
+.steps-line__actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 4rem;
+}
+
+/* ------------------------- steps2 · B: split on white (496 + 80 + 704 = 1280) */
+.steps-split__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 31rem) minmax(0, 1fr);
+  gap: 5rem;
+  align-items: start;
+}
+
+.steps-split__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.steps-split__photo {
+  position: relative;
+  margin-top: 3rem;
+  aspect-ratio: 496 / 336;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
+
+.steps-split__photo .media {
+  position: absolute;
+  inset: 0;
+}
+
+.steps-split__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps-split__item {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 2rem 0;
+  border-top: 1px solid var(--stroke);
+}
+
+.steps-split__item:last-child {
+  border-bottom: 1px solid var(--stroke);
+}
+
+.steps-split__no {
+  color: var(--accent);
+  font-size: 4.5rem;
+  font-weight: var(--w-light);
+  --lh: 1;
+}
+
+.steps-split__title {
+  color: var(--deep);
+  font-size: var(--fs-h3);
+}
+
+.steps-split__title .accent {
+  color: var(--primary);
+}
+
+.steps-split__text {
+  margin: 0.5rem 0 0;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.steps-split__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  color: var(--primary);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+  white-space: nowrap;
+}
+
+/* -------------------- steps2 · C: photo cards on dark (4 × 302 + 3 × 24, 302 × 440) */
+.steps-photo__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps-photo__card {
+  position: relative;
+  aspect-ratio: 302 / 440;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  color: var(--white);
+}
+
+.steps-photo__card .media {
+  position: absolute;
+  inset: 0;
+}
+
+.steps-photo__card .media img {
+  transition: transform 0.6s var(--ease-power1-out);
+}
+
+.steps-photo__card:hover .media img {
+  transform: scale(1.1);
+}
+
+.steps-photo__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(30, 10, 2, 0.1) 30%, rgba(30, 10, 2, 0.88) 100%);
+}
+
+.steps-photo__no {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+}
+
+.steps-photo__time {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  font-size: var(--fs-xs);
+  font-weight: var(--w-bold);
+}
+
+.steps-photo__body {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+}
+
+.steps-photo__card .steps-photo__title {
+  color: var(--white);
+  font-size: var(--fs-h4);
+}
+
+.steps-photo__card .steps-photo__title .accent {
+  color: var(--accent-soft);
+}
+
+.steps-photo__text {
+  margin: 0.5rem 0 0;
+  color: var(--on-dark);
+  font-size: var(--fs-sm);
+}
+
+.steps-photo__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+@media (max-width: 1100px) {
+  .steps-line__list,
+  .steps-photo__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 3rem;
+  }
+
+  .steps-line__list::before {
+    display: none;
+  }
+
+  .steps-split__grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .steps-line__list,
+  .steps-photo__list {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-split__item {
+    grid-template-columns: 4rem minmax(0, 1fr);
+  }
+
+  .steps-split__no {
+    font-size: 3rem;
+  }
+
+  .steps-split__time {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0;
+  }
+}
