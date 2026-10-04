@@ -2,7 +2,7 @@ import { findGame, games, placeLabel, rental } from '../data/games.js';
 import { eventType } from '../data/site.js';
 import Icon from '../components/Icon.jsx';
 import { Button, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
-import { CtaBanner, GameGrid } from '../components/sections.jsx';
+import { CtaBanner, FaqSection, GameGrid } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
 
 /** "Велика Дженга" + accent "Дженга" → ["Велика", "Дженга"]. */
@@ -137,6 +137,8 @@ export default function Game({ slug }) {
           </dl>
         </div>
       </section>
+
+      <FaqSection book={game.slug} />
 
       <CtaBanner title="Хочете цю гру" accent="на своїй події?" book={game.slug} tone="cream" />
 

@@ -2,10 +2,12 @@
  * Reusable page sections and cards. Each maps to a pattern in the reference
  * (Calmlyss) and is reused across pages rather than rebuilt per page.
  */
+import { useId, useState } from 'react';
 import { company, eventType, stats as defaultStats, steps as defaultSteps, advantages as defaultAdvantages, useCases as defaultUseCases } from '../data/site.js';
 import { findGame, games as allGames } from '../data/games.js';
 import { CountUp } from './motion.jsx';
 import { blogCategory } from '../data/posts.js';
+import { faq as defaultFaq } from '../data/faq.js';
 import { href } from '../router.js';
 import Icon from './Icon.jsx';
 import { Button, Chip, GameMedia, Heading, Media, Pill, SectionHead } from './ui.jsx';
@@ -460,5 +462,58 @@ export function FilterBar({ items, value, onChange, label, className = '' }) {
         </button>
       ))}
     </div>
+  );
+}
+
+/* ---------------------------------------------------------- FAQ */
+
+/**
+ * «Часті питання»: head + booking button + phone on the left, the accordion on
+ * the right (on phones: head, list, then the button). The first answer starts
+ * open; every answer is in the HTML for search engines, collapsed ones are hidden.
+ */
+export function FaqSection({ items = defaultFaq, book = true, className = '' }) {
+  const [open, setOpen] = useState(0);
+  const uid = useId();
+  return (
+    <section className={`section faq-section ${className}`}>
+      <div className="container faq">
+        <div className="faq__head">
+          <Pill tone="cream" className="rv" data-reveal="90">
+            Питання й відповіді
+          </Pill>
+          <Heading as="h2" title="Часті" accent="питання" br reveal className="faq__title" />
+          <p className="faq__text rv" data-reveal="90" style={{ '--rv-delay': '0.4s' }}>
+            Не знайшли відповіді? Зателефонуйте або залиште заявку: адміністратор зв’яжеться з вами протягом доби.
+          </p>
+        </div>
+        <ul className="faq__list" role="list">
+          {items.map((it, i) => {
+            const isOpen = open === i;
+            return (
+              <li key={it.q} className={`faq__item ${isOpen ? 'is-open' : ''}`}>
+                <h3 className="faq__q">
+                  <button type="button" aria-expanded={isOpen} aria-controls={`${uid}-${i}`} onClick={() => setOpen(isOpen ? -1 : i)}>
+                    <span>{it.q}</span>
+                    <span className="faq__toggle" aria-hidden="true" />
+                  </button>
+                </h3>
+                <div className="faq__a" id={`${uid}-${i}`} role="region" aria-hidden={!isOpen}>
+                  <div>
+                    <p>{it.a}</p>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="faq__actions">
+          <Button book={book}>Поставити питання</Button>
+          <a className="faq__phone" href={company.phoneHref}>
+            <Icon name="phone" size={18} /> {company.phone}
+          </a>
+        </div>
+      </div>
+    </section>
   );
 }

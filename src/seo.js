@@ -11,6 +11,7 @@ import { company } from './data/site.js';
 import { findGame, games, placeLabel, rental } from './data/games.js';
 import { findPost, posts } from './data/posts.js';
 import { photos } from './data/media.js';
+import { faq } from './data/faq.js';
 
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || '').replace(/\/$/, '');
 const BRAND = 'Бавись';
@@ -60,6 +61,12 @@ const business = {
   sameAs: company.socials.filter((s) => s.id === 'instagram').map((s) => s.href.split('?')[0]),
 };
 
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+
 const crumbs = (items) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -77,6 +84,7 @@ export function pageMeta(path) {
   if (!section) {
     return {
       ...base,
+      jsonLd: [business, faqPage],
       title: 'Оренда великих дерев’яних ігор у Львові | Бавись',
       description: `Велика Дженга, корнхол, кільцекид та ще ${games.length - 3} дерев’яних ігор в оренду на весілля, корпоративи й дні народження. Доставка по Львову та області, від ${rental.price}.`,
     };
@@ -110,6 +118,7 @@ export function pageMeta(path) {
             seller: { '@id': abs('/#business') },
           },
         },
+        faqPage,
         crumbs([[BRAND, '/'], ['Ігри', '/games'], [g.name, path]]),
       ],
     };

@@ -2045,3 +2045,197 @@
 .section.catalog {
   padding-top: 3rem;
 }
+
+/* ===================================================== FAQ (Часті питання) */
+
+/* 1440: head + button left (440), accordion right (760) between dashed rules */
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 27.5rem) minmax(0, 47.5rem);
+  grid-template-areas:
+    'head list'
+    'actions list';
+  grid-template-rows: auto 1fr;
+  justify-content: space-between;
+  column-gap: 5rem;
+}
+
+.faq__head {
+  grid-area: head;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.faq__title {
+  color: var(--deep);
+  font-size: var(--fs-h2);
+  --lh: 1.17;
+}
+
+.faq__title .accent {
+  color: var(--primary);
+}
+
+.faq__text {
+  max-width: 25rem;
+  margin-top: var(--s-5);
+  color: var(--ink);
+  font-size: 1.125rem;
+  --lh: 1.67;
+}
+
+.faq__actions {
+  grid-area: actions;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+  margin-top: var(--s-7);
+}
+
+.faq__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--deep);
+  font-weight: var(--w-bold);
+  --lh: 1.75;
+}
+
+.faq__phone .icon {
+  color: var(--accent);
+}
+
+.faq__phone:hover {
+  color: var(--primary);
+}
+
+.faq__list {
+  grid-area: list;
+  margin: 0;
+  padding: 0;
+  border-top: 1px dashed var(--dash);
+  list-style: none;
+}
+
+.faq__item {
+  border-bottom: 1px dashed var(--dash);
+}
+
+.faq__q {
+  margin: 0;
+  font-size: inherit;
+  text-wrap: wrap;
+}
+
+.faq__q button {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2.5rem;
+  width: 100%;
+  padding: 1.75rem 0;
+  border: 0;
+  background: none;
+  color: var(--deep);
+  font: inherit;
+  font-size: 1.375rem;
+  font-weight: var(--w-bold);
+  --lh: 1.36;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq__q button:hover {
+  color: var(--primary);
+}
+
+/* + on a cream circle; the open one is − on brown */
+.faq__toggle {
+  position: relative;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-block: -0.4375rem;
+  border-radius: 50%;
+  background: var(--bg);
+  transition: background 0.3s var(--ease-sine-out);
+}
+
+.faq__toggle::before,
+.faq__toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--deep);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s var(--ease-sine-out), background 0.3s var(--ease-sine-out);
+}
+
+.faq__toggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq__item.is-open .faq__toggle {
+  background: var(--primary);
+}
+
+.faq__item.is-open .faq__toggle::before,
+.faq__item.is-open .faq__toggle::after {
+  background: var(--white);
+}
+
+.faq__item.is-open .faq__toggle::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* the answer slides open (grid rows 0fr → 1fr); 12 under the question */
+.faq__a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease-sine-out);
+}
+
+.faq__a > div {
+  overflow: hidden;
+}
+
+.faq__a p {
+  max-width: 42.25rem;
+  margin: -1rem 0 0;
+  padding-bottom: 1.75rem;
+  color: var(--ink);
+  font-size: 1.125rem;
+  font-weight: var(--w-text);
+  --lh: 1.67;
+}
+
+.faq__item.is-open .faq__a {
+  grid-template-rows: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__a,
+  .faq__toggle,
+  .faq__toggle::before,
+  .faq__toggle::after {
+    transition: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'head' 'list' 'actions';
+    grid-template-rows: none;
+  }
+
+  .faq__list {
+    margin-top: var(--s-7);
+  }
+}

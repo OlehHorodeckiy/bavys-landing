@@ -416,3 +416,84 @@
     transform: translateY(100%);
   }
 }
+
+@media (max-width: 767px) {
+  /* ------------------------------------------------------- FAQ (phones)
+     head centred, list 40 under the text, full-width button 40 under the list,
+     phone 24 under it; question 18/26, circle 36, row 20, answer 16/26 */
+  .faq__head {
+    align-items: center;
+    text-align: center;
+  }
+
+  .faq__title {
+    --lh: 1.2;
+  }
+
+  .faq__text {
+    margin-top: 1rem;
+  }
+
+  .faq__q button {
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    font-size: 1.125rem;
+    --lh: 1.44;
+  }
+
+  .faq__toggle {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-block: -0.3125rem;
+  }
+
+  .faq__a p {
+    margin-top: -0.5rem;
+    padding-bottom: 1.25rem;
+    font-size: 1rem;
+    --lh: 1.63;
+  }
+
+  .faq__actions {
+    align-items: stretch;
+    margin-top: 2.5rem;
+  }
+
+  .faq__actions .btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .faq__phone {
+    align-self: center;
+  }
+
+  /* ------------------------------------------- pinned actions (phones)
+     no panel: «Забронювати» from the left margin + Instagram circle, 20 above
+     the bottom edge (Figma «13 Стартовий екран + Instagram») */
+  .mobile-bar--book {
+    right: 1.25rem;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    left: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) 3.125rem;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .mobile-bar--book .btn {
+    min-height: 3.125rem;
+  }
+
+  .mobile-bar__ig {
+    display: grid;
+    place-items: center;
+    width: 3.125rem;
+    height: 3.125rem;
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--primary);
+  }
+}

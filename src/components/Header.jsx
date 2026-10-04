@@ -98,11 +98,15 @@ export default function Header({ path, book }) {
   );
 }
 
-/** Phone-only bottom bar that keeps browsing and booking one tap away. */
+/**
+ * Phone-only pinned actions: «Забронювати» across the screen + an Instagram circle
+ * (Figma «13 Стартовий екран + Instagram»); on contacts: call / write.
+ */
 export function MobileBar({ path, book }) {
   const onContacts = path.startsWith('/contacts');
+  const instagram = company.socials.find((s) => s.id === 'instagram');
   return (
-    <div className="mobile-bar" role="navigation" aria-label="Швидкі дії">
+    <div className={`mobile-bar ${onContacts ? '' : 'mobile-bar--book'}`} role="navigation" aria-label="Швидкі дії">
       {onContacts ? (
         <>
           <Button href={company.phoneHref} variant="outline" disc={false}>
@@ -114,12 +118,12 @@ export function MobileBar({ path, book }) {
         </>
       ) : (
         <>
-          <Button to="/games" variant="outline" disc={false}>
-            Ігри
-          </Button>
           <Button book={book} variant="primary">
             Забронювати
           </Button>
+          <a className="mobile-bar__ig" href={instagram.href} target="_blank" rel="noreferrer" aria-label="Instagram">
+            <Icon name="instagram" size={20} />
+          </a>
         </>
       )}
     </div>

@@ -15,6 +15,7 @@ import {
   StatsRow,
   StepsTiles,
   UseCasesSection,
+  FaqSection,
 } from '../components/sections.jsx';
 
 const featured = games.filter((g) => g.featured);
@@ -128,6 +129,7 @@ export default function Home() {
       <GamesPreview />
       <StepsTiles />
       <UseCasesSection />
+      <FaqSection />
       <GalleryPreview />
     </>
   );

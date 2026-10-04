@@ -100,10 +100,10 @@ export const useCases = [
   },
 ];
 
-/** Headline numbers. Carried over from the previous landing page — confirm before launch. */
+/** Headline numbers (confirmed by the owner 2026-10-04: 16 games, about 70 events). */
 export const stats = [
-  { value: '32', suffix: '', title: "Дерев'яні", accent: 'набори', text: 'Ігри для дорослих, дітей і змішаних компаній — від настільних до гігантських.' },
-  { value: '120', suffix: '+', title: 'Проведених', accent: 'подій', text: 'Весілля, корпоративи, фестивалі та сімейні свята у Львові й області.' },
+  { value: '16', suffix: '', title: "Дерев'яні", accent: 'набори', text: 'Ігри для дорослих, дітей і змішаних компаній — від настільних до гігантських.' },
+  { value: '70', suffix: '+', title: 'Проведених', accent: 'подій', text: 'Весілля, корпоративи, фестивалі та сімейні свята у Львові й області.' },
   { value: '24', suffix: 'год', title: 'Швидке', accent: 'бронювання', text: 'Підтверджуємо наявність і деталі протягом доби після заявки.' },
 ];
 
