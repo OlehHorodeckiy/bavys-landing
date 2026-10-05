@@ -36,9 +36,10 @@
 
 /* links are plain text; only the current page (and hover) gets the accent pill */
 
+/* the current page and hover: the same brown as the «Забронювати» button */
 .site-nav__link:hover,
 .site-nav__link.is-current {
-  background: var(--accent);
+  background: var(--primary);
 }
 
 /* over the white home hero */
@@ -52,7 +53,7 @@
 
 .site-header--light .site-nav__link:hover,
 .site-header--light .site-nav__link.is-current {
-  background: var(--accent);
+  background: var(--primary);
   color: var(--white);
 }
 
