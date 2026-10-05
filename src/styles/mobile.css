@@ -421,7 +421,7 @@
 @media (max-width: 767px) {
   /* ------------------------------------------------------- FAQ (phones)
      head centred, list 40 under the text, full-width button 40 under the list,
-     phone 24 under it; question 18/26, circle 36, row 20, answer 16/26 */
+     phone 24 under it; question 18/26, circle 36, row 20, answer 12 under it 16/26 */
   .faq__head {
     align-items: center;
     text-align: center;
@@ -449,7 +449,6 @@
   }
 
   .faq__a p {
-    margin-top: -0.5rem;
     padding-bottom: 1.25rem;
     font-size: 1rem;
     --lh: 1.63;
