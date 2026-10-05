@@ -1,6 +1,8 @@
 // Serve dist/ the way Cloudflare Pages does: /games → games.html, /games/x → games/x.html,
 // unknown paths → 404.html with status 404. `npm run preview` (after `npm run build`).
+// Listens on the home Wi-Fi too, so a phone on the same network can open the printed address.
 import http from 'node:http';
+import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -19,4 +21,7 @@ http
     res.writeHead(hit ? 200 : 404, { 'Content-Type': types[path.extname(target)] || 'application/octet-stream' });
     fs.createReadStream(target).pipe(res);
   })
-  .listen(port, '127.0.0.1', () => console.log(`dist on http://127.0.0.1:${port}`));
+  .listen(port, '0.0.0.0', () => {
+    const lan = Object.values(os.networkInterfaces()).flat().find((a) => a && a.family === 'IPv4' && !a.internal);
+    console.log(`dist on http://127.0.0.1:${port}` + (lan ? `  ·  phone (same Wi-Fi): http://${lan.address}:${port}` : ''));
+  });
