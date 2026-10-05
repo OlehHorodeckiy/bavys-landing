@@ -5,14 +5,17 @@
  * so the answers change together with them. Numbers keep their word on one line.
  */
 import { company } from './site.js';
-import { rental } from './games.js';
+import { games, rental } from './games.js';
+
+// «Велика Дженга 1200 грн, Бірпонг 1500 грн, …» from the games that have their own price
+const own = games.filter((g) => g.price).map((g) => `${g.name} ${g.price.replace(' / доба', '')}`).join(', ');
 
 const nb = (s) => s.replace(/(\d) (?=[а-яіїєґa-z\d])/gi, '$1 ');
 
 export const faq = [
   {
     q: 'Скільки коштує оренда ігор?',
-    a: `Одна гра коштує ${rental.price.replace(' / доба', '')} на добу. Що більше ігор, то вигідніше: 2 гри 1550 грн, 3 гри 2300 грн, 4 гри 3000 грн, кожна наступна 750 грн.`,
+    a: `Одна гра коштує ${rental.price.replace(' / доба', '')} на добу. Що більше ігор, то вигідніше: 2 гри 1650 грн, 3 гри 2450 грн, 4 гри 3200 грн, кожна наступна 800 грн. Окрема ціна: ${own}.`,
   },
   {
     q: 'На скільки часу можна взяти гру?',

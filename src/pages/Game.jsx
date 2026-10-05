@@ -1,4 +1,4 @@
-import { findGame, games, placeLabel, rental } from '../data/games.js';
+import { findGame, gamePrice, games, placeLabel, rental } from '../data/games.js';
 import { eventType } from '../data/site.js';
 import Icon from '../components/Icon.jsx';
 import { Button, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
@@ -24,7 +24,7 @@ function GameHero({ game }) {
   const label = game.events.slice(0, 2).map((e) => eventType(e)?.label).join(' · ');
   const facts = [
     { icon: 'users', value: `${game.players} гравців` },
-    { icon: 'wallet', value: rental.price },
+    { icon: 'wallet', value: gamePrice(game) },
     { icon: 'calendar', value: 'Оренда на добу' },
     { icon: placeIcon(game.place), value: placeLabel[game.place] },
   ];
@@ -82,7 +82,8 @@ export default function Game({ slug }) {
     { icon: 'tag', label: 'Застава', value: rental.deposit },
     { icon: 'calendar', label: 'Термін оренди', value: `${rental.term}. ${rental.returnBy}` },
     { icon: 'blocks', label: 'Комплектація', value: game.kit.join(', ') },
-    { icon: 'wallet', label: 'Вартість оренди', value: `${rental.price} · ${rental.bundle}` },
+    { icon: 'wallet', label: 'Вартість оренди', value: game.price || `${rental.price} · ${rental.bundle}` },
+    ...(game.addon ? [{ icon: 'tag', label: game.addon.label, value: game.addon.value }] : []),
     { icon: 'chat', label: 'Інструктор на події', value: rental.instructor },
   ];
 

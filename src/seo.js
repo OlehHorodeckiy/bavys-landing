@@ -8,7 +8,7 @@
  * links, absolute share images and sitemap.xml need it; without it they are left out.
  */
 import { company } from './data/site.js';
-import { findGame, games, placeLabel, rental } from './data/games.js';
+import { findGame, gamePrice, games, placeLabel, rental } from './data/games.js';
 import { findPost, posts } from './data/posts.js';
 import { photos } from './data/media.js';
 import { faq } from './data/faq.js';
@@ -93,7 +93,7 @@ export function pageMeta(path) {
   if (section === 'games' && slug) {
     const g = findGame(slug);
     if (!g) return notFound(path);
-    const description = clip(`${g.lead} Оренда ${g.name} у Львові: ${rental.price}, ${g.players} гравців, ${placeLabel[g.place].toLowerCase()}. Доставка по Львову та області.`);
+    const description = clip(`${g.lead} Оренда ${g.name} у Львові: ${gamePrice(g)}, ${g.players} гравців, ${placeLabel[g.place].toLowerCase()}. Доставка по Львову та області.`);
     return {
       ...base,
       title: `${g.name}: оренда гри у Львові | Бавись`,
@@ -111,10 +111,10 @@ export function pageMeta(path) {
           offers: {
             '@type': 'Offer',
             url: abs(path),
-            price: String(parseInt(rental.price, 10)),
+            price: String(parseInt(gamePrice(g), 10)),
             priceCurrency: 'UAH',
             availability: 'https://schema.org/InStock',
-            priceSpecification: { '@type': 'UnitPriceSpecification', price: String(parseInt(rental.price, 10)), priceCurrency: 'UAH', unitText: 'доба' },
+            priceSpecification: { '@type': 'UnitPriceSpecification', price: String(parseInt(gamePrice(g), 10)), priceCurrency: 'UAH', unitText: 'доба' },
             seller: { '@id': abs('/#business') },
           },
         },

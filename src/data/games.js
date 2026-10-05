@@ -16,22 +16,29 @@
  * `gallery` yet.
  */
 
-/** Rental terms that apply to every game. */
+/**
+ * Rental terms that apply to every game (owner's Instagram «Ціни», 1 вересня 2026).
+ * A game with its own `price` (Велика Дженга, Бірпонг, Великий морський бій) shows that instead.
+ */
 export const rental = {
-  price: '800 грн / доба',
-  bundle: '2 гри — 1550 грн · 3 гри — 2300 грн · 4 гри — 3000 грн · кожна наступна — 750 грн',
+  price: '850 грн / доба',
+  bundle: '2 гри — 1650 грн · 3 гри — 2450 грн · 4 гри — 3200 грн · кожна наступна — 800 грн',
   term: 'Доба: з дня отримання до наступного дня включно',
   returnBy: 'Повернення наступного дня до 12:00',
   delivery: 'Доставка або самовивіз',
   deposit: 'Залежить від кількості ігор',
   instructor: '400 грн/год, від 3 годин',
-  table: '90 грн',
+  table: '120 грн',
 };
+
+/** The game's price per day: its own one or the shared one. */
+export const gamePrice = (g) => g.price || rental.price;
 
 export const games = [
   {
     slug: 'velyka-dzhenga',
     name: 'Велика Дженга',
+    price: '1200 грн / доба',
     accent: 'Дженга',
     art: 'jenga',
     photo: 'card-velyka-dzhenga',
@@ -318,6 +325,7 @@ export const games = [
   },
   {
     slug: 'velykyi-morskyi-bii',
+    price: '2000 грн / доба',
     name: 'Великий морський бій',
     accent: 'морський бій',
     photo: 'card-velykyi-morskyi-bii',
@@ -429,6 +437,8 @@ export const games = [
   {
     slug: 'birponh',
     name: 'Бірпонг',
+    price: '1500 грн / доба',
+    addon: { label: 'Комплект для гри', value: '12 червоних і 12 синіх стаканчиків, 6 м’ячиків: 500 грн. Можна взяти свої.' },
     accent: 'Бірпонг',
     photo: 'card-birponh',
     hero: null,
@@ -444,7 +454,7 @@ export const games = [
       { title: 'Знімайте стаканчик', text: 'Влучили — стаканчик знімають зі столу.' },
       { title: 'Хто перемагає', text: 'Перемагає команда, яка першою прибере всі стаканчики суперника.' },
     ],
-    kit: ['розкладний стіл', 'стаканчики', 'кульки'],
+    kit: ['розкладний стіл для гри'],
     players: '2 або 4',
     place: 'both',
     table: false,

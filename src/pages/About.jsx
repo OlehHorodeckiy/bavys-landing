@@ -15,7 +15,7 @@ const service = [
 // real numbers only: the catalog size, the rental price, where we work
 const facts = [
   { value: String(games.length), text: 'дерев’яних ігор у колекції' },
-  { value: rental.price.split(' / ')[0], text: 'за гру на добу' },
+  { value: `від ${rental.price.split(' / ')[0]}`, text: 'за гру на добу' },
   { value: 'Львів', text: 'та область, з доставкою' },
 ];
 
