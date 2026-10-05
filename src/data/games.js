@@ -325,7 +325,7 @@ export const games = [
   },
   {
     slug: 'velykyi-morskyi-bii',
-    price: '2000 грн / доба',
+    price: '1600 грн / доба',
     name: 'Великий морський бій',
     accent: 'морський бій',
     photo: 'card-velykyi-morskyi-bii',
