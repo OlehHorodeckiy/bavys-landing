@@ -108,9 +108,10 @@ export function GalleryBento({ items, className = '', ...rest }) {
 
 /* ------------------------------------------------------------- Game card */
 
-export function GameCard({ game, headingLevel = 'h3' }) {
+/** `event`: the catalog filter; the card's event chip then names it instead of the game's main event. */
+export function GameCard({ game, headingLevel = 'h3', event }) {
   const H = headingLevel;
-  const primary = eventType(game.events[0]);
+  const primary = eventType(event && game.tags.includes(event) ? event : game.events[0]);
   return (
     <a className="game-card" href={href(`/games/${game.slug}`)}>
       <div className="game-card__media">
@@ -127,12 +128,13 @@ export function GameCard({ game, headingLevel = 'h3' }) {
   );
 }
 
-export function GameGrid({ games, headingLevel }) {
+/** `delay`: when the first row starts rising (0.4s on page load, sooner after a filter change). */
+export function GameGrid({ games, headingLevel, event, delay = 0.4 }) {
   return (
     <ul className="game-grid" role="list">
       {games.map((g, i) => (
-        <li key={g.slug} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.4 + (i % 3) * 0.06}s` }}>
-          <GameCard game={g} headingLevel={headingLevel} />
+        <li key={g.slug} className="rv" data-reveal="90" style={{ '--rv-delay': `${delay + (i % 3) * 0.06}s` }}>
+          <GameCard game={g} headingLevel={headingLevel} event={event} />
         </li>
       ))}
     </ul>
@@ -456,7 +458,15 @@ export function FilterBar({ items, value, onChange, label, className = '' }) {
           type="button"
           className={`filter-bar__btn ${value === f.id ? 'is-active' : ''}`}
           aria-pressed={value === f.id}
-          onClick={() => onChange(f.id)}
+          onClick={(e) => {
+            onChange(f.id);
+            // phones: the chip row scrolls sideways; bring the chosen chip fully into view (the row only, not the page)
+            const row = e.currentTarget.parentElement;
+            const r = row.getBoundingClientRect();
+            const c = e.currentTarget.getBoundingClientRect();
+            const shift = c.left < r.left ? c.left - r.left - 20 : c.right > r.right ? c.right - r.right + 20 : 0;
+            if (shift) row.scrollBy({ left: shift, behavior: 'smooth' });
+          }}
         >
           {f.label}
         </button>
