@@ -5,7 +5,7 @@ import Icon from './Icon.jsx';
 import { Button, IconButton, Logo, Media } from './ui.jsx';
 import logoSvg from '../../assets/Group.svg?raw';
 
-/** The big «Бавись» at the bottom: glass letters (frosted fill + light edge) over the photo. */
+/** The big «Бавись» at the bottom: white letters at 50% over the photo (Figma footer). */
 const GlassWordmark = () => <span className="glass-wordmark" dangerouslySetInnerHTML={{ __html: logoSvg }} />;
 
 export default function Footer() {
