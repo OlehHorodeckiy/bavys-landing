@@ -100,32 +100,20 @@ export default function Header({ path, book }) {
 
 /**
  * Phone-only pinned actions: «Забронювати» across the screen + an Instagram circle
- * (Figma «13 Стартовий екран + Instagram»); on contacts: call / write.
+ * (Figma «13 Стартовий екран + Instagram»). None on contacts: the form and the
+ * phone are right there (Figma «09 Контакти — 390»).
  */
 export function MobileBar({ path, book }) {
-  const onContacts = path.startsWith('/contacts');
+  if (path.startsWith('/contacts')) return null;
   const instagram = company.socials.find((s) => s.id === 'instagram');
   return (
-    <div className={`mobile-bar ${onContacts ? '' : 'mobile-bar--book'}`} role="navigation" aria-label="Швидкі дії">
-      {onContacts ? (
-        <>
-          <Button href={company.phoneHref} variant="outline" disc={false}>
-            <Icon name="phone" size={18} /> Подзвонити
-          </Button>
-          <Button href={`mailto:${company.email}`} variant="primary" disc={false}>
-            <Icon name="mail" size={18} /> Написати
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button book={book} variant="primary">
-            Забронювати
-          </Button>
-          <a className="mobile-bar__ig" href={instagram.href} target="_blank" rel="noreferrer" aria-label="Instagram">
-            <Icon name="instagram" size={20} />
-          </a>
-        </>
-      )}
+    <div className="mobile-bar mobile-bar--book" role="navigation" aria-label="Швидкі дії">
+      <Button book={book} variant="primary">
+        Забронювати
+      </Button>
+      <a className="mobile-bar__ig" href={instagram.href} target="_blank" rel="noreferrer" aria-label="Instagram">
+        <Icon name="instagram" size={20} />
+      </a>
     </div>
   );
 }
