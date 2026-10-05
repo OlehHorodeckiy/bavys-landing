@@ -126,27 +126,50 @@ function specialCard(s, W, m) {
 
 const TEE = await figma.getNodeByIdAsync('1592:3874');
 function tee(h) { const t = TEE.clone(); t.name = 'футболка «Бавись»'; t.rescale(h / TEE.height); return t; }
-function teePanel(w, h, th, r) {
-  const p = fixWH(AL('HORIZONTAL', { name: 'instructor__tee', fill: C.cream, radius: r, align: 'CENTER', justify: 'CENTER' }), w, h);
-  return add(p, tee(th));
+const POINTS = ['Швидко й зрозуміло пояснює правила', 'За потреби грає разом із гостями', 'Робить відпочинок гостей цікавішим та активнішим'];
+function checkItem(text, w, m) {
+  const r = AL('HORIZONTAL', { name: 'point', gap: 12, align: 'CENTER' });
+  const c = fixWH(AL('HORIZONTAL', { name: 'check', fill: C.cream, radius: 14, align: 'CENTER', justify: 'CENTER' }), 28, 28);
+  add(c, svg('check', 16, '#866452'));
+  return add(r, c, T(text, { size: m ? 16 : 16, lh: 26, style: 'Medium', color: C.deep, w }));
 }
-const TXT = 'Базово ігри йдуть без супроводу: до кожної додаємо правила. Інструктор швидко й зрозуміло пояснить правила гостям, а за потреби зіграє разом з ними.';
+function teePanel(w, h, th, disc, r, m) {
+  const p = fixWH(AL('HORIZONTAL', { name: 'instructor__tee', fill: C.cream, radius: r, align: 'MAX', justify: 'CENTER' }), w, h); p.clipsContent = true;
+  const e = figma.createEllipse(); e.name = 'коло'; e.resize(disc, disc); e.fills = solid(C.white, 0.7); add(p, e); e.layoutPositioning = 'ABSOLUTE';
+  e.x = Math.round((w - disc) / 2); e.y = h - disc + Math.round(disc * 0.12); e.constraints = { horizontal: 'CENTER', vertical: 'CENTER' };
+  add(p, tee(th));
+  const badge = AL('HORIZONTAL', { name: 'badge', fill: C.white, radius: 18, pad: [8, 16, 8, 12], gap: 8, align: 'CENTER' });
+  add(badge, svg('sparkle', 16), T('Інструктор у футболці «Бавись»', { size: m ? 12 : 14, lh: m ? 16 : 20, style: 'Bold' }));
+  add(p, badge); badge.layoutPositioning = 'ABSOLUTE'; badge.x = m ? 16 : 24; badge.y = m ? 16 : 24; badge.constraints = { horizontal: 'MIN', vertical: 'MIN' };
+  return p;
+}
+function priceBox(m) {
+  const box = AL('HORIZONTAL', { name: 'price', gap: m ? 16 : 24, align: 'CENTER' });
+  const a = AL('VERTICAL', { name: 'per-hour', gap: 0 });
+  add(a, T('400' + NB + 'грн', { size: m ? 32 : 48, lh: m ? 40 : 56, style: 'Bold' }), T('за годину', { size: m ? 14 : 16, lh: m ? 20 : 26, color: C.ink }));
+  const line = figma.createRectangle(); line.name = 'divider'; line.resize(1, m ? 48 : 64); line.fills = solid('#d8cfc6');
+  const b = AL('VERTICAL', { name: 'minimum', gap: 2 });
+  add(b, T('від 3 годин', { size: m ? 16 : 18, lh: m ? 24 : 26, style: 'Bold' }), T('від 1200' + NB + 'грн за свято', { size: m ? 12 : 14, lh: m ? 16 : 20, color: C.muted, w: m ? 128 : undefined }));
+  return add(box, a, line, b);
+}
+const LEAD = 'Базово ігри йдуть без супроводу: до кожної додаємо правила. Інструктор поруч, щоб гості не розбиралися самі.';
 const out = {};
 // desktop
 {
   const s = (await figma.getNodeByIdAsync('1592:3063')).findChild((n) => n.name === 'prices-instructor');
   for (const k of [...s.children]) k.remove();
-  const card = AL('HORIZONTAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [48, 48, 48, 48], gap: 48, align: 'CENTER' }); fixW(card, 1280);
-  const left = AL('VERTICAL', { name: 'instructor__text', gap: 32 });
-  const tb = AL('VERTICAL', { name: 'text', gap: 20 });
-  const tt = AL('VERTICAL', { name: 'title', gap: 16 });
-  add(tt, title('Інструктор', 'на святі', { size: 48, lh: 56, br: true }), T(TXT, { size: 18, lh: 30, color: C.ink, w: 560 }));
-  add(tb, pill('Супровід ігор', C.cream), tt);
-  const pr = AL('HORIZONTAL', { name: 'price', gap: 16, align: 'MAX' });
-  add(pr, T('400' + NB + 'грн', { size: 48, lh: 56, style: 'Bold' }), T('за годину, від 3 годин', { size: 18, lh: 34, color: C.ink }));
-  add(left, tb, pr, btn('Замовити ігри з інструктором'));
+  const card = AL('HORIZONTAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [24, 24, 24, 48], gap: 48, align: 'CENTER' }); fixW(card, 1280);
+  card.counterAxisAlignItems = 'CENTER';
+  const left = AL('VERTICAL', { name: 'instructor__text', gap: 32 }); fixW(left, 560);
+  const head = AL('VERTICAL', { name: 'head', gap: 20 });
+  add(head, pill('Супровід ігор', C.cream), title('Інструктор', 'на святі', { size: 48, lh: 56, br: true }));
+  const body = AL('VERTICAL', { name: 'body', gap: 20 });
+  const pts = AL('VERTICAL', { name: 'points', gap: 12 });
+  for (const p of POINTS) add(pts, checkItem(p));
+  add(body, T(LEAD, { size: 18, lh: 30, color: C.ink, w: 560 }), pts);
+  add(left, head, body, priceBox(false), btn('Замовити інструктора'));
   add(card, left);
-  const panel = teePanel(560, 440, 360, 24); add(card, panel); panel.layoutGrow = 1;
+  const panel = teePanel(600, 560, 440, 460, 20, false); add(card, panel); panel.layoutGrow = 1;
   add(s, card); out.desk = [card.id, card.height];
 }
 // mobile
@@ -154,15 +177,17 @@ const out = {};
   const f = await figma.getNodeByIdAsync('1592:3468');
   const s = f.findChild((n) => n.name === 'prices-instructor');
   for (const k of [...s.children]) k.remove();
-  const card = AL('VERTICAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [24, 24, 24, 24], gap: 24 }); fixW(card, 350);
-  const panel = teePanel(302, 240, 200, 20);
-  const tb = AL('VERTICAL', { name: 'instructor__text', gap: 16 });
-  const tt = AL('VERTICAL', { name: 'title', gap: 12 });
-  add(tt, title('Інструктор', 'на святі', { size: 30, lh: 36, br: true }), T('Базово ігри йдуть без супроводу: до кожної додаємо правила. Інструктор пояснить правила гостям, а за потреби зіграє разом з ними.', { size: 16, lh: 26, color: C.ink, w: 302 }));
-  add(tb, pill('Супровід ігор', C.cream), tt);
-  const pr = AL('VERTICAL', { name: 'price', gap: 4 });
-  add(pr, T('400' + NB + 'грн', { size: 40, lh: 48, style: 'Bold' }), T('за годину, від 3 годин', { size: 16, lh: 26, color: C.ink }));
-  add(card, panel, tb, pr, btn('Замовити інструктора', 302));
+  const card = AL('VERTICAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [12, 12, 24, 12], gap: 24 }); fixW(card, 350);
+  const panel = teePanel(326, 280, 216, 248, 16, true);
+  const inner = AL('VERTICAL', { name: 'instructor__text', gap: 24 }); fixW(inner, 302);
+  const head = AL('VERTICAL', { name: 'head', gap: 16 });
+  add(head, pill('Супровід ігор', C.cream), title('Інструктор', 'на святі', { size: 30, lh: 36, br: true }));
+  const body = AL('VERTICAL', { name: 'body', gap: 16 });
+  const pts = AL('VERTICAL', { name: 'points', gap: 12 });
+  for (const p of POINTS) add(pts, checkItem(p, 262, true));
+  add(body, T(LEAD, { size: 16, lh: 26, color: C.ink, w: 302 }), pts);
+  add(inner, head, body, priceBox(true), btn('Замовити інструктора', 302));
+  add(card, panel, inner); inner.layoutAlign = 'CENTER';
   add(s, card);
   const hi = f.findChild((n) => n.name === 'iOS · Home indicator'); if (hi) hi.y = f.height - hi.height;
   out.mob = [card.id, card.height, f.height];
