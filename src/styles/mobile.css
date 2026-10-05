@@ -105,11 +105,12 @@
   }
 
   /* ------------------------------------------------- home: first screen
-     text on top, the Jenga tower big and centred on the lawn under it
-     (photo hero-tower-m), the arch strip over the grass 40 from the bottom */
+     text on top, no button (the pinned «Забронювати» is always there), the
+     Jenga tower big and centred on the lawn under it (photo hero-tower-m),
+     the arch strip 490 under the text and 42 above the bottom */
   .hero--home {
     padding-top: 7.5rem;
-    padding-bottom: 2.5rem;
+    padding-bottom: 2.625rem;
   }
 
   .hero--home .hero__bg img {
@@ -125,11 +126,11 @@
   }
 
   .hero--home .hero__actions {
-    margin-top: 1.5rem;
+    display: none;
   }
 
   .hero--home .hero-strip {
-    margin-top: 30.25rem;
+    margin-top: 30.625rem;
   }
 
   /* --------------------------------------------- page titles and chips */
