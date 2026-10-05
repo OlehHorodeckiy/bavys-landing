@@ -37,16 +37,18 @@ export default function Prices() {
       <section className="prices-hero">
         <div className="container">
           <div className="prices-hero__split">
-            <div className="prices-hero__photo">
+            <div className="prices-hero__photo rv" data-reveal="90" style={{ '--rv-delay': '0.2s' }}>
               <Media photo="ev-jenga-festival" position="50% 40%" eager />
             </div>
             <div className="prices-hero__main">
               <div className="prices-hero__head">
-                <Pill tone="cream">Ціни</Pill>
-                <Heading as="h1" title="Скільки коштує" accent="оренда ігор" br className="prices-hero__title" />
-                <p className="prices-hero__text">Що більше ігор берете, то вигідніше кожна. Велика Дженга, Бірпонг і Морський бій мають свою ціну.</p>
+                <Pill tone="cream" className="rv" data-reveal="90">
+                  Ціни
+                </Pill>
+                <Heading as="h1" title="Скільки коштує" accent="оренда ігор" br reveal className="prices-hero__title" />
+                <p className="prices-hero__text rv" data-reveal="90" style={{ '--rv-delay': '0.3s' }}>Що більше ігор берете, то вигідніше кожна. Велика Дженга, Бірпонг і Морський бій мають свою ціну.</p>
               </div>
-              <ul className="price-list" role="list">
+              <ul className="price-list rv" data-reveal="90" style={{ '--rv-delay': '0.4s' }} role="list">
                 {rental.packages.map((p) => (
                   <li key={p.count} className="price-list__row">
                     <span className="price-list__name">
@@ -65,8 +67,8 @@ export default function Prices() {
           </div>
 
           <ul className="special-cards" role="list" aria-label="Ігри й столи з окремою ціною">
-            {special.map((s) => (
-              <li key={s.key} className="special-card">
+            {special.map((s, i) => (
+              <li key={s.key} className="special-card rv" data-reveal="90" style={{ '--rv-delay': `${(i % 2) * 0.08}s` }}>
                 <div className="special-card__media">
                   <Media photo={s.photo} />
                   <span className="special-card__tag">
@@ -102,14 +104,16 @@ export default function Prices() {
 
       <section className="section section--cream prices-instructor">
         <div className="container">
-          <div className="instructor-card">
+          <div className="instructor-card rv" data-reveal="90">
             <div className="instructor-card__text">
-              <Heading as="h2" title="Інструктор" accent="на святі" br className="instructor-card__title" />
+              <Heading as="h2" title="Інструктор" accent="на святі" br reveal className="instructor-card__title" />
               <div className="instructor-card__body">
                 <p>Базово до кожної гри додаємо правила. Інструктор поруч, щоб гості не розбиралися самі.</p>
                 <ul className="instructor-card__points" role="list">
-                  {points.map((p) => (
-                    <li key={p}>{p}</li>
+                  {points.map((p, i) => (
+                    <li key={p} className="rv" data-reveal="95" style={{ '--rv-delay': `${0.2 + i * 0.08}s` }}>
+                      {p}
+                    </li>
                   ))}
                 </ul>
               </div>

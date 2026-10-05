@@ -1723,13 +1723,15 @@
 /* Calmlyss cards: the photo scales to 110% over 0.6s while hovered */
 .game-card__media img,
 .uc-row__thumb img,
-.post-card__media img {
+.post-card__media img,
+.special-card__media img {
   transition: transform 0.6s var(--ease-power1-out);
 }
 
 .game-card:hover .game-card__media img,
 .uc-row:hover .uc-row__thumb img,
-.post-card:hover .post-card__media img {
+.post-card:hover .post-card__media img,
+.special-card:hover .special-card__media img {
   transform: scale(1.1);
 }
 
@@ -1737,7 +1739,8 @@
   .btn__roll,
   .game-card__media img,
   .uc-row__thumb img,
-  .post-card__media img {
+  .post-card__media img,
+  .special-card__media img {
     transition: none;
   }
 }
