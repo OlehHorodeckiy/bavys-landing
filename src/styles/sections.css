@@ -1656,7 +1656,8 @@
 
 /* ============================================================= CTA banner */
 
-/* light card 1280×328: lawn photo (1280×356) pinned to the bottom, title + one button on top */
+/* light card 1280×328: lawn photo (1280×356) pinned to the bottom and cropped from the
+   middle of the picture (as every Figma banner), title + one button on top */
 .cta-banner {
   position: relative;
   isolation: isolate;
@@ -1684,7 +1685,7 @@
 }
 
 .cta-banner__photo img {
-  object-position: 50% 100%;
+  object-position: 50% 50%;
 }
 
 .cta-banner__inner {
