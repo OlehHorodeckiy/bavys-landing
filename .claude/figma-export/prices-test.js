@@ -57,10 +57,10 @@ function section(name, bg, top, bottom, W) { const s = AL('VERTICAL', { name, fi
 async function clone(id) { const n = await figma.getNodeByIdAsync(id); return n.clone(); }
 
 const PRICES = [
-  { n: '1 гра', price: '800' + NB + 'грн', chip: null, line: 'базова ціна' },
-  { n: '2 гри', price: '1550' + NB + 'грн', chip: '−50' + NB + 'грн', line: 'замість 1600' + NB + 'грн' },
-  { n: '3 гри', price: '2300' + NB + 'грн', chip: '−100' + NB + 'грн', line: 'замість 2400' + NB + 'грн' },
-  { n: '4 гри', price: '3000' + NB + 'грн', chip: '−200' + NB + 'грн', line: 'замість 3200' + NB + 'грн', hi: true },
+  { n: '1 гра', price: '850' + NB + 'грн', chip: null, line: 'базова ціна' },
+  { n: '2 гри', price: '1650' + NB + 'грн', chip: '−50' + NB + 'грн', line: 'замість 1700' + NB + 'грн' },
+  { n: '3 гри', price: '2450' + NB + 'грн', chip: '−100' + NB + 'грн', line: 'замість 2550' + NB + 'грн' },
+  { n: '4 гри', price: '3200' + NB + 'грн', chip: '−200' + NB + 'грн', line: 'замість 3400' + NB + 'грн', hi: true },
 ];
 const TERMS = [
   ['calendar', 'Доба оренди', 'З дня отримання до наступного дня включно.'],
@@ -93,14 +93,35 @@ function note(text, w) {
   return r;
 }
 function termTile(t, W, m) {
-  const tile = AL('VERTICAL', { name: 'term-tile', fill: C.white, radius: 20, pad: m ? [20, 20, 20, 20] : [24, 24, 24, 24], gap: m ? 16 : 24 });
+  const tile = AL('VERTICAL', { name: 'term-tile', fill: C.cream, radius: 20, pad: m ? [20, 20, 20, 20] : [24, 24, 24, 24], gap: m ? 16 : 24 });
   fixW(tile, W);
   const tx = AL('VERTICAL', { name: 'term-tile__text', gap: 8 });
-  add(tile, iconCircle(t[0], C.cream), tx);
+  add(tile, iconCircle(t[0], C.white), tx);
   tx.layoutSizingHorizontal = 'FILL';
   const a = T(t[1], { size: 18, lh: 26, style: 'Bold' }); const b = T(nb(t[2]), { size: 16, lh: 26, color: C.ink });
   add(tx, a, b); a.layoutSizingHorizontal = 'FILL'; b.layoutSizingHorizontal = 'FILL'; a.textAutoResize = 'HEIGHT'; b.textAutoResize = 'HEIGHT';
   return tile;
+}
+
+// games with their own price (Instagram «Ціни», 1 вересня)
+const SPECIAL = [
+  { name: 'Велика Дженга', price: '1200' + NB + 'грн', per: 'за добу', extra: null, note: 'Якщо свято на плитці чи асфальті, м’яку підкладку даємо безкоштовно.' },
+  { name: 'Бірпонг', price: '1500' + NB + 'грн', per: 'за добу', extra: 'Комплект для гри: +500' + NB + 'грн', note: '12 червоних і 12 синіх стаканчиків, 6 м’ячиків. Можна взяти свої.' },
+  { name: 'Стіл для ігор', price: '120' + NB + 'грн', per: 'за 1 стіл', extra: null, note: 'Дерев’яний розкладний стіл під настільні ігри.' },
+];
+function specialCard(s, W, m) {
+  const card = AL('VERTICAL', { name: 'special-card', fill: C.white, radius: m ? 20 : 24, pad: m ? [20, 20, 20, 20] : [28, 28, 28, 28], gap: m ? 20 : 24 });
+  fixW(card, W);
+  const pr = AL('VERTICAL', { name: 'price', gap: 4 });
+  add(pr, T(s.price, { size: m ? 30 : 40, lh: m ? 36 : 48, style: 'Bold' }), T(s.per, { size: m ? 14 : 16, lh: m ? 20 : 26, color: C.ink }));
+  const top = AL('VERTICAL', { name: 'special-card__head', gap: m ? 12 : 16 });
+  add(top, T(s.name, { size: m ? 18 : 22, lh: m ? 26 : 30, style: 'Bold' }), pr);
+  add(card, top);
+  const foot = AL('VERTICAL', { name: 'special-card__note', gap: 12 });
+  add(card, foot); foot.layoutSizingHorizontal = 'FILL';
+  if (s.extra) add(foot, chip(s.extra, C.cream, C.primary, m));
+  const n = T(nb(s.note), { size: 14, lh: 20, color: C.muted }); add(foot, n); n.layoutSizingHorizontal = 'FILL'; n.textAutoResize = 'HEIGHT';
+  return card;
 }
 
 // ---------------------------------------------------------------- page holder
@@ -119,16 +140,25 @@ const s1 = section('prices-hero', C.white, 160, 80, 1440);
 const col1 = AL('VERTICAL', { name: 'content', gap: 56, align: 'CENTER' }); fixW(col1, 1280);
 const head = AL('VERTICAL', { name: 'page-title', gap: 20, align: 'CENTER' });
 const ht = AL('VERTICAL', { name: 'page-title__text', gap: 24, align: 'CENTER' });
-add(ht, title('Скільки коштує', 'оренда ігор', { size: 60, lh: 64, align: 'CENTER' }), T('Ціна однакова для будь-якої гри з колекції. Що більше ігор берете, то вигідніше кожна.', { size: 20, lh: 34, color: C.ink, w: 760, align: 'CENTER' }));
+add(ht, title('Скільки коштує', 'оренда ігор', { size: 60, lh: 64, align: 'CENTER' }), T('Що більше ігор берете, то вигідніше кожна. Велика Дженга і Бірпонг мають свою ціну.', { size: 20, lh: 34, color: C.ink, w: 760, align: 'CENTER' }));
 add(head, pill('Ціни', C.cream), ht);
 const cards = AL('VERTICAL', { name: 'prices', gap: 24, align: 'CENTER' });
 const row = AL('HORIZONTAL', { name: 'price-cards', gap: 16 });
 for (const p of PRICES) { const c = priceCard(p, 308, false); add(row, c); c.layoutSizingVertical = 'FILL'; }
-add(cards, row, note('П’ята і кожна наступна гра: +750' + NB + 'грн'));
+add(cards, row, note('П’ята і кожна наступна гра: +800' + NB + 'грн'));
 add(col1, head, cards); add(s1, col1);
 
-// 2. terms
-const s2 = section('prices-terms', C.cream, 80, 80, 1440);
+// 2. games with their own price
+const sp = section('prices-special', C.cream, 80, 80, 1440);
+const colS = AL('VERTICAL', { name: 'content', gap: 48, align: 'CENTER' }); fixW(colS, 1280);
+const hS = AL('VERTICAL', { name: 'section-head', gap: 16, align: 'CENTER' });
+add(hS, title('Окрема', 'ціна', { size: 48, lh: 56, align: 'CENTER' }), T('Велика Дженга, Бірпонг і столи для ігор мають свою ціну.', { size: 18, lh: 28, color: C.ink, align: 'CENTER' }));
+const rowS = AL('HORIZONTAL', { name: 'special-cards', gap: 16 });
+for (const x of SPECIAL) { const c = specialCard(x, 416, false); add(rowS, c); c.layoutSizingVertical = 'FILL'; }
+add(colS, hS, rowS); add(sp, colS);
+
+// 3. terms
+const s2 = section('prices-terms', C.white, 80, 80, 1440);
 const col2 = AL('VERTICAL', { name: 'content', gap: 48, align: 'CENTER' }); fixW(col2, 1280);
 const h2 = AL('VERTICAL', { name: 'section-head', gap: 16, align: 'CENTER' });
 add(h2, title('Умови', 'оренди', { size: 48, lh: 56, align: 'CENTER' }), T('Усе, що варто знати до бронювання.', { size: 18, lh: 28, color: C.ink, align: 'CENTER' }));
@@ -136,20 +166,20 @@ const grid = AL('VERTICAL', { name: 'term-tiles', gap: 16 });
 for (let r = 0; r < 2; r++) { const rr = AL('HORIZONTAL', { name: 'row', gap: 16 }); for (const t of TERMS.slice(r * 3, r * 3 + 3)) { const tl = termTile(t, 416, false); add(rr, tl); tl.layoutSizingVertical = 'FILL'; } add(grid, rr); }
 add(col2, h2, grid); add(s2, col2);
 
-// 3. instructor
-const s3 = section('prices-instructor', C.white, 80, 80, 1440);
-const card = AL('HORIZONTAL', { name: 'instructor-card', fill: C.cream, radius: 24, pad: [48, 48, 48, 48], justify: 'SPACE_BETWEEN', align: 'CENTER' }); fixW(card, 1280);
+// 4. instructor
+const s3 = section('prices-instructor', C.cream, 80, 80, 1440);
+const card = AL('HORIZONTAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [48, 48, 48, 48], justify: 'SPACE_BETWEEN', align: 'CENTER' }); fixW(card, 1280);
 const left = AL('VERTICAL', { name: 'instructor__text', gap: 20 });
 const lt = AL('VERTICAL', { name: 'text', gap: 16 });
-add(lt, title('Інструктор', 'на святі', { size: 48, lh: 56, br: true }), T('Пояснить гостям правила й проведе ігри, поки ви святкуєте.', { size: 18, lh: 30, color: C.ink, w: 520 }));
-add(left, pill('Додатково', C.white), lt);
+add(lt, title('Інструктор', 'на святі', { size: 48, lh: 56, br: true }), T('Базово ігри йдуть без супроводу: до кожної додаємо правила. Інструктор швидко й зрозуміло пояснить правила гостям, а за потреби зіграє разом з ними.', { size: 18, lh: 30, color: C.ink, w: 520 }));
+add(left, pill('Супровід ігор', C.cream), lt);
 const right = AL('VERTICAL', { name: 'instructor__price', gap: 32 });
 const rp = AL('VERTICAL', { name: 'price', gap: 8 });
 add(rp, T('400' + NB + 'грн', { size: 60, lh: 64, style: 'Bold' }), T('за годину, від 3 годин', { size: 18, lh: 28, color: C.ink }));
 add(right, rp, btn('Замовити ігри з інструктором'));
 add(card, left, right); add(s3, card);
 
-add(D, s1, s2, s3);
+add(D, s1, sp, s2, s3);
 // 4–6: the same blocks as on the site
 for (const id of ['1586:374', '1547:6791', '1547:6802']) { const k = await clone(id); add(D, k); k.layoutSizingHorizontal = 'FIXED'; }
 // header on top, no current page in the menu (the page is not in it)
@@ -162,15 +192,23 @@ const m1 = section('prices-hero', C.white, 182, 64, 390);
 const mc1 = AL('VERTICAL', { name: 'content', gap: 40, align: 'CENTER' }); fixW(mc1, 350);
 const mh = AL('VERTICAL', { name: 'page-title', gap: 16, align: 'CENTER' });
 const mht = AL('VERTICAL', { name: 'page-title__text', gap: 16, align: 'CENTER' });
-add(mht, title('Скільки коштує', 'оренда ігор', { size: 30, lh: 36, align: 'CENTER', br: true, w: 350 }), T('Ціна однакова для будь-якої гри з колекції. Що більше ігор берете, то вигідніше кожна.', { size: 18, lh: 30, color: C.ink, w: 350, align: 'CENTER' }));
+add(mht, title('Скільки коштує', 'оренда ігор', { size: 30, lh: 36, align: 'CENTER', br: true, w: 350 }), T('Що більше ігор берете, то вигідніше кожна. Велика Дженга і Бірпонг мають свою ціну.', { size: 18, lh: 30, color: C.ink, w: 350, align: 'CENTER' }));
 add(mh, pill('Ціни', C.cream), mht);
 const mp = AL('VERTICAL', { name: 'prices', gap: 24, align: 'CENTER' });
 const mg = AL('VERTICAL', { name: 'price-cards', gap: 16 });
 for (let r = 0; r < 2; r++) { const rr = AL('HORIZONTAL', { name: 'row', gap: 16 }); for (const p of PRICES.slice(r * 2, r * 2 + 2)) { const c = priceCard(p, 167, true); add(rr, c); c.layoutSizingVertical = 'FILL'; } add(mg, rr); }
-add(mp, mg, note('П’ята і кожна наступна гра: +750' + NB + 'грн', 298));
+add(mp, mg, note('П’ята і кожна наступна гра: +800' + NB + 'грн', 298));
 add(mc1, mh, mp); add(m1, mc1);
 
-const m2 = section('prices-terms', C.cream, 64, 64, 390);
+const mS = section('prices-special', C.cream, 64, 64, 390);
+const mcS = AL('VERTICAL', { name: 'content', gap: 40, align: 'CENTER' }); fixW(mcS, 350);
+const mhS = AL('VERTICAL', { name: 'section-head', gap: 16, align: 'CENTER' });
+add(mhS, title('Окрема', 'ціна', { size: 30, lh: 36, align: 'CENTER' }), T('Велика Дженга, Бірпонг і столи для ігор мають свою ціну.', { size: 18, lh: 30, color: C.ink, w: 350, align: 'CENTER' }));
+const mlS = AL('VERTICAL', { name: 'special-cards', gap: 12 });
+for (const x of SPECIAL) add(mlS, specialCard(x, 350, true));
+add(mcS, mhS, mlS); add(mS, mcS);
+
+const m2 = section('prices-terms', C.white, 64, 64, 390);
 const mc2 = AL('VERTICAL', { name: 'content', gap: 40, align: 'CENTER' }); fixW(mc2, 350);
 const mh2 = AL('VERTICAL', { name: 'section-head', gap: 16, align: 'CENTER' });
 add(mh2, title('Умови', 'оренди', { size: 30, lh: 36, align: 'CENTER' }), T('Усе, що варто знати до бронювання.', { size: 18, lh: 30, color: C.ink, w: 350, align: 'CENTER' }));
@@ -178,21 +216,26 @@ const ml = AL('VERTICAL', { name: 'term-tiles', gap: 12 });
 for (const t of TERMS) add(ml, termTile(t, 350, true));
 add(mc2, mh2, ml); add(m2, mc2);
 
-const m3 = section('prices-instructor', C.white, 64, 64, 390);
-const mcard = AL('VERTICAL', { name: 'instructor-card', fill: C.cream, radius: 24, pad: [24, 24, 24, 24], gap: 24 }); fixW(mcard, 350);
+const m3 = section('prices-instructor', C.cream, 64, 64, 390);
+const mcard = AL('VERTICAL', { name: 'instructor-card', fill: C.white, radius: 24, pad: [24, 24, 24, 24], gap: 24 }); fixW(mcard, 350);
 const mlt = AL('VERTICAL', { name: 'instructor__text', gap: 16 });
 const mtt = AL('VERTICAL', { name: 'text', gap: 12 });
-add(mtt, title('Інструктор', 'на святі', { size: 30, lh: 36, br: true }), T('Пояснить гостям правила й проведе ігри, поки ви святкуєте.', { size: 16, lh: 26, color: C.ink, w: 302 }));
-add(mlt, pill('Додатково', C.white), mtt);
+add(mtt, title('Інструктор', 'на святі', { size: 30, lh: 36, br: true }), T('Базово ігри йдуть без супроводу: до кожної додаємо правила. Інструктор пояснить правила гостям, а за потреби зіграє разом з ними.', { size: 16, lh: 26, color: C.ink, w: 302 }));
+add(mlt, pill('Супровід ігор', C.cream), mtt);
 const mrp = AL('VERTICAL', { name: 'price', gap: 4 });
 add(mrp, T('400' + NB + 'грн', { size: 40, lh: 48, style: 'Bold' }), T('за годину, від 3 годин', { size: 16, lh: 26, color: C.ink }));
-add(mcard, mlt, mrp, btn('Замовити з інструктором', 302)); add(m3, mcard);
+add(mcard, mlt, mrp, btn('Замовити інструктора', 302)); add(m3, mcard);
 
-add(M, m1, m2, m3);
+add(M, m1, mS, m2, m3);
 for (const id of ['1586:432', '1554:15197', '1554:28763']) { const k = await clone(id); add(M, k); k.layoutSizingHorizontal = 'FIXED'; }
 const chrome = [];
 for (const [id, y] of [['1554:17714', 0], ['1554:17704', 0], ['1554:15323', 62]]) { const k = await clone(id); add(M, k); k.layoutPositioning = 'ABSOLUTE'; k.x = 0; k.y = y; chrome.push(k); }
 const hi = await clone('1554:17715'); add(M, hi); hi.layoutPositioning = 'ABSOLUTE'; hi.x = 0; hi.y = M.height - hi.height; hi.constraints = { horizontal: 'CENTER', vertical: 'MAX' };
 
+for (const fr of [D, M]) {
+  const a = fr.findOne((n) => n.type === 'TEXT' && n.characters.startsWith('Одна гра коштує'));
+  if (a) { for (const f of a.getStyledTextSegments(['fontName'])) await figma.loadFontAsync(f.fontName);
+    a.characters = nb('Одна гра коштує 850 грн на добу. Що більше ігор, то вигідніше: 2 гри 1650 грн, 3 гри 2450 грн, 4 гри 3200 грн, кожна наступна 800 грн. Велика Дженга 1200 грн, Бірпонг 1500 грн.'); }
+}
 sec.resizeWithoutConstraints(1680 + 390 + 120, Math.max(D.y + D.height, M.y + M.height) + 120);
-return { section: sec.id, desktop: [D.id, D.height], mobile: [M.id, M.height], sizes: { s1: s1.height, s2: s2.height, s3: s3.height, m1: m1.height, m2: m2.height, m3: m3.height } };
+return { faqFixed: true, section: sec.id, desktop: [D.id, D.height], mobile: [M.id, M.height], sizes: { s1: s1.height, s2: s2.height, s3: s3.height, m1: m1.height, m2: m2.height, m3: m3.height } };
