@@ -146,7 +146,7 @@ export function pageMeta(path) {
       ...base,
       title: 'Фото з наших свят: дерев’яні ігри на подіях у Львові | Бавись',
       description: 'Як виглядають наші дерев’яні ігри на весіллях, корпоративах і фестивалях у Львові: живі фото гостей та ігрових зон.',
-      image: img('gal-jenga-guests-day'),
+      image: img('ev-jenga-festival'),
     };
   }
 

@@ -71,6 +71,24 @@ import galFestivalTable from '../../assets/photos/gallery/festival-table.webp';
 import galVOdniVorotaPlay from '../../assets/photos/gallery/v-odni-vorota-play.webp';
 import galConnect4Evening from '../../assets/photos/gallery/connect4-evening.webp';
 
+// real event photos (Figma «Сайт», user's own shots, 2026-10-05)
+import evBalansLounge from '../../assets/photos/events/balans-lounge.webp';
+import evBalansHands from '../../assets/photos/events/balans-hands.webp';
+import evCornholeLake from '../../assets/photos/events/cornhole-lake.webp';
+import evJengaHouse from '../../assets/photos/events/jenga-house.webp';
+import evBalansTop from '../../assets/photos/events/balans-top.webp';
+import evGuestsDog from '../../assets/photos/events/guests-dog.webp';
+import evGalaktykaGuests from '../../assets/photos/events/galaktyka-guests.webp';
+import evGalaktykaLawn from '../../assets/photos/events/galaktyka-lawn.webp';
+import evConnect4Lawn from '../../assets/photos/events/connect4-lawn.webp';
+import evConnect4Guests from '../../assets/photos/events/connect4-guests.webp';
+import evWeddingGames from '../../assets/photos/events/wedding-games.webp';
+import evParkEvent from '../../assets/photos/events/park-event.webp';
+import evEventStand from '../../assets/photos/events/event-stand.webp';
+import evJengaFestival from '../../assets/photos/events/jenga-festival.webp';
+import evKiltsekydRings from '../../assets/photos/events/kiltsekyd-rings.webp';
+import evKiltsekydPines from '../../assets/photos/events/kiltsekyd-pines.webp';
+
 export const photos = {
   // home hero: pure white backdrop (#fff) so it melts into the white hero
   'lawn-white': {
@@ -145,6 +163,22 @@ export const photos = {
   'footer-garden': { src: footerGarden, mobile: footerGardenM, alt: '' },
   'jenga-404': { src: jenga404, alt: 'Вежа Дженги, з якої випадають бруски', fit: 'contain' },
   // occasions
+  'ev-balans-lounge': { src: evBalansLounge, alt: 'Гра «Баланс» на столику в лаунж-зоні свята' },
+  'ev-balans-hands': { src: evBalansHands, alt: 'Гравець кладе брусок на «Баланс»' },
+  'ev-cornhole-lake': { src: evCornholeLake, alt: 'Корнхол «Бавись» на березі озера' },
+  'ev-jenga-house': { src: evJengaHouse, alt: 'Велика Дженга біля дерев’яного будиночка' },
+  'ev-balans-top': { src: evBalansTop, alt: '«Баланс» зблизька: бруски на платформі' },
+  'ev-guests-dog': { src: evGuestsDog, alt: 'Гості грають у «Баланс» на галявині' },
+  'ev-galaktyka-guests': { src: evGalaktykaGuests, alt: 'Гості грають у «Галактику» на святі' },
+  'ev-galaktyka-lawn': { src: evGalaktykaLawn, alt: 'Гра «Галактика» на траві' },
+  'ev-connect4-lawn': { src: evConnect4Lawn, alt: 'Велика гра «4 в ряд» на газоні' },
+  'ev-connect4-guests': { src: evConnect4Guests, alt: 'Дівчата грають у «4 в ряд» на святі' },
+  'ev-wedding-games': { src: evWeddingGames, alt: 'Наречені на весільній фотосесії поруч з іграми Бавись' },
+  'ev-park-event': { src: evParkEvent, alt: 'Ігрова зона на святі в парку' },
+  'ev-event-stand': { src: evEventStand, alt: 'Банер Бавись і «4 в ряд» на події' },
+  'ev-jenga-festival': { src: evJengaFestival, alt: 'Велика Дженга «Бавись» на фестивалі' },
+  'ev-kiltsekyd-rings': { src: evKiltsekydRings, alt: 'Кільцекид зблизька: мотузкові кільця на кілках' },
+  'ev-kiltsekyd-pines': { src: evKiltsekydPines, alt: 'Кільцекид серед сосон на березі' },
   'occ-wedding': { src: occWedding, alt: 'Гості грають у Велику Дженгу на весіллі' },
   'occ-corporate': { src: occCorporate, alt: 'Гості на корпоративі біля шатра' },
   'occ-birthday': { src: occBirthday, alt: 'Корнхол на вечірньому святі' },

@@ -99,7 +99,7 @@ export function GalleryBento({ items, className = '', ...rest }) {
     <ul className={`bento ${className}`} role="list" {...rest}>
       {items.map((it) => (
         <li className="bento__tile" key={it.photo}>
-          <Media photo={it.photo} />
+          <Media photo={it.photo} position={it.position} />
         </li>
       ))}
     </ul>

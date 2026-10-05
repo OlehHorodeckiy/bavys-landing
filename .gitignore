@@ -20,3 +20,6 @@ dist-ssr/
 
 # local wrangler dev state
 .wrangler/
+
+# files prepared for Google Business Profile etc.
+exports/
