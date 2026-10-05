@@ -33,7 +33,7 @@ export default function About() {
           text="Ми команда зі Львова, яка вірить, що найкращі свята там, де гості не сидять за столами, а грають, сміються і знайомляться."
         />
         <div className="container about-intro__photos">
-          {['gal-guests-tent', 'gal-cornhole-evening', 'gal-festival-table'].map((p) => (
+          {['about-kids-table', 'about-jenga-tower', 'about-connect4-kids'].map((p) => (
             <div className="about-intro__photo" key={p}>
               <Media photo={p} />
             </div>
@@ -50,8 +50,8 @@ export default function About() {
             <Pill>Наша історія</Pill>
             <Heading as="h2" title="Із любові" accent="до дерев’яних ігор" br className="about-story__title" />
             <p>
-              Бавись починався з кількох великих ігор, які ми робили для свят друзів. Гості не відходили від них до ночі, і ми
-              зрозуміли, що це варто робити для всіх.
+              Наша історія розпочалась з кількох великих ігор, які ми робили для свят друзів. Гості не відходили від них до
+              ночі, і ми зрозуміли, що це варто робити для всіх.
             </p>
             <p>
               Сьогодні в нашій колекції {games.length} дерев’яних ігор для дорослих і дітей. Ми дбаємо про кожну так, ніби

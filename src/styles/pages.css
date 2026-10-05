@@ -487,7 +487,6 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   gap: var(--s-9);
-  margin-bottom: var(--s-10);
 }
 
 .collage {
@@ -1509,6 +1508,11 @@ body.modal-open {
   background: transparent;
 }
 
+/* the lead runs 760 wide here: two lines at 1440 */
+.about-intro .page-title__text {
+  max-width: 47.5rem;
+}
+
 .about-intro__photos {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1547,8 +1551,9 @@ body.modal-open {
   background: var(--white);
 }
 
+/* 20 under the pill (the pill keeps its own 20) */
 .about-story__title {
-  margin-top: 1.25rem;
+  margin-top: 0;
   color: var(--deep);
   font-size: var(--fs-h2);
 }
@@ -1614,6 +1619,7 @@ body.modal-open {
   margin-top: 1rem;
   color: var(--ink);
   font-size: 1.125rem;
+  --lh: 1.56;
   text-align: center;
 }
 
@@ -1626,9 +1632,10 @@ body.modal-open {
   list-style: none;
 }
 
+/* 416×160: icon 24 from the top, text 24 under it, 20 to the bottom */
 .service-tiles li {
   min-height: 10rem;
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 1.25rem;
   border-radius: 1.25rem;
   background: var(--bg);
 }

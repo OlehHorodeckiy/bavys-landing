@@ -50,6 +50,9 @@ import heroVelykaDzhenga from '../../assets/photos/games/hero-velyka-dzhenga.web
 // backgrounds: white backdrop + lawn strip (game hero, about, 404), booking banner, footer
 import lawnStrip from '../../assets/photos/lawn-strip.webp';
 import ctaLawn from '../../assets/photos/cta-lawn.webp';
+import aboutKidsTable from '../../assets/photos/about/kids-table.webp';
+import aboutJengaTower from '../../assets/photos/about/jenga-tower.webp';
+import aboutConnect4Kids from '../../assets/photos/about/connect4-kids.webp';
 import footerGarden from '../../assets/photos/footer-garden.webp';
 import footerGardenM from '../../assets/photos/footer-garden-m.webp';
 import jenga404 from '../../assets/photos/jenga-404.webp';
@@ -160,6 +163,9 @@ export const photos = {
   // backgrounds
   'lawn-strip': { src: lawnStrip, alt: '' },
   'cta-lawn': { src: ctaLawn, alt: 'Велика Дженга і кільцекид на газоні' },
+  'about-kids-table': { src: aboutKidsTable, alt: 'Дорослі й діти грають у дерев’яну настільну гру на святі в парку' },
+  'about-jenga-tower': { src: aboutJengaTower, alt: 'Гість обережно витягує брусок з Великої Дженги' },
+  'about-connect4-kids': { src: aboutConnect4Kids, alt: 'Діти грають у «4 в ряд» на святі в парку' },
   'footer-garden': { src: footerGarden, mobile: footerGardenM, alt: '' },
   'jenga-404': { src: jenga404, alt: 'Вежа Дженги, з якої випадають бруски', fit: 'contain' },
   // occasions
