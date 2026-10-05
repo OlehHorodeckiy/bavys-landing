@@ -148,7 +148,8 @@
   display: none;
 }
 
-@media (max-width: 1100px) {
+/* seven menu items need ~1180: below that the menu goes behind the ≡ button */
+@media (max-width: 1180px) {
   .site-nav {
     display: none;
   }

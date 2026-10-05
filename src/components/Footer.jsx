@@ -31,7 +31,7 @@ export default function Footer() {
         <div className="site-footer__col">
           <h2 className="site-footer__title">Навігація</h2>
           <ul>
-            {nav.map((item) => (
+            {nav.filter((item) => item.footer !== false).map((item) => (
               <li key={item.path}>
                 <a href={href(item.path)}>{item.label}</a>
               </li>

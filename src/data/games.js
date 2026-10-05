@@ -20,14 +20,23 @@
  * Rental terms that apply to every game (owner's Instagram «Ціни», 1 вересня 2026).
  * A game with its own `price` (Велика Дженга, Бірпонг, Великий морський бій) shows that instead.
  */
+/** [games, price for the day] — one game is the base price, more games cost less each. */
+const PACKAGES = [[1, 850], [2, 1650], [3, 2450], [4, 3200]];
+const NEXT = 800;
+const word = (n) => (n === 1 ? 'гра' : 'гри');
+
 export const rental = {
-  price: '850 грн / доба',
-  bundle: '2 гри — 1650 грн · 3 гри — 2450 грн · 4 гри — 3200 грн · кожна наступна — 800 грн',
+  packages: PACKAGES.map(([count, price]) => ({ count, label: `${count} ${word(count)}`, price, save: count * PACKAGES[0][1] - price })),
+  next: NEXT,
+  price: `${PACKAGES[0][1]} грн / доба`,
+  bundle: `${PACKAGES.slice(1).map(([c, p]) => `${c} ${word(c)} — ${p} грн`).join(' · ')} · кожна наступна — ${NEXT} грн`,
   term: 'Доба: з дня отримання до наступного дня включно',
   returnBy: 'Повернення наступного дня до 12:00',
   delivery: 'Доставка або самовивіз',
   deposit: 'Залежить від кількості ігор',
   instructor: '400 грн/год, від 3 годин',
+  instructorRate: 400,
+  instructorHours: 3,
   table: '120 грн',
 };
 

@@ -497,3 +497,177 @@
     color: var(--primary);
   }
 }
+
+@media (max-width: 767px) {
+  /* ---------------------------------------------------------- prices (phones)
+     Figma «12 Ціни — 390»: title centred, photo 350×260, list, then the
+     own-price cards one under another 40 below; instructor card with the shirt on top */
+  .prices-hero {
+    padding: 7.5rem 0 4rem;
+  }
+
+  .prices-hero > .container {
+    gap: 2.5rem;
+  }
+
+  .prices-hero__split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prices-hero__main {
+    display: contents;
+  }
+
+  .prices-hero__head {
+    order: 1;
+    align-items: center;
+    text-align: center;
+  }
+
+  .prices-hero__photo {
+    order: 2;
+    height: 16.25rem;
+    border-radius: 1.25rem;
+  }
+
+  .price-list {
+    order: 3;
+    padding: 0.5rem;
+    border-radius: 1.25rem;
+  }
+
+  .prices-hero__title,
+  .instructor-card__title {
+    font-size: 1.875rem;
+    --lh: 1.2;
+  }
+
+  .prices-hero__text {
+    margin-top: 1rem;
+  }
+
+  .price-list__row {
+    padding: 0.875rem 1rem;
+  }
+
+  .price-list__name {
+    font-size: 1rem;
+    --lh: 1.5;
+  }
+
+  .price-list__save {
+    padding-inline: 0.5rem;
+  }
+
+  .price-list__row > strong {
+    font-size: 1.25rem;
+    --lh: 1.4;
+  }
+
+  .special-cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .special-card {
+    gap: 1.25rem;
+    padding: 0.5rem 0.5rem 1.25rem;
+    border-radius: 1.25rem;
+  }
+
+  .special-card__media {
+    height: 13.75rem;
+    border-radius: 0.875rem;
+  }
+
+  .special-card__tag {
+    bottom: 0.75rem;
+    left: 0.75rem;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+    --lh: 1.33;
+  }
+
+  .special-card__tag strong {
+    font-size: 1.125rem;
+    --lh: 1.44;
+  }
+
+  .special-card__body {
+    padding: 0 0.75rem;
+  }
+
+  .special-card__name {
+    font-size: 1.125rem;
+    --lh: 1.44;
+  }
+
+  .special-card__body > p {
+    font-size: 0.875rem;
+    --lh: 1.43;
+  }
+
+  .special-card__kit {
+    gap: 0.5rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  .instructor-card {
+    gap: 1.5rem;
+    padding: 0.75rem 0.75rem 1.5rem;
+  }
+
+  .instructor-card__tee {
+    height: 17.5rem;
+    border-radius: 1rem;
+  }
+
+  .instructor-card__text {
+    gap: 2rem;
+    padding: 0 0.75rem;
+  }
+
+  .instructor-card__body {
+    gap: 1rem;
+  }
+
+  .instructor-card__body > p {
+    font-size: 1rem;
+    --lh: 1.63;
+  }
+
+  .instructor-card__cta {
+    align-items: stretch;
+  }
+
+  .instructor-card__cta .btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .instructor-card__price p:first-child strong {
+    font-size: 2rem;
+    --lh: 1.25;
+  }
+
+  .instructor-card__price p:first-child span {
+    font-size: 0.875rem;
+    --lh: 1.43;
+  }
+
+  .instructor-card__price p + p {
+    min-height: 3rem;
+    margin-left: 1rem;
+    padding-left: 1rem;
+  }
+
+  .instructor-card__price p + p strong {
+    font-size: 1rem;
+    --lh: 1.5;
+  }
+
+  .instructor-card__price p + p span {
+    font-size: 0.75rem;
+    --lh: 1.33;
+  }
+}

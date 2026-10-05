@@ -23,6 +23,7 @@ export const allRoutes = () => [
   '/',
   '/games',
   ...games.map((g) => `/games/${g.slug}`),
+  '/prices',
   '/gallery',
   '/blog',
   ...posts.map((p) => `/blog/${p.slug}`),
@@ -138,6 +139,16 @@ export function pageMeta(path) {
           itemListElement: games.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.name, url: abs(`/games/${g.slug}`) })),
         },
       ],
+    };
+  }
+
+  if (section === 'prices') {
+    return {
+      ...base,
+      title: 'Ціни на оренду дерев’яних ігор у Львові | Бавись',
+      description: `Оренда гри від ${rental.price}: ${rental.bundle}. Велика Дженга, Бірпонг і Великий морський бій мають свою ціну. Інструктор ${rental.instructor}.`,
+      image: img('ev-jenga-festival'),
+      jsonLd: [business, faqPage, crumbs([[BRAND, '/'], ['Ціни', '/prices']])],
     };
   }
 

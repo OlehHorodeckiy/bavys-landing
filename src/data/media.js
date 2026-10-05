@@ -51,6 +51,11 @@ import heroVelykaDzhenga from '../../assets/photos/games/hero-velyka-dzhenga.web
 import lawnStrip from '../../assets/photos/lawn-strip.webp';
 import ctaLawn from '../../assets/photos/cta-lawn.webp';
 import aboutKidsTable from '../../assets/photos/about/kids-table.webp';
+import pricesJenga from '../../assets/photos/prices/jenga.webp';
+import pricesBirponh from '../../assets/photos/prices/birponh.webp';
+import pricesMorskyiBii from '../../assets/photos/prices/morskyi-bii.webp';
+import pricesTable from '../../assets/photos/prices/table.webp';
+import pricesTee from '../../assets/photos/prices/tee.webp';
 import aboutJengaTower from '../../assets/photos/about/jenga-tower.webp';
 import aboutConnect4Kids from '../../assets/photos/about/connect4-kids.webp';
 import footerGarden from '../../assets/photos/footer-garden.webp';
@@ -163,6 +168,11 @@ export const photos = {
   // backgrounds
   'lawn-strip': { src: lawnStrip, alt: '' },
   'cta-lawn': { src: ctaLawn, alt: 'Велика Дженга і кільцекид на газоні' },
+  'prices-jenga': { src: pricesJenga, alt: 'Велика Дженга на газоні' },
+  'prices-birponh': { src: pricesBirponh, alt: 'Стіл для бірпонгу з червоними й синіми стаканчиками' },
+  'prices-morskyi-bii': { src: pricesMorskyiBii, alt: 'Великий морський бій: дерев’яний кейс з двома полями' },
+  'prices-table': { src: pricesTable, alt: 'Дерев’яний розкладний стіл для ігор' },
+  'prices-tee': { src: pricesTee, alt: 'Жовта футболка «Бавись» на траві' },
   'about-kids-table': { src: aboutKidsTable, alt: 'Дорослі й діти грають у дерев’яну настільну гру на святі в парку' },
   'about-jenga-tower': { src: aboutJengaTower, alt: 'Гість обережно витягує брусок з Великої Дженги' },
   'about-connect4-kids': { src: aboutConnect4Kids, alt: 'Діти грають у «4 в ряд» на святі в парку' },

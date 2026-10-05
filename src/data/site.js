@@ -23,9 +23,11 @@ export const company = {
   ],
 };
 
+/** `footer: false` — in the header and the phone menu only (the footer list stays as in Figma). */
 export const nav = [
   { path: '/', label: 'Головна' },
   { path: '/games', label: 'Ігри' },
+  { path: '/prices', label: 'Ціни', footer: false },
   { path: '/gallery', label: 'Галерея' },
   { path: '/blog', label: 'Блог' },
   { path: '/about', label: 'Про нас' },
