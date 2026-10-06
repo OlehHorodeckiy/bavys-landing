@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const dist = path.resolve(import.meta.dirname, '../dist');
-const port = Number(process.env.PORT || 4173);
+const port = Number(process.argv[2] || process.env.PORT || 4173); // `node scripts/serve.mjs 4180` when 4173 is busy
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json' };
 const file = (p) => fs.existsSync(p) && fs.statSync(p).isFile() && p;
 

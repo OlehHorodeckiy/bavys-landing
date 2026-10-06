@@ -52,6 +52,11 @@ import lawnStrip from '../../assets/photos/lawn-strip.webp';
 import ctaLawn from '../../assets/photos/cta-lawn.webp';
 import aboutKidsTable from '../../assets/photos/about/kids-table.webp';
 import pricesJenga from '../../assets/photos/prices/jenga.webp';
+import ydGalaktyka from '../../assets/photos/blog/youth-day/galaktyka.webp';
+import ydJengaGirl from '../../assets/photos/blog/youth-day/jenga-girl.webp';
+import ydJengaCrowd from '../../assets/photos/blog/youth-day/jenga-crowd.webp';
+import ydRybalkaAdults from '../../assets/photos/blog/youth-day/rybalka-adults.webp';
+import ydRybalkaKids from '../../assets/photos/blog/youth-day/rybalka-kids.webp';
 import pricesBirponh from '../../assets/photos/prices/birponh.webp';
 import pricesMorskyiBii from '../../assets/photos/prices/morskyi-bii.webp';
 import pricesTable from '../../assets/photos/prices/table.webp';
@@ -168,6 +173,11 @@ export const photos = {
   // backgrounds
   'lawn-strip': { src: lawnStrip, alt: '' },
   'cta-lawn': { src: ctaLawn, alt: 'Велика Дженга і кільцекид на газоні' },
+  'yd-galaktyka': { src: ydGalaktyka, alt: 'Малюк грає в Галактику на Дні молоді у Стрийському парку' },
+  'yd-jenga-girl': { src: ydJengaGirl, alt: 'Дівчина витягує брусок з Великої Дженги в Стрийському парку' },
+  'yd-jenga-crowd': { src: ydJengaCrowd, alt: 'Гості навколо Великої Дженги на Дні молоді' },
+  'yd-rybalka-adults': { src: ydRybalkaAdults, alt: 'Дорослі й діти грають у «Рибалку» в Стрийському парку' },
+  'yd-rybalka-kids': { src: ydRybalkaKids, alt: 'Діти ловлять рибок у «Рибалці» на Дні молоді' },
   'prices-jenga': { src: pricesJenga, alt: 'Велика Дженга на газоні' },
   'prices-birponh': { src: pricesBirponh, alt: 'Стіл для бірпонгу з червоними й синіми стаканчиками' },
   'prices-morskyi-bii': { src: pricesMorskyiBii, alt: 'Великий морський бій: дерев’яний кейс з двома полями' },

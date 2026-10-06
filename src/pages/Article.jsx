@@ -93,6 +93,15 @@ export default function Article({ slug }) {
                 <p>{s.text}</p>
               </section>
             ))}
+            {post.gallery?.length ? (
+              <ul className="article__gallery" role="list" aria-label="Фото з події">
+                {post.gallery.map((photo) => (
+                  <li key={photo}>
+                    <Media photo={photo} />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <div className="article__back">
               <Button to="/blog" variant="outline" disc={false}>
                 <Icon name="arrowLeft" size={16} /> Усі статті

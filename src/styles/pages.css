@@ -433,6 +433,22 @@
   border-radius: var(--r-lg);
 }
 
+/* photos from the event: two per row, 16 between them */
+.article__gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: var(--s-7) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article__gallery li {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--r-md);
+}
+
 .article__quote {
   margin-block: var(--s-7);
   padding: 2rem 2.5rem;

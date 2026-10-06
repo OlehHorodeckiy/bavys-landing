@@ -1,7 +1,8 @@
 /**
  * Blog — the company's story: events, partners, company news, games and tips.
- * These six articles are demo copy that shows the structure; they only mention
- * the real Bavys games. Replace them with real stories as they're published.
+ * «День молоді у Стрийському парку» is a real story (facts from the owner, photos
+ * from the event). The six after it are demo copy that shows the structure; they
+ * only mention the real Bavys games. Replace them with real stories as they come.
  */
 export const blogCategories = [
   { id: 'all', label: 'Усі статті' },
@@ -15,6 +16,26 @@ export const blogCategories = [
 export const blogCategory = (id) => blogCategories.find((c) => c.id === id);
 
 export const posts = [
+  {
+    slug: 'den-molodi-stryiskyi-park',
+    category: 'partners',
+    title: 'День молоді у Стрийському парку: ми були партнерами свята',
+    excerpt: '15–16 серпня Львівська міська рада запросила молодь міста на День молоді у Стрийському парку. Ми привезли великі дерев’яні ігри та інструктора.',
+    date: '6 жовтня 2026',
+    read: '3 хв',
+    media: { photo: 'about-jenga-tower' },
+    figure: { photo: 'about-connect4-kids', caption: '«4 в ряд» на Дні молоді у Стрийському парку' },
+    lead: 'Цього літа Львівська міська рада запросила молодь міста відзначити День молоді у Стрийському парку. 15–16 серпня ми були партнерами свята й привезли в парк великі дерев’яні ігри.',
+    sections: [
+      { title: 'Які ігри ми привезли', text: 'Велику Дженгу, кільцекид, «Рибалку» з магнітами, «4 в ряд» і «На гачок», а ще Галактику. Ігри стояли просто неба, тож зіграти міг кожен, хто гуляв парком.' },
+      { title: 'Грали всі: і дорослі, і малі', text: 'Людей було дуже багато. Діти змагалися в «4 в ряд» і ловили рибок, дорослі обережно витягували бруски з Дженги, а навколо вежі постійно збиралися ті, хто вболівав.' },
+      { title: 'Наш інструктор був поруч', text: 'Увесь час на місці працював наш інструктор: пояснював правила, допомагав почати гру й стежив, щоб усім вистачило місця.' },
+      { title: 'Дякуємо за свято', text: 'Дякуємо Львівській міській раді за запрошення, а всім гостям за гру й гарний настрій. Хочете таку ж ігрову зону на своєму святі? Залиште заявку, і ми підберемо ігри під вашу подію.' },
+    ],
+    quote: 'Найкраще свято те, де бавляться всі: і малі, і дорослі.',
+    gallery: ['yd-galaktyka', 'yd-jenga-girl', 'about-kids-table', 'yd-rybalka-adults', 'yd-jenga-crowd', 'yd-rybalka-kids'],
+    relatedGames: ['velyka-dzhenga', 'kiltsekyd', 'rybalka', 'chotyry-v-riad', 'na-hachok'],
+  },
   {
     slug: 'yak-obraty-igry-dlia-vesillia',
     category: 'tips',

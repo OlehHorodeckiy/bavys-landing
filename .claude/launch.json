@@ -39,6 +39,16 @@
       ],
       "port": 8788,
       "url": "http://127.0.0.1:8788"
+    },
+    {
+      "name": "bavys-dist-4180",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve.mjs",
+        "4180"
+      ],
+      "port": 4180,
+      "url": "http://127.0.0.1:4180"
     }
   ]
 }
