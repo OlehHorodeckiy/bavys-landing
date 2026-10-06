@@ -179,7 +179,7 @@ export const photos = {
   'prices-morskyi-bii': { src: pricesMorskyiBii, alt: 'Великий морський бій: дерев’яний кейс з двома полями' },
   'prices-table': { src: pricesTable, alt: 'Дерев’яний розкладний стіл для ігор' },
   'prices-tee': { src: pricesTee, alt: 'Жовта футболка «Бавись» на траві' },
-  'about-kids-table': { src: aboutKidsTable, alt: 'Дорослі й діти грають у дерев’яну настільну гру на святі в парку' },
+  'about-kids-table': { src: aboutKidsTable, alt: 'Мама з дитиною грають у «Шалені камені» на святі в парку' },
   'about-jenga-tower': { src: aboutJengaTower, alt: 'Гість обережно витягує брусок з Великої Дженги' },
   'about-connect4-kids': { src: aboutConnect4Kids, alt: 'Діти грають у «4 в ряд» на святі в парку' },
   'footer-garden': { src: footerGarden, mobile: footerGardenM, alt: '' },
