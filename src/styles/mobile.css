@@ -113,7 +113,14 @@
     padding-bottom: 2.625rem;
   }
 
+  /* the phone photo is drawn at the Figma 390 scale (1112 tall, pinned to the
+     bottom) on every width up to 767: wider screens see more sky and lawn at
+     the sides instead of a bigger tower sliding under the headline */
   .hero--home .hero__bg img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: max(100%, 69.5rem);
     object-position: 50% 100%;
   }
 
