@@ -3,9 +3,9 @@ import { games } from '../data/games.js';
 import { inventory } from '../data/inventory.js';
 import { useFanSpread } from '../components/motion.jsx';
 import { homeGallery } from '../data/gallery.js';
-import { Button, Chip, GameMedia, Rule, SectionHead } from '../components/ui.jsx';
+import { Button, Chip, GameMedia, MarqueeLink, MarqueeTrack, Rule, SectionHead } from '../components/ui.jsx';
 import Icon from '../components/Icon.jsx';
-import { href } from '../router.js';
+import { href, navigate } from '../router.js';
 import {
   CtaBanner,
   GalleryBento,
@@ -66,12 +66,80 @@ function HomeHero() {
   );
 }
 
+/**
+ * Desktop only (a mouse, motion allowed): over the section the pointer becomes
+ * the «Більше про нас.» capsule, trailing the mouse; a click anywhere that is
+ * not a link opens /about. Over links the normal pointer comes back.
+ */
+function useSectionCursor(section, cursor, to) {
+  useEffect(() => {
+    const sec = section.current;
+    const el = cursor.current;
+    if (!sec || !el) return undefined;
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!mq.matches || reduce.matches) return undefined;
+    let x = 0;
+    let y = 0;
+    let tx = 0;
+    let ty = 0;
+    let shown = false;
+    let raf = 0;
+    const tick = () => {
+      x += (tx - x) * 0.2;
+      y += (ty - y) * 0.2;
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(tick) : 0;
+    };
+    const move = (e) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      const overLink = !!e.target.closest('a, button');
+      if (!shown) {
+        x = tx;
+        y = ty;
+      }
+      shown = !overLink;
+      el.classList.toggle('is-on', shown);
+      sec.classList.toggle('has-cursor', shown);
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    const leave = () => {
+      shown = false;
+      el.classList.remove('is-on');
+      sec.classList.remove('has-cursor');
+    };
+    const click = (e) => {
+      if (e.button !== 0 || e.target.closest('a, button')) return;
+      navigate(to);
+    };
+    sec.addEventListener('mousemove', move);
+    sec.addEventListener('mouseleave', leave);
+    sec.addEventListener('click', click);
+    return () => {
+      cancelAnimationFrame(raf);
+      sec.removeEventListener('mousemove', move);
+      sec.removeEventListener('mouseleave', leave);
+      sec.removeEventListener('click', click);
+      leave();
+    };
+  }, [section, cursor, to]);
+}
+
 function Intro() {
   const [a, b, c] = [games[1], games[0], games[2]];
   const fan = useRef(null);
+  const section = useRef(null);
+  const cursor = useRef(null);
   useFanSpread(fan);
+  useSectionCursor(section, cursor, '/about');
   return (
-    <section className="section section--cream intro-section" id="pro-bavys">
+    <section className="section section--cream intro-section" id="pro-bavys" ref={section}>
+      <div className="cursor-marquee" ref={cursor} aria-hidden="true">
+        <span className="cursor-marquee__card">
+          <MarqueeTrack>Більше про нас.</MarqueeTrack>
+        </span>
+      </div>
       <div className="container">
         <SectionHead
           reveal
@@ -98,7 +166,7 @@ function Intro() {
         <Rule />
         <StatsRow reveal />
         <div className="section-actions">
-          <Button to="/about">Більше про нас</Button>
+          <MarqueeLink to="/about">Більше про нас.</MarqueeLink>
         </div>
       </div>
     </section>

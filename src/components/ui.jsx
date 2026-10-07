@@ -233,3 +233,28 @@ export function Media({ photo, art, position, className = '', eager = false, alt
 
 /** Media for a game — its photo if it has one, else its illustration. */
 export const GameMedia = ({ game, ...rest }) => <Media photo={game.photo} art={game.art} alt={game.name} {...rest} />;
+
+/**
+ * A brown capsule whose label runs right to left on a loop (after hugeinc.com
+ * «Explore.»). Four copies so the loop never shows a gap; the track moves by
+ * half its width. Screen readers get the label once.
+ */
+export function MarqueeLink({ to, children, className = '' }) {
+  return (
+    <a className={`marquee-btn ${className}`} href={toHref(to)} aria-label={String(children).replace(/\.$/, '')}>
+      <MarqueeTrack>{children}</MarqueeTrack>
+    </a>
+  );
+}
+
+export function MarqueeTrack({ children }) {
+  return (
+    <span className="marquee-btn__track" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) => (
+        <span key={i} className="marquee-btn__item">
+          {children}
+        </span>
+      ))}
+    </span>
+  );
+}
