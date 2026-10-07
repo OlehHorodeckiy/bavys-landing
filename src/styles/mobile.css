@@ -363,6 +363,7 @@
      a bottom sheet: full width, 32 top corners, grabber, 20 sides */
   .modal {
     place-items: end stretch;
+    overflow: hidden;
     padding: 2.125rem 0 0;
   }
 
@@ -370,6 +371,7 @@
     width: 100%;
     max-height: 100%;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 1.75rem 1.25rem calc(1rem + env(safe-area-inset-bottom));
     border-radius: 2rem 2rem 0 0;
     animation-name: sheet-rise;

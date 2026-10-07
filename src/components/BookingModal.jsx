@@ -28,7 +28,12 @@ export default function BookingModal() {
 
   useEffect(() => {
     if (!state) return undefined;
-    document.body.classList.add('modal-open');
+    // iOS Safari ignores overflow:hidden on body: pin the page in place instead,
+    // so it does not scroll under the sheet and the toolbar does not move it
+    const y = window.scrollY;
+    const { body } = document;
+    body.classList.add('modal-open');
+    body.style.top = `-${y}px`;
     const onKey = (e) => {
       if (e.key === 'Escape') close();
       if (e.key !== 'Tab' || !card.current) return;
@@ -40,9 +45,11 @@ export default function BookingModal() {
     };
     document.addEventListener('keydown', onKey);
     return () => {
-      document.body.classList.remove('modal-open');
+      body.classList.remove('modal-open');
+      body.style.top = '';
+      window.scrollTo(0, y);
       document.removeEventListener('keydown', onKey);
-      back.current?.focus?.();
+      back.current?.focus?.({ preventScroll: true });
     };
   }, [state]);
 

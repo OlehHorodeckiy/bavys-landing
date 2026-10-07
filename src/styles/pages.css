@@ -1414,6 +1414,9 @@ a.contact-list__value:hover {
 /* ===================================================================== popup */
 
 body.modal-open {
+  position: fixed;
+  right: 0;
+  left: 0;
   overflow: hidden;
 }
 
@@ -1424,6 +1427,7 @@ body.modal-open {
   display: grid;
   place-items: center;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 2rem 1rem;
   background: rgba(43, 16, 3, 0.48);
   -webkit-backdrop-filter: blur(8px);
