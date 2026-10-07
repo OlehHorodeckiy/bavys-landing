@@ -7,6 +7,24 @@
   padding-block: 1.5rem;
 }
 
+/* pinned on tablet and desktop (phones have the bottom bar instead); no
+   backdrop-filter: it would trap the fixed full-screen menu inside the header */
+@media (min-width: 768px) {
+  .site-header {
+    position: fixed;
+    transition:
+      background-color 0.3s var(--ease-sine-out),
+      box-shadow 0.3s var(--ease-sine-out),
+      padding 0.3s var(--ease-sine-out);
+  }
+
+  .site-header.is-scrolled {
+    padding-block: 1rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 1px 0 rgba(43, 16, 3, 0.08), 0 12px 32px rgba(43, 16, 3, 0.06);
+  }
+}
+
 .site-header__bar {
   display: flex;
   align-items: center;

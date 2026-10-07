@@ -13,8 +13,17 @@ const isHere = (current, path) => (path === '/' ? current === '/' : current.star
  */
 export default function Header({ path, book }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => setOpen(false), [path]);
+
+  // pinned from 768px up: transparent over the first screen, white once the page moves
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
@@ -25,7 +34,7 @@ export default function Header({ path, book }) {
   }, [open]);
 
   return (
-    <header className="site-header site-header--light">
+    <header className={`site-header site-header--light ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="site-header__bar container">
         <a className="site-header__logo" href={href('/')} aria-label="Бавись — на головну">
           <Logo />
