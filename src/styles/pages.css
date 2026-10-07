@@ -620,8 +620,18 @@
 
 .contact-list li {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
   gap: 1rem;
+}
+
+/* Figma «08 Контакти»: the icon alone, brown, centred on the label line (no box) */
+.contact-list li > .contact-list__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -0.125rem;
+  border-radius: 0;
+  background: none;
+  color: var(--primary);
 }
 
 .contact-list__icon {

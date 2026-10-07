@@ -26,7 +26,7 @@ export default function Contacts() {
           <aside className="contacts__info" aria-label="Контактна інформація">
             <ul className="contact-list" role="list">
               <li>
-                <span className="contact-list__icon"><Icon name="phone" size={22} /></span>
+                <span className="contact-list__icon"><Icon name="phone" size={24} strokeWidth={1.5} /></span>
                 <div>
                   <p className="contact-list__label">Телефон</p>
                   <a className="contact-list__value" href={company.phoneHref}>{company.phone}</a>
@@ -34,14 +34,14 @@ export default function Contacts() {
                 </div>
               </li>
               <li>
-                <span className="contact-list__icon"><Icon name="mail" size={22} /></span>
+                <span className="contact-list__icon"><Icon name="mail" size={24} strokeWidth={1.5} /></span>
                 <div>
                   <p className="contact-list__label">E-mail</p>
                   <a className="contact-list__value" href={`mailto:${company.email}`}>{company.email}</a>
                 </div>
               </li>
               <li>
-                <span className="contact-list__icon"><Icon name="pin" size={22} /></span>
+                <span className="contact-list__icon"><Icon name="pin" size={24} strokeWidth={1.5} /></span>
                 <div>
                   <p className="contact-list__label">Місто</p>
                   <p className="contact-list__value">{company.city}</p>
@@ -49,7 +49,7 @@ export default function Contacts() {
                 </div>
               </li>
               <li>
-                <span className="contact-list__icon"><Icon name="clock" size={22} /></span>
+                <span className="contact-list__icon"><Icon name="clock" size={24} strokeWidth={1.5} /></span>
                 <div>
                   <p className="contact-list__label">Графік роботи</p>
                   {company.hours.map((h) => (

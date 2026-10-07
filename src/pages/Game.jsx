@@ -12,7 +12,7 @@ function splitName(game) {
   return [name, null];
 }
 
-const placeIcon = (p) => (p === 'outdoor' ? 'sun' : p === 'indoor' ? 'home' : 'area');
+const placeIcon = (p) => (p === 'outdoor' ? 'sun' : p === 'indoor' ? 'home' : 'homeSun');
 
 /**
  * Light first screen: white backdrop with a lawn strip along the bottom, text
