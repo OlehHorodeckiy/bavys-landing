@@ -710,6 +710,15 @@
   cursor: none;
 }
 
+/* with a mouse (and motion allowed) the capsule is the pointer itself, so the
+   button under the stats goes (Figma «01 Головна — 1440»); phones, tablets and
+   reduced motion keep it as the way to «Про нас» */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .intro-section .section-actions {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-btn__track {
     animation: none;
