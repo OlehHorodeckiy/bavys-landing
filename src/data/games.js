@@ -78,6 +78,8 @@ export const games = [
     art: 'ringtoss',
     photo: 'card-kiltsekyd',
     hero: null,
+    // the rings set fills its photo: frame it from the peg tops to the rings
+    heroPosition: '50% 50%',
     gallery: [],
     short: 'Прості правила, справжній азарт: кидай кільця й збирай бали.',
     lead: 'Прості правила, справжній азарт! Кидай кільця, збирай бали і перемагай. Весело для всіх — від малих до дорослих.',
