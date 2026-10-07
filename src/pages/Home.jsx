@@ -36,6 +36,15 @@ function useRandomGames() {
   return list;
 }
 
+/** «Більше про нас»: a smooth scroll down to «Про Бавись» (a jump with reduced motion). */
+function toAbout(e) {
+  const target = document.getElementById('pro-bavys');
+  if (!target) return;
+  e.preventDefault();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+
 function HomeHero() {
   return (
     <PageHero
@@ -47,9 +56,9 @@ function HomeHero() {
       accent="для подій у Львові"
       text={'Привозимо Дженгу, корнхол та інші дерев’яні ігри на весілля, дні народження, корпоративи й сімейні свята.'}
       actions={
-        <>
-          <Button book>Забронювати ігри</Button>
-        </>
+        <Button href="#pro-bavys" variant="outline" disc icon="arrowDown" onClick={toAbout}>
+          Більше про нас
+        </Button>
       }
     >
       <GameStrip games={inventory} />
@@ -62,7 +71,7 @@ function Intro() {
   const fan = useRef(null);
   useFanSpread(fan);
   return (
-    <section className="section section--cream intro-section">
+    <section className="section section--cream intro-section" id="pro-bavys">
       <div className="container">
         <SectionHead
           reveal

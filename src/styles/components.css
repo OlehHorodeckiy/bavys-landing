@@ -109,6 +109,21 @@
   color: var(--white);
 }
 
+/* outline with a disc (home hero «Більше про нас»): brown disc, white arrow;
+   on hover the button fills brown and the disc turns white */
+.btn--outline .btn__disc {
+  background: var(--primary);
+  color: var(--white);
+  transition:
+    background-color 0.3s var(--ease-sine-out),
+    color 0.3s var(--ease-sine-out);
+}
+
+.btn--outline:hover .btn__disc {
+  background: var(--white);
+  color: var(--primary);
+}
+
 .btn--outline-light {
   border-color: rgba(255, 255, 255, 0.7);
   background: transparent;

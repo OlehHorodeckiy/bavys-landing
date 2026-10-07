@@ -855,6 +855,8 @@
 /* the fanned-out side cards may poke past narrow viewports */
 .intro-section {
   overflow: hidden;
+  /* «Більше про нас» lands here: the pill sits 48 below the pinned header */
+  scroll-margin-top: 3.5rem;
 }
 
 .intro-section .section-head {
