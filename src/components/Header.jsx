@@ -7,9 +7,10 @@ import { Button, Logo } from './ui.jsx';
 const isHere = (current, path) => (path === '/' ? current === '/' : current.startsWith(path));
 
 /**
- * Floating header over each page's light first screen: logo, plain text links
- * (the current page gets the accent pill) and a brown «Забронювати» that opens
- * the booking popup. Below 1080px the links move into a full-screen panel.
+ * Floating header over each page's light first screen: logo, the links in one
+ * cream capsule (an icon slides in on hover; the current page is a white pill
+ * with its icon) and a brown «Забронювати» that opens the booking popup.
+ * Below 1180px the links move into a full-screen panel.
  */
 export default function Header({ path, book }) {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ export default function Header({ path, book }) {
               href={href(item.path)}
               aria-current={isHere(path, item.path) ? 'page' : undefined}
             >
+              <Icon name={item.icon} size={18} strokeWidth={1.5} className="site-nav__icon" />
               {item.label}
             </a>
           ))}

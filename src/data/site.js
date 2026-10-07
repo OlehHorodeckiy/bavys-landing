@@ -24,14 +24,15 @@ export const company = {
 };
 
 /** `footer: false` — in the header and the phone menu only (the footer list stays as in Figma). */
+// `icon`: shown in the header capsule on hover and on the current page
 export const nav = [
-  { path: '/', label: 'Головна' },
-  { path: '/games', label: 'Ігри' },
-  { path: '/prices', label: 'Ціни', footer: false },
-  { path: '/gallery', label: 'Галерея' },
-  { path: '/blog', label: 'Блог' },
-  { path: '/about', label: 'Про нас' },
-  { path: '/contacts', label: 'Контакти' },
+  { path: '/', label: 'Головна', icon: 'navHome' },
+  { path: '/games', label: 'Ігри', icon: 'navGames' },
+  { path: '/prices', label: 'Ціни', icon: 'navPrices', footer: false },
+  { path: '/gallery', label: 'Галерея', icon: 'navGallery' },
+  { path: '/blog', label: 'Блог', icon: 'navBlog' },
+  { path: '/about', label: 'Про нас', icon: 'navAbout' },
+  { path: '/contacts', label: 'Контакти', icon: 'navPhone' },
 ];
 
 /** Event types — used for game tags, catalog filters and the booking form. */
