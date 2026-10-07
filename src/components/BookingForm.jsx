@@ -156,7 +156,7 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
           <input id={id('phone')} type="tel" autoComplete="tel" inputMode="tel" placeholder="+38 (0__) ___-__-__" value={values.phone} onChange={set('phone')} {...err('phone')} />
         </Field>
         <Field id={id('date')} label="Дата події" icon="calendar">
-          <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} />
+          <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} className={values.date ? '' : 'is-empty'} />
         </Field>
         <Field id={id('message')} label="Коментар">
           <textarea id={id('message')} rows={3} placeholder="Які ігри вас цікавлять, формат свята, побажання щодо часу" value={values.message} onChange={set('message')} />

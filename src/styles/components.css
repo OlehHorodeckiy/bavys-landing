@@ -423,12 +423,39 @@
   color: #a8978c;
 }
 
+/* focus: one solid border in the button brown, no light halo around it */
 .field input:focus,
 .field select:focus,
-.field textarea:focus {
+.field textarea:focus,
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
   border-color: var(--primary);
-  outline: 3px solid rgba(134, 100, 82, 0.18);
-  outline-offset: 0;
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--primary);
+  caret-color: var(--primary);
+}
+
+/* Safari tints the date parts in the system accent colour: dark once a date is
+   picked, placeholder grey while it is empty */
+.field input[type='date'] {
+  accent-color: var(--primary);
+}
+
+.field input[type='date']::-webkit-datetime-edit,
+.field input[type='date']::-webkit-datetime-edit-day-field,
+.field input[type='date']::-webkit-datetime-edit-month-field,
+.field input[type='date']::-webkit-datetime-edit-year-field,
+.field input[type='date']::-webkit-datetime-edit-text {
+  color: var(--deep);
+}
+
+.field input[type='date'].is-empty::-webkit-datetime-edit,
+.field input[type='date'].is-empty::-webkit-datetime-edit-day-field,
+.field input[type='date'].is-empty::-webkit-datetime-edit-month-field,
+.field input[type='date'].is-empty::-webkit-datetime-edit-year-field,
+.field input[type='date'].is-empty::-webkit-datetime-edit-text {
+  color: #a8978c;
 }
 
 .field textarea {
