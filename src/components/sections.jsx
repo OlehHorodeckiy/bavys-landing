@@ -244,12 +244,26 @@ export function StepsSection({ items = defaultSteps, label = 'Як це прац
 
 /* ----------------------------------------- How to order (illustrated) */
 
+// `strong`: the key phrase of the text, set bold and dark (Figma «Як замовити ігри?»)
 const orderSteps = [
-  { title: 'Оберіть ігри', text: 'Перегляньте каталог і додайте ігри, що пасують вашій події.' },
-  { title: 'Надішліть заявку', text: 'Вкажіть дату, локацію та кількість гостей. Без передоплати.' },
-  { title: 'Підтверджуємо наявність', text: 'Адміністратор зателефонує, уточнить деталі й зафіксує бронь.' },
-  { title: 'Привозимо на локацію', text: 'Розставляємо ігри, пояснюємо правила й забираємо після свята.' },
+  { title: 'Оберіть ігри', text: 'Перегляньте каталог і додайте ігри, що пасують вашій події.', strong: 'додайте ігри' },
+  { title: 'Надішліть заявку', text: 'Вкажіть дату, локацію та кількість гостей. Без передоплати.', strong: 'Вкажіть дату' },
+  { title: 'Підтверджуємо наявність', text: 'Адміністратор зателефонує, уточнить деталі й зафіксує бронь.', strong: 'Адміністратор зателефонує' },
+  { title: 'Привозимо на локацію', text: 'Розставляємо ігри, пояснюємо правила й забираємо після свята.', strong: 'Розставляємо ігри' },
 ];
+
+/** The text with its `strong` phrase wrapped in <strong>. */
+function withStrong(text, strong) {
+  const at = strong ? text.indexOf(strong) : -1;
+  if (at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <strong>{strong}</strong>
+      {text.slice(at + strong.length)}
+    </>
+  );
+}
 
 /** Little interface sketches inside the step tiles (decorative). */
 function StepArt({ i }) {
@@ -307,7 +321,7 @@ export function StepsTiles({ tone = 'white', items = orderSteps }) {
                 <StepArt i={i} />
               </div>
               <h3 className="steps-tiles__name">{s.title}</h3>
-              <p className="steps-tiles__text">{s.text}</p>
+              <p className="steps-tiles__text">{withStrong(s.text, s.strong)}</p>
             </li>
           ))}
         </ol>
