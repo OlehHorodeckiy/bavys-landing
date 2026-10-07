@@ -637,7 +637,7 @@
 }
 
 /* ============================================================ marquee capsule
-   Figma «Про Бавись»: brown 220×52 capsule, white «Більше про нас.» Bold 18
+   Figma «Про Бавись»: brown 220×52 capsule, white «Більше про нас» Bold 18
    running right to left, one copy per ~1.8s */
 .marquee-btn {
   display: flex;

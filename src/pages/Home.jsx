@@ -68,7 +68,7 @@ function HomeHero() {
 
 /**
  * Desktop only (a mouse, motion allowed): over the section the pointer becomes
- * the «Більше про нас.» capsule, trailing the mouse; a click anywhere that is
+ * the «Більше про нас» capsule, trailing the mouse; a click anywhere that is
  * not a link opens /about. Over links the normal pointer comes back.
  */
 function useSectionCursor(section, cursor, to) {
@@ -137,7 +137,7 @@ function Intro() {
     <section className="section section--cream intro-section" id="pro-bavys" ref={section}>
       <div className="cursor-marquee" ref={cursor} aria-hidden="true">
         <span className="cursor-marquee__card">
-          <MarqueeTrack>Більше про нас.</MarqueeTrack>
+          <MarqueeTrack>Більше про нас</MarqueeTrack>
         </span>
       </div>
       <div className="container">
@@ -166,7 +166,7 @@ function Intro() {
         <Rule />
         <StatsRow reveal />
         <div className="section-actions">
-          <MarqueeLink to="/about">Більше про нас.</MarqueeLink>
+          <MarqueeLink to="/about">Більше про нас</MarqueeLink>
         </div>
       </div>
     </section>
