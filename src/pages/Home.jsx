@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { games } from '../data/games.js';
 import { inventory } from '../data/inventory.js';
 import { useFanSpread } from '../components/motion.jsx';
@@ -19,6 +19,22 @@ import {
 } from '../components/sections.jsx';
 
 const featured = games.filter((g) => g.featured);
+
+/** Six random games from the whole catalog, new on every visit. The prerendered
+ *  page keeps the featured six (search engines and the first paint see those);
+ *  the swap happens after load, while the section is still below the fold. */
+function useRandomGames() {
+  const [list, setList] = useState(featured);
+  useEffect(() => {
+    const pool = [...games];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    setList(pool.slice(0, featured.length));
+  }, []);
+  return list;
+}
 
 function HomeHero() {
   return (
@@ -81,6 +97,7 @@ function Intro() {
 }
 
 function GamesPreview() {
+  const shown = useRandomGames();
   return (
     <section className="section games-preview">
       <div className="container">
@@ -92,7 +109,7 @@ function GamesPreview() {
           br
           text="Від компактних настільних до гігантських ігор на газон — кожну привеземо підготовленою й чистою."
         />
-        <GameGrid games={featured} />
+        <GameGrid games={shown} />
         <div className="section-actions rv" data-reveal="90" style={{ '--rv-delay': '0.2s' }}>
           <Button to="/games">Переглянути всі ігри</Button>
         </div>
