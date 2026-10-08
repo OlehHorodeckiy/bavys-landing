@@ -290,8 +290,68 @@
     margin-top: 1.5rem;
   }
 
-  .about-intro__photos {
-    margin-top: 2.5rem;
+  /* Figma «08 Про нас — 390»: the video full width, then a 2×2 grid of
+     168×200 cells (photo + «16», «70+» + photo), 14 apart */
+  .about-bento {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.875rem;
+    margin-top: 2rem;
+  }
+
+  .about-bento__col {
+    display: contents;
+  }
+
+  .about-bento__video {
+    grid-column: 1 / -1;
+    order: -1;
+    border-radius: 1.5rem;
+  }
+
+  .about-bento__photo,
+  .about-bento__stat {
+    height: 12.5rem;
+    border-radius: 1.25rem;
+  }
+
+  .about-bento__stat {
+    padding: 1.25rem;
+  }
+
+  .about-bento__stat b {
+    font-size: 2.75rem;
+    --lh: 1.1;
+  }
+
+  .about-bento__stat span {
+    font-size: 0.875rem;
+    --lh: 1.43;
+  }
+
+  .about-bento__long {
+    display: none;
+  }
+
+  .about-bento__short {
+    display: block;
+  }
+
+  /* the opened video fills the width; the cross sits in the top corner */
+  .video-modal {
+    padding: 1.25rem;
+  }
+
+  .video-modal__frame {
+    width: 100%;
+    max-width: 21.875rem;
+    height: auto;
+  }
+
+  .video-modal__close {
+    position: fixed;
+    top: calc(1rem + env(safe-area-inset-top));
+    right: 1rem;
+    left: auto;
   }
 
   .about-story__grid {

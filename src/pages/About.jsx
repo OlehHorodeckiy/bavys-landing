@@ -1,7 +1,13 @@
+import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
+import VideoModal from '../components/VideoModal.jsx';
 import { Heading, Logo, Media, Pill } from '../components/ui.jsx';
 import { CtaBanner, PageTitle, StepsTiles } from '../components/sections.jsx';
 import { games, rental } from '../data/games.js';
+import { stats } from '../data/site.js';
+import videoPreview from '../../assets/video/about-preview.mp4';
+import videoFull from '../../assets/video/about.mp4';
+import videoPoster from '../../assets/photos/about/video-poster.webp';
 
 const service = [
   { icon: 'truck', text: 'Доставка по Львову та області у зручний для локації час' },
@@ -19,6 +25,42 @@ const facts = [
   { value: 'Львів', text: 'та область, з доставкою' },
 ];
 
+// the same «70+» as the home stats row
+const done = stats.find((s) => s.accent === 'подій');
+const eventsDone = `${done.value}${done.suffix}`;
+
+/**
+ * The bento's middle: a short silent loop of the team video (1 MB, plays by
+ * itself, paused with reduced motion) under a play button; the button opens the
+ * full 42 s video with sound over a dimmed page.
+ */
+function AboutVideo() {
+  const [open, setOpen] = useState(false);
+  const preview = useRef(null);
+
+  useEffect(() => {
+    const v = preview.current;
+    if (!v) return undefined;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => (reduce.matches || open ? v.pause() : v.play().catch(() => {}));
+    sync();
+    reduce.addEventListener?.('change', sync);
+    return () => reduce.removeEventListener?.('change', sync);
+  }, [open]);
+
+  return (
+    <>
+      <button type="button" className="about-bento__video" onClick={() => setOpen(true)} aria-label="Дивитися відео про Бавись, 42 секунди, зі звуком">
+        <video ref={preview} src={videoPreview} poster={videoPoster} muted loop playsInline preload="metadata" aria-hidden="true" tabIndex={-1} />
+        <span className="about-bento__play" aria-hidden="true">
+          <Icon name="play" size={30} />
+        </span>
+      </button>
+      {open ? <VideoModal src={videoFull} poster={videoPoster} label="Відео про Бавись" onClose={() => setOpen(false)} /> : null}
+    </>
+  );
+}
+
 export default function About() {
   return (
     <>
@@ -30,14 +72,32 @@ export default function About() {
           label="Про компанію"
           title="Бавись — це"
           accent="про гру разом"
+          br
           text="Ми команда зі Львова, яка вірить, що найкращі свята там, де гості не сидять за столами, а грають, сміються і знайомляться."
         />
-        <div className="container about-intro__photos">
-          {['about-kids-table', 'about-jenga-tower', 'about-connect4-kids'].map((p) => (
-            <div className="about-intro__photo" key={p}>
-              <Media photo={p} />
+        {/* Figma «07 Про нас — 1440»: photo + «16» | video | «70+» + photo; phones: video, then a 2×2 grid */}
+        <div className="container about-bento rv" data-reveal="85" style={{ '--rv-delay': '0.4s' }}>
+          <div className="about-bento__col">
+            <div className="about-bento__photo">
+              <Media photo="about-kids-table" />
             </div>
-          ))}
+            <div className="about-bento__stat about-bento__stat--brown">
+              <b>{games.length}</b>
+              <span className="about-bento__long">дерев’яних наборів у каталозі: від настільних до великих ігор на газон</span>
+              <span className="about-bento__short">дерев’яних наборів у каталозі</span>
+            </div>
+          </div>
+          <AboutVideo />
+          <div className="about-bento__col">
+            <div className="about-bento__stat">
+              <b>{eventsDone}</b>
+              <span className="about-bento__long">проведених подій: весілля, корпоративи, фестивалі й сімейні свята</span>
+              <span className="about-bento__short">проведених подій</span>
+            </div>
+            <div className="about-bento__photo">
+              <Media photo="about-connect4-kids" />
+            </div>
+          </div>
         </div>
       </section>
 

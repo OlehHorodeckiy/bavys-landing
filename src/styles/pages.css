@@ -1543,17 +1543,161 @@ body.modal-open {
   max-width: 47.5rem;
 }
 
-.about-intro__photos {
+/* Figma «07 Про нас — 1440»: three 416 columns, 16 apart; the middle is the
+   9:16 video, the sides split into two 362-tall cells (photo / number card) */
+.about-bento {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 3.5rem;
 }
 
-.about-intro__photo {
-  aspect-ratio: 1;
+.about-bento__col {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+}
+
+.about-bento__photo,
+.about-bento__video {
   overflow: hidden;
   border-radius: var(--r-lg);
+}
+
+.about-bento__photo .media {
+  height: 100%;
+}
+
+.about-bento__stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.25rem;
+  border-radius: var(--r-lg);
+  background: var(--bg);
+  color: var(--deep);
+}
+
+.about-bento__stat b {
+  font-size: 4.5rem;
+  font-weight: var(--w-bold);
+  --lh: 1.06;
+}
+
+.about-bento__stat span {
+  max-width: 17.5rem;
+  font-size: 1.125rem;
+  --lh: 1.56;
+}
+
+.about-bento__stat--brown {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.about-bento__stat--brown span {
+  opacity: 0.85;
+}
+
+.about-bento__short {
+  display: none;
+}
+
+/* the video: a silent loop under a white play disc with a thin ring */
+.about-bento__video {
+  position: relative;
+  display: block;
+  aspect-ratio: 9 / 16;
+  padding: 0;
+  border: 0;
+  background: #3a1a0a;
+  cursor: pointer;
+}
+
+.about-bento__video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-bento__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 5.75rem;
+  height: 5.75rem;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--primary);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s var(--ease-sine-out);
+}
+
+.about-bento__play::before {
+  content: '';
+  position: absolute;
+  inset: -1rem;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+}
+
+.about-bento__video:hover .about-bento__play {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.about-bento__video:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 4px;
+}
+
+/* ------------------------------------------------------ video, opened
+   Figma «Про нас: відео відкрите»: the page dims, the 9:16 video in the
+   middle with its controls, a white cross beside it */
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(20, 8, 3, 0.88);
+  animation: modal-fade 0.3s var(--ease-sine-out);
+  overscroll-behavior: contain;
+}
+
+.video-modal__frame {
+  position: relative;
+  height: min(48rem, calc(100dvh - 3rem));
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+}
+
+.video-modal__frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 1.25rem;
+  background: #000;
+  object-fit: contain;
+}
+
+.video-modal__close {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 1.5rem);
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--deep);
+  cursor: pointer;
 }
 
 .about-story__grid {
@@ -1699,14 +1843,6 @@ body.modal-open {
 }
 
 @media (max-width: 640px) {
-  .about-intro__photos {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .about-intro__photo:last-child {
-    display: none;
-  }
-
   .service-tiles {
     grid-template-columns: 1fr;
   }

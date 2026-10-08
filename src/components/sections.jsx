@@ -41,7 +41,7 @@ export function PageHero({ media, label, title, accent, br = true, text, actions
  * title in one line, an optional line of text, then whatever follows (filter
  * chips, the page content). Replaces the old dark photographic heroes.
  */
-export function PageTitle({ label, title, accent, text, children, className = '' }) {
+export function PageTitle({ label, title, accent, text, br = false, children, className = '' }) {
   return (
     <section className={`page-title ${className}`}>
       <div className="container page-title__inner">
@@ -50,7 +50,7 @@ export function PageTitle({ label, title, accent, text, children, className = ''
             {label}
           </Pill>
         ) : null}
-        <Heading as="h1" title={title} accent={accent} reveal className="page-title__title" />
+        <Heading as="h1" title={title} accent={accent} br={br} reveal className="page-title__title" />
         {text ? (
           <p className="page-title__text rv" data-reveal="90" style={{ '--rv-delay': '0.3s' }}>
             {text}

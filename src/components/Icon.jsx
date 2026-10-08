@@ -4,6 +4,7 @@ const paths = {
   arrowRight: <path d="M4 12h16M14 6l6 6-6 6" />,
   arrowLeft: <path d="M20 12H4M10 6l-6 6 6 6" />,
   arrowDown: <path d="M12 5v14M6 13l6 6 6-6" />,
+  play: <path d="M8 5.5v13l10.5-6.5Z" fill="currentColor" stroke="none" />,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   plus: <path d="M12 5v14M5 12h14" />,
   menu: <path d="M4 6h16M4 12h16M4 18h16" />,
