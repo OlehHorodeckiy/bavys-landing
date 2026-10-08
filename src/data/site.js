@@ -24,9 +24,10 @@ export const company = {
 };
 
 /** `footer: false` — in the header and the phone menu only (the footer list stays as in Figma). */
-// `icon`: shown in the header capsule on hover and on the current page
+// `icon`: shown in the header capsule on hover and on the current page;
+// `header: false`: footer only (the logo already leads home)
 export const nav = [
-  { path: '/', label: 'Головна', icon: 'navHome' },
+  { path: '/', label: 'Головна', icon: 'navHome', header: false },
   { path: '/games', label: 'Ігри', icon: 'navGames' },
   { path: '/prices', label: 'Ціни', icon: 'navPrices', footer: false },
   { path: '/gallery', label: 'Галерея', icon: 'navGallery' },

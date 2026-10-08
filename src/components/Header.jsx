@@ -4,6 +4,7 @@ import { href } from '../router.js';
 import Icon from './Icon.jsx';
 import { Button, Logo } from './ui.jsx';
 
+const headerNav = nav.filter((item) => item.header !== false);
 const isHere = (current, path) => (path === '/' ? current === '/' : current.startsWith(path));
 
 /**
@@ -42,7 +43,7 @@ export default function Header({ path, book }) {
         </a>
 
         <nav className="site-nav" aria-label="Головна навігація">
-          {nav.map((item) => (
+          {headerNav.map((item) => (
             <a
               key={item.path}
               className={`site-nav__link ${isHere(path, item.path) ? 'is-current' : ''}`}
@@ -83,7 +84,7 @@ export default function Header({ path, book }) {
         </div>
 
         <nav className="mobile-menu__links" aria-label="Мобільна навігація">
-          {nav.map((item) => (
+          {headerNav.map((item) => (
             <a
               key={item.path}
               href={href(item.path)}
