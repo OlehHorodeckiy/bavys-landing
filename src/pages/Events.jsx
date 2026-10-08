@@ -39,7 +39,7 @@ export default function Events() {
               <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.2 + (i % 3) * 0.06}s` }}>
                 <a className="event-card" href={href('/games', { type: occasionType(u.id) })}>
                   <span className="event-card__media">
-                    <Media photo={eventPhotos[u.id] || u.photo} alt="" />
+                    <Media photo={eventPhotos[u.id]?.photo || u.photo} position={eventPhotos[u.id]?.position} alt="" />
                   </span>
                   <span className="event-card__head">
                     <h2 className="event-card__title">{u.title}</h2>

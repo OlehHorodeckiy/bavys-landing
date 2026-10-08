@@ -64,8 +64,18 @@ export const gameFilters = [
 ];
 
 /** Where the games are used — the "Events" section. */
-/** Photos for the «Події» page cards (Figma «13 Події»): real event photos where we have them. */
-export const eventPhotos = { wedding: 'ev-wedding-games', corporate: 'hub-corporate', birthday: 'hub-birthday' };
+/**
+ * Photos for the «Події» page cards (Figma «13 Події»): real event photos, framed
+ * like the Figma crops (`position` = where the 4:3 window sits on a tall photo).
+ */
+export const eventPhotos = {
+  wedding: { photo: 'ev-wedding-games', position: '50% 64%' },
+  corporate: { photo: 'hub-corporate', position: '50% 66%' },
+  birthday: { photo: 'hub-birthday', position: '50% 78%' },
+  festival: { photo: 'ev-jenga-festival' },
+  teambuilding: { photo: 'yd-rybalka-adults' },
+  family: { photo: 'ev-balans-lounge', position: '50% 76%' },
+};
 
 export const useCases = [
   {
