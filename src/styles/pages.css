@@ -1590,15 +1590,6 @@ body.modal-open {
   --lh: 1.56;
 }
 
-.about-bento__stat--brown {
-  background: var(--primary);
-  color: var(--white);
-}
-
-.about-bento__stat--brown span {
-  opacity: 0.85;
-}
-
 .about-bento__short {
   display: none;
 }

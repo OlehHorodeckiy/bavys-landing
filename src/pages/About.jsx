@@ -81,7 +81,7 @@ export default function About() {
             <div className="about-bento__photo">
               <Media photo="about-kids-table" />
             </div>
-            <div className="about-bento__stat about-bento__stat--brown">
+            <div className="about-bento__stat">
               <b>{games.length}</b>
               <span className="about-bento__long">дерев’яних наборів у каталозі: від настільних до великих ігор на газон</span>
               <span className="about-bento__short">дерев’яних наборів у каталозі</span>
