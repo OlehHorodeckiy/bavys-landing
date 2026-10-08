@@ -290,6 +290,43 @@
     margin-top: 1.5rem;
   }
 
+  /* Figma «13 Події — 390»: facts in a column, one card per row (photo
+     350×240), name 22, the line under it 14 */
+  .events-facts {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .events-facts li {
+    font-size: 0.875rem;
+    --lh: 1.43;
+  }
+
+  .section.events-hub {
+    padding-top: 2.5rem;
+  }
+
+  .event-cards {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .event-card__media {
+    aspect-ratio: 35 / 24;
+    border-radius: 1.25rem;
+  }
+
+  .event-card__title {
+    font-size: 1.375rem;
+    --lh: 1.27;
+  }
+
+  .event-card__note {
+    font-size: 0.875rem;
+    --lh: 1.57;
+  }
+
   /* Figma «08 Про нас — 390»: the video full width, then a 2×2 grid of
      168×200 cells (photo + «16», «70+» + photo), 14 apart */
   .about-bento {

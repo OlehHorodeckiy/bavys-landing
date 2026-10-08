@@ -23,6 +23,7 @@ export const allRoutes = () => [
   '/',
   '/games',
   ...games.map((g) => `/games/${g.slug}`),
+  '/podii',
   '/prices',
   '/gallery',
   '/blog',
@@ -139,6 +140,16 @@ export function pageMeta(path) {
           itemListElement: games.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.name, url: abs(`/games/${g.slug}`) })),
         },
       ],
+    };
+  }
+
+  if (section === 'podii') {
+    return {
+      ...base,
+      title: 'Ігри на свята у Львові: весілля, корпоративи, дні народження | Бавись',
+      description: 'Оренда великих дерев’яних ігор для весіль, корпоративів, тімбілдингів, днів народження, фестивалів і сімейних свят у Львові та області. Доставка, без передоплати.',
+      image: img('ev-wedding-games'),
+      jsonLd: [business, crumbs([[BRAND, '/'], ['Події', '/podii']])],
     };
   }
 

@@ -66,6 +66,8 @@ import footerGardenM from '../../assets/photos/footer-garden-m.webp';
 import jenga404 from '../../assets/photos/jenga-404.webp';
 // occasions ("Для яких подій"), 4:3 crops of event photos
 import occWedding from '../../assets/photos/occasions/wedding.webp';
+import hubCorporate from '../../assets/photos/occasions/hub-corporate.webp';
+import hubBirthday from '../../assets/photos/occasions/hub-birthday.webp';
 import occCorporate from '../../assets/photos/occasions/corporate.webp';
 import occBirthday from '../../assets/photos/occasions/birthday.webp';
 import occFestival from '../../assets/photos/occasions/festival.webp';
@@ -201,6 +203,8 @@ export const photos = {
   'ev-jenga-festival': { src: evJengaFestival, alt: 'Велика Дженга «Бавись» на фестивалі' },
   'ev-kiltsekyd-rings': { src: evKiltsekydRings, alt: 'Кільцекид зблизька: мотузкові кільця на кілках' },
   'ev-kiltsekyd-pines': { src: evKiltsekydPines, alt: 'Кільцекид серед сосон на березі' },
+  'hub-corporate': { src: hubCorporate, alt: 'Гості грають у Корнхол і Велику Дженгу на галявині' },
+  'hub-birthday': { src: hubBirthday, alt: 'Гості й дитина грають у «Галактику»' },
   'occ-wedding': { src: occWedding, alt: 'Гості грають у Велику Дженгу на весіллі' },
   'occ-corporate': { src: occCorporate, alt: 'Гості на корпоративі біля шатра' },
   'occ-birthday': { src: occBirthday, alt: 'Корнхол на вечірньому святі' },

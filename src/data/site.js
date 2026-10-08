@@ -29,6 +29,7 @@ export const company = {
 export const nav = [
   { path: '/', label: 'Головна', icon: 'navHome', header: false },
   { path: '/games', label: 'Ігри', icon: 'navGames' },
+  { path: '/podii', label: 'Події', icon: 'navEvents' },
   { path: '/prices', label: 'Ціни', icon: 'navPrices', footer: false },
   { path: '/gallery', label: 'Галерея', icon: 'navGallery' },
   { path: '/blog', label: 'Блог', icon: 'navBlog' },
@@ -63,6 +64,9 @@ export const gameFilters = [
 ];
 
 /** Where the games are used — the "Events" section. */
+/** Photos for the «Події» page cards (Figma «13 Події»): real event photos where we have them. */
+export const eventPhotos = { wedding: 'ev-wedding-games', corporate: 'hub-corporate', birthday: 'hub-birthday' };
+
 export const useCases = [
   {
     id: 'wedding',

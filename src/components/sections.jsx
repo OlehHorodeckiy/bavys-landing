@@ -360,7 +360,7 @@ export function AdvantagesSection({ items = defaultAdvantages, label = 'Чому
 /* -------------------------------------------------- Events / use cases */
 
 /** Games tagged for an occasion (team building borrows the corporate set). */
-const occasionType = (id) => (id === 'teambuilding' ? 'corporate' : id);
+export const occasionType = (id) => (id === 'teambuilding' ? 'corporate' : id);
 export const gamesForOccasion = (id) => allGames.filter((g) => g.events.includes(occasionType(id)));
 
 /** 1 гра · 2–4 гри · 5+ ігор */
