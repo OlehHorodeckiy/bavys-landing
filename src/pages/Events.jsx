@@ -2,7 +2,7 @@ import Icon from '../components/Icon.jsx';
 import { Media } from '../components/ui.jsx';
 import { CtaBanner, PageTitle, StepsTiles } from '../components/sections.jsx';
 import { games } from '../data/games.js';
-import { eventPhotos, useCases } from '../data/site.js';
+import { useCases } from '../data/site.js';
 import { href } from '../router.js';
 
 // real facts only: the catalog size and the shared rental terms
@@ -38,7 +38,7 @@ export default function Events() {
               <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.2 + (i % 3) * 0.06}s` }}>
                 <a className="event-card" href={href(`/podii/${u.slug}`)}>
                   <span className="event-card__media">
-                    <Media photo={eventPhotos[u.id] || u.photo} alt="" />
+                    <Media photo={u.photo} alt="" />
                   </span>
                   <span className="event-card__head">
                     <h2 className="event-card__title">{u.title}</h2>

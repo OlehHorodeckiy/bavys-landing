@@ -1,6 +1,6 @@
 /**
  * Photos of the event pages (/podii/:slug): the arch portrait of the first screen (`-hero`)
- * and four square gallery shots (`-1` … `-4`). Cropped in Figma «Події · нова структура».
+ * four square gallery shots (`-1` … `-4`) and the landscape card of the events list (`-card`). Cropped in Figma «Події · нова структура».
  */
 import vesilliaHero from '../../assets/photos/podii/vesillia-hero.webp';
 import vesillia1 from '../../assets/photos/podii/vesillia-1.webp';
@@ -33,6 +33,13 @@ import simeiniSviata2 from '../../assets/photos/podii/simeini-sviata-2.webp';
 import simeiniSviata3 from '../../assets/photos/podii/simeini-sviata-3.webp';
 import simeiniSviata4 from '../../assets/photos/podii/simeini-sviata-4.webp';
 
+import vesilliaCard from '../../assets/photos/podii/card-vesillia.webp';
+import korporatyvCard from '../../assets/photos/podii/card-korporatyv.webp';
+import denNarodzhenniaCard from '../../assets/photos/podii/card-den-narodzhennia.webp';
+import festyvalCard from '../../assets/photos/podii/card-festyval.webp';
+import timbildynhCard from '../../assets/photos/podii/card-timbildynh.webp';
+import simeiniSviataCard from '../../assets/photos/podii/card-simeini-sviata.webp';
+
 const alt = {
   'vesillia': 'на весіллі',
   'korporatyv': 'на корпоративі',
@@ -43,6 +50,12 @@ const alt = {
 };
 
 export const podiiPhotos = {
+  'podii-vesillia-card': { src: vesilliaCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['vesillia']}` },
+  'podii-korporatyv-card': { src: korporatyvCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['korporatyv']}` },
+  'podii-den-narodzhennia-card': { src: denNarodzhenniaCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['den-narodzhennia']}` },
+  'podii-festyval-card': { src: festyvalCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['festyval']}` },
+  'podii-timbildynh-card': { src: timbildynhCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['timbildynh']}` },
+  'podii-simeini-sviata-card': { src: simeiniSviataCard, alt: `Гості грають у дерев’яні ігри Бавись ${alt['simeini-sviata']}` },
   'podii-vesillia-hero': { src: vesilliaHero, alt: `Гості грають у дерев’яні ігри Бавись ${alt['vesillia']}` },
   'podii-vesillia-1': { src: vesillia1, alt: `Справжня подія з іграми Бавись ${alt['vesillia']}, фото 1` },
   'podii-vesillia-2': { src: vesillia2, alt: `Справжня подія з іграми Бавись ${alt['vesillia']}, фото 2` },

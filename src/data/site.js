@@ -63,50 +63,47 @@ export const gameFilters = [
   { id: 'kids', label: 'Для дітей' },
 ];
 
-/** Where the games are used — the "Events" section. */
-/** Photos for the «Події» page cards (Figma «13 Події»): real event photos where we have them. */
-export const eventPhotos = { wedding: 'ev-wedding-games', corporate: 'hub-corporate', birthday: 'hub-birthday' };
-
+/** Where the games are used — the events list and the home section. Card photos: Figma «Події — список». */
 export const useCases = [
   {
     id: 'wedding',
     slug: 'vesillia',
-    photo: 'occ-wedding',
+    photo: 'podii-vesillia-card',
     title: 'Весілля',
     note: 'Зона відпочинку для гостей між тостами',
   },
   {
     id: 'corporate',
     slug: 'korporatyv',
-    photo: 'occ-corporate',
+    photo: 'podii-korporatyv-card',
     title: 'Корпоративи',
     note: 'Командні ігри на 20–300 гостей',
   },
   {
     id: 'birthday',
     slug: 'den-narodzhennia',
-    photo: 'occ-birthday',
+    photo: 'podii-den-narodzhennia-card',
     title: 'Дні народження',
     note: 'Для дітей і дорослих в одному просторі',
   },
   {
     id: 'festival',
     slug: 'festyval',
-    photo: 'occ-festival',
+    photo: 'podii-festyval-card',
     title: 'Фестивалі',
     note: 'Ігрові острівці, що збирають натовп',
   },
   {
     id: 'teambuilding',
     slug: 'timbildynh',
-    photo: 'occ-teambuilding',
+    photo: 'podii-timbildynh-card',
     title: 'Тімбілдинг',
     note: 'Стратегія, азарт і спільна перемога',
   },
   {
     id: 'family',
     slug: 'simeini-sviata',
-    photo: 'occ-family',
+    photo: 'podii-simeini-sviata-card',
     title: 'Сімейні свята',
     note: 'Ігри, у які грають усі покоління',
   },
