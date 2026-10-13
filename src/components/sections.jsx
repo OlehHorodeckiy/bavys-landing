@@ -106,6 +106,19 @@ export function GalleryBento({ items, className = '', ...rest }) {
   );
 }
 
+/** The gallery's portrait shots: a uniform grid of 3:4 tiles, five across (two on phones). */
+export function GalleryMoments({ items, className = '' }) {
+  return (
+    <ul className={`moments ${className}`} role="list">
+      {items.map((it) => (
+        <li className="moments__tile" key={it.photo}>
+          <Media photo={it.photo} position={it.position} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /* ------------------------------------------------------------- Game card */
 
 /**

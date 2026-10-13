@@ -57,4 +57,27 @@ export const galleryMore = [
   { photo: 'ev-balans-top', position: '50% 50%', tags: ['games', 'backstage'] },
 ];
 
-export const allGalleryPhotos = [...homeGallery, ...galleryMore];
+/**
+ * Portrait shots from the events (Figma «Картинки», IMG_8732 … IMG_8746): the gallery
+ * page's third block, a uniform grid of 3:4 tiles. `portrait` keeps them out of the 4:3
+ * grid of the chip filter.
+ */
+export const galleryMoments = [
+  { photo: 'moment-01', position: '50% 45%', portrait: true, tags: ['events', 'weddings', 'games', 'outdoor'] },
+  { photo: 'moment-02', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-03', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-04', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-05', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-06', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-07', position: '50% 45%', portrait: true, tags: ['events', 'games'] },
+  { photo: 'moment-08', position: '50% 45%', portrait: true, tags: ['events', 'outdoor'] },
+  { photo: 'moment-09', position: '50% 45%', portrait: true, tags: ['events', 'outdoor'] },
+  { photo: 'moment-10', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-11', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-12', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-13', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-14', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+  { photo: 'moment-15', position: '50% 45%', portrait: true, tags: ['events', 'games', 'outdoor'] },
+];
+
+export const allGalleryPhotos = [...homeGallery, ...galleryMore, ...galleryMoments];

@@ -279,6 +279,10 @@
     margin-inline: var(--gutter);
   }
 
+  .gallery-page .moments {
+    margin-inline: var(--gutter);
+  }
+
   /* --------------------------------------------------------------- about
      intro: title → text 24, text → photos 40, photos → section end 64;
      story: logo card 350×352, 40 to the pill, pill → title → text 16, facts 40 */
