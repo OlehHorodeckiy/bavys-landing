@@ -102,7 +102,10 @@ import evJengaFestival from '../../assets/photos/events/jenga-festival.webp';
 import evKiltsekydRings from '../../assets/photos/events/kiltsekyd-rings.webp';
 import evKiltsekydPines from '../../assets/photos/events/kiltsekyd-pines.webp';
 
+import { podiiPhotos } from './podii-media.js';
+
 export const photos = {
+  ...podiiPhotos,
   // home hero: pure white backdrop (#fff) so it melts into the white hero
   'lawn-white': {
     src: lawnWhite,

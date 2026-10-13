@@ -32,7 +32,7 @@ function validate(v) {
 }
 
 /** One request as the rows of the e-mail table (FormSubmit keeps the key order). */
-function toPayload(v, gameName, honey) {
+function toPayload(v, gameName, honey, event) {
   return {
     _subject: `Заявка на оренду ігор: ${v.name}`,
     _template: 'table',
@@ -41,6 +41,7 @@ function toPayload(v, gameName, honey) {
     'Ім’я': v.name,
     Телефон: v.phone,
     'Дата події': formatDate(v.date),
+    ...(event ? { 'Тип події': event, 'Кількість гостей': v.guests || 'не вказана', Локація: v.location || 'не вказана' } : {}),
     ...(gameName ? { 'Сторінка гри': gameName } : {}),
     Коментар: v.message || 'без коментаря',
   };
@@ -69,9 +70,11 @@ function Field({ id, label, required, error, icon, children }) {
 /**
  * variant: 'modal' (popup, «Забронювати ігри») | 'page' (contacts, «Надішліть заявку»)
  * onDone: called by the success state's button (the popup closes itself).
+ * event: the event page the request comes from (adds the event type, guests and place to the letter);
+ * head: false hides the form's own heading (the event page has its own).
  */
-export default function BookingForm({ game, variant = 'page', onDone }) {
-  const [values, setValues] = useState({ name: '', phone: '', date: '', message: '' });
+export default function BookingForm({ game, variant = 'page', onDone, event, head = true }) {
+  const [values, setValues] = useState({ name: '', phone: '', date: '', guests: '', location: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const first = useRef(null);
@@ -103,7 +106,7 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
       const res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '')),
+        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '', event)),
       });
       const data = await res.json().catch(() => ({}));
       // FormSubmit answers 200 with success "false" (e.g. before activation)
@@ -135,16 +138,18 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
 
   return (
     <form className={`booking-form booking-form--${variant}`} onSubmit={onSubmit} noValidate>
-      <div className="booking-form__head">
-        <Heading
-          as="h2"
-          id={modal ? 'booking-title' : undefined}
-          title={modal ? 'Забронювати' : 'Надішліть'}
-          accent={modal ? 'ігри' : 'заявку'}
-          className="booking-form__title"
-        />
-        <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
-      </div>
+      {head ? (
+        <div className="booking-form__head">
+          <Heading
+            as="h2"
+            id={modal ? 'booking-title' : undefined}
+            title={modal ? 'Забронювати' : 'Надішліть'}
+            accent={modal ? 'ігри' : 'заявку'}
+            className="booking-form__title"
+          />
+          <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
+        </div>
+      ) : null}
 
       <input ref={honey} type="text" name="_honey" className="visually-hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
@@ -158,6 +163,16 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
         <Field id={id('date')} label="Дата події" icon="calendar">
           <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} className={values.date ? '' : 'is-empty'} />
         </Field>
+        {event ? (
+          <>
+            <Field id={id('guests')} label="Кількість гостей">
+              <input id={id('guests')} type="number" inputMode="numeric" min="1" placeholder="Приблизно" value={values.guests} onChange={set('guests')} />
+            </Field>
+            <Field id={id('location')} label="Локація" icon="pin">
+              <input id={id('location')} type="text" autoComplete="off" placeholder="Місто, ресторан чи адреса" value={values.location} onChange={set('location')} />
+            </Field>
+          </>
+        ) : null}
         <Field id={id('message')} label="Коментар">
           <textarea id={id('message')} rows={3} placeholder="Які ігри вас цікавлять, формат свята, побажання щодо часу" value={values.message} onChange={set('message')} />
         </Field>

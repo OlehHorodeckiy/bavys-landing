@@ -108,10 +108,13 @@ export function GalleryBento({ items, className = '', ...rest }) {
 
 /* ------------------------------------------------------------- Game card */
 
-/** `event`: the catalog filter; the card's event chip then names it instead of the game's main event. */
-export function GameCard({ game, headingLevel = 'h3', event }) {
+/**
+ * `event`: the catalog filter; the card's event chip then names it instead of the game's main event.
+ * `chip`: an event id that always names the chip (event pages); `text` replaces the game's short line.
+ */
+export function GameCard({ game, headingLevel = 'h3', event, chip, text }) {
   const H = headingLevel;
-  const primary = eventType(event && game.tags.includes(event) ? event : game.events[0]);
+  const primary = eventType(chip || (event && game.tags.includes(event) ? event : game.events[0]));
   return (
     <a className="game-card" href={href(`/games/${game.slug}`)}>
       <div className="game-card__media">
@@ -123,7 +126,7 @@ export function GameCard({ game, headingLevel = 'h3', event }) {
         </div>
       </div>
       <H className="game-card__title">{game.name}</H>
-      <p className="game-card__text">{game.short}</p>
+      <p className="game-card__text">{text ?? game.short}</p>
     </a>
   );
 }
@@ -401,7 +404,7 @@ export function UseCasesSection({
             const picks = gamesForOccasion(u.id);
             return (
               <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.4 + i * 0.06}s` }}>
-                <a className="uc-row" href={href('/games', { type: occasionType(u.id) })}>
+                <a className="uc-row" href={u.slug ? href(`/podii/${u.slug}`) : href('/games', { type: occasionType(u.id) })}>
                   <span className="uc-row__thumb">
                     <Media photo={u.photo} alt="" />
                   </span>

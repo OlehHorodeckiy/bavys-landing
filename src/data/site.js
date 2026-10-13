@@ -70,36 +70,42 @@ export const eventPhotos = { wedding: 'ev-wedding-games', corporate: 'hub-corpor
 export const useCases = [
   {
     id: 'wedding',
+    slug: 'vesillia',
     photo: 'occ-wedding',
     title: 'Весілля',
     note: 'Зона відпочинку для гостей між тостами',
   },
   {
     id: 'corporate',
+    slug: 'korporatyv',
     photo: 'occ-corporate',
     title: 'Корпоративи',
     note: 'Командні ігри на 20–300 гостей',
   },
   {
     id: 'birthday',
+    slug: 'den-narodzhennia',
     photo: 'occ-birthday',
     title: 'Дні народження',
     note: 'Для дітей і дорослих в одному просторі',
   },
   {
     id: 'festival',
+    slug: 'festyval',
     photo: 'occ-festival',
     title: 'Фестивалі',
     note: 'Ігрові острівці, що збирають натовп',
   },
   {
     id: 'teambuilding',
+    slug: 'timbildynh',
     photo: 'occ-teambuilding',
     title: 'Тімбілдинг',
     note: 'Стратегія, азарт і спільна перемога',
   },
   {
     id: 'family',
+    slug: 'simeini-sviata',
     photo: 'occ-family',
     title: 'Сімейні свята',
     note: 'Ігри, у які грають усі покоління',

@@ -12,6 +12,7 @@ import { findGame, gamePrice, games, placeLabel, rental } from './data/games.js'
 import { findPost, posts } from './data/posts.js';
 import { photos } from './data/media.js';
 import { faq } from './data/faq.js';
+import { eventPages, findEvent } from './data/events.js';
 
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || '').replace(/\/$/, '');
 const BRAND = 'Бавись';
@@ -24,6 +25,7 @@ export const allRoutes = () => [
   '/games',
   ...games.map((g) => `/games/${g.slug}`),
   '/podii',
+  ...eventPages.map((e) => `/podii/${e.slug}`),
   '/prices',
   '/gallery',
   '/blog',
@@ -139,6 +141,26 @@ export function pageMeta(path) {
           '@type': 'ItemList',
           itemListElement: games.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.name, url: abs(`/games/${g.slug}`) })),
         },
+      ],
+    };
+  }
+
+  if (section === 'podii' && slug) {
+    const e = findEvent(slug);
+    if (!e) return notFound(path);
+    return {
+      ...base,
+      title: `Ігри на ${e.acc} у Львові: оренда дерев’яних ігор | Бавись`,
+      description: clip(`${e.lead} Оренда від ${rental.price}, доставка й встановлення по Львову та області, без передоплати.`),
+      image: img(`podii-${e.slug}-hero`),
+      jsonLd: [
+        business,
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: e.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+        },
+        crumbs([[BRAND, '/'], ['Події', '/podii'], [e.name, path]]),
       ],
     };
   }
