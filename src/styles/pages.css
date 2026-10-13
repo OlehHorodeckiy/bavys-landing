@@ -1837,6 +1837,71 @@ body.modal-open {
   }
 }
 
+/* tablets (768–1024): the story logo is a short band, the three facts sit in one row,
+   the number cards of the bento use their short line so the narrow columns stay calm */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .about-story__logo {
+    min-height: 13rem;
+  }
+
+  .about-story__logo .logo {
+    width: 16rem;
+  }
+
+  .about-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .about-facts li {
+    width: auto;
+    min-height: 6.5rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .about-facts strong {
+    font-size: 1.5rem;
+    white-space: nowrap;
+  }
+
+  .about-bento {
+    gap: 0.875rem;
+    margin-top: 2.5rem;
+  }
+
+  .about-bento__col {
+    gap: 0.875rem;
+  }
+
+  .about-bento__stat {
+    padding: 1.5rem;
+  }
+
+  .about-bento__stat b {
+    font-size: 3.5rem;
+  }
+
+  .about-bento__stat span {
+    font-size: 1rem;
+    --lh: 1.5;
+  }
+
+  .about-bento__long {
+    display: none;
+  }
+
+  .about-bento__short {
+    display: block;
+  }
+
+  .about-bento__play {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
+
 @media (max-width: 640px) {
   .service-tiles {
     grid-template-columns: 1fr;
