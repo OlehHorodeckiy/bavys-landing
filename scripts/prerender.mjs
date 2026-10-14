@@ -58,6 +58,16 @@ if (SITE_URL) {
   const urls = routes.map((r) => `  <url><loc>${SITE_URL}${r === '/' ? '/' : r}</loc></url>`).join('\n');
   fs.writeFileSync(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 }
+// removed demo posts → the closest live page (Cloudflare reads dist/_redirects)
+const OLD_POSTS = {
+  '/blog/yak-obraty-igry-dlia-vesillia': '/blog/yaki-igry-obraty-na-vesillia-u-lvovi',
+  '/blog/dytiacha-zona-na-vesilli': '/blog/yaki-igry-obraty-na-vesillia-u-lvovi',
+  '/blog/litnii-korporatyv-150-gostei': '/blog/igry-dlia-korporatyvu-na-pryrodi-chek-lyst',
+  '/blog/morskyi-bii-istoriia-gry': '/games/velykyi-morskyi-bii',
+  '/blog/za-lashtunkamy-pidgotovka-igor': '/blog',
+  '/blog/partnerstvo-z-event-agentsiiamy': '/blog',
+};
+fs.writeFileSync(path.join(dist, '_redirects'), Object.entries(OLD_POSTS).map(([from, to]) => `${from} ${to} 301`).join('\n') + '\n');
 fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n${SITE_URL ? `\nSitemap: ${SITE_URL}/sitemap.xml\n` : ''}`);
 
 console.log(`prerendered ${routes.length} pages + 404${SITE_URL ? ` · sitemap for ${SITE_URL}` : ' · no VITE_SITE_URL: canonical, og:image and sitemap skipped'}`);
