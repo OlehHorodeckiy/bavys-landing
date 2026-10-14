@@ -1761,6 +1761,7 @@ body.modal-open {
 
 .about-facts strong {
   display: block;
+  white-space: nowrap;
   color: var(--deep);
   font-size: 1.75rem;
   --lh: 1.29;
