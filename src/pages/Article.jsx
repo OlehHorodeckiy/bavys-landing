@@ -5,6 +5,7 @@ import { SITE_URL } from '../seo.js';
 import Icon from '../components/Icon.jsx';
 import { Button, Chip, Heading, IconButton, Media, Pill, SectionHead } from '../components/ui.jsx';
 import { CtaBanner, PostCard } from '../components/sections.jsx';
+import ArticleBlocks, { articleHeadings } from '../components/article-blocks.jsx';
 import NotFound from './NotFound.jsx';
 
 export default function Article({ slug }) {
@@ -22,7 +23,8 @@ export default function Article({ slug }) {
     { id: 'facebook', label: 'Поділитися у Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
     { id: 'telegram', label: 'Поділитися в Telegram', href: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(post.title)}` },
   ];
-  const [first, second, ...rest] = post.sections;
+  const [first, second, ...rest] = post.sections || [];
+  const toc = post.blocks ? articleHeadings(post.blocks) : [];
   // «Як обрати ігри для весілля: 5 порад…» → bold part up to the colon, the rest in the accent
   const colon = post.title.indexOf(':');
   const [title, accent] = colon > 0 ? [post.title.slice(0, colon + 1), post.title.slice(colon + 2)] : [post.title, null];
@@ -67,19 +69,41 @@ export default function Article({ slug }) {
                 </div>
               </dl>
             </div>
+            {toc.length ? (
+              <nav className="article-toc" aria-label="Зміст статті">
+                <h2 className="article-toc__title">Зміст</h2>
+                <ol>
+                  {toc.map((t) => (
+                    <li key={t.id}>
+                      <a href={`#${t.id}`}>{t.title}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            ) : null}
           </aside>
 
           <article className="article__body">
             <p className="article__lead">{post.lead}</p>
+            {post.blocks ? (
+              <>
+                <figure className="article__figure article__figure--cover">
+                  <Media {...post.media} alt="" eager />
+                </figure>
+                <ArticleBlocks blocks={post.blocks} />
+              </>
+            ) : null}
             {[first, second].filter(Boolean).map((s) => (
               <section key={s.title}>
                 <h2>{s.title}</h2>
                 <p>{s.text}</p>
               </section>
             ))}
-            <figure className="article__figure">
-              <Media {...(post.figure || post.media)} alt={post.figure?.caption || ''} />
-            </figure>
+            {post.blocks ? null : (
+              <figure className="article__figure">
+                <Media {...(post.figure || post.media)} alt={post.figure?.caption || ''} />
+              </figure>
+            )}
             {post.quote ? (
               <blockquote className="article__quote">
                 <Icon name="motif" size={28} />

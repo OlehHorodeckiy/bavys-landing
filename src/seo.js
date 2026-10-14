@@ -39,6 +39,9 @@ const clip = (s, n = 160) => (s.length <= n ? s : `${s.slice(0, s.lastIndexOf(' 
 
 const MONTHS = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
 /** «18 вересня 2026» → 2026-09-18 */
+/** Questions of a rich article's FAQ block (for the FAQPage markup). */
+const faqBlocks = (p) => (p.blocks || []).filter((b) => b.type === 'faq').flatMap((b) => b.items);
+
 const isoDate = (s) => {
   const [d, m, y] = s.split(' ');
   const mi = MONTHS.indexOf(m);
@@ -216,6 +219,9 @@ export function pageMeta(path) {
           publisher: { '@id': abs('/#business') },
           mainEntityOfPage: abs(path),
         },
+        ...(faqBlocks(p).length
+          ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqBlocks(p).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }]
+          : []),
         crumbs([[BRAND, '/'], ['Блог', '/blog'], [p.title, path]]),
       ],
     };

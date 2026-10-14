@@ -1,3 +1,5 @@
+import { guides } from './guides.js';
+
 /**
  * Blog — the company's story: events, partners, company news, games and tips.
  * «День молоді у Стрийському парку» is a real story (facts from the owner, photos
@@ -16,6 +18,7 @@ export const blogCategories = [
 export const blogCategory = (id) => blogCategories.find((c) => c.id === id);
 
 export const posts = [
+  ...guides,
   {
     slug: 'den-molodi-stryiskyi-park',
     category: 'partners',
