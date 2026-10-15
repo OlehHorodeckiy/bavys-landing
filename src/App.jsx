@@ -19,6 +19,7 @@ import About from './pages/About.jsx';
 import Contacts from './pages/Contacts.jsx';
 import Prices from './pages/Prices.jsx';
 import Events from './pages/Events.jsx';
+import Event from './pages/Event.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Lab from './pages/Lab.jsx';
 
@@ -28,6 +29,7 @@ function resolve({ segments, query }) {
   if (section === 'games' && slug) return <Game slug={slug} />;
   if (section === 'games') return <Games query={query} />;
   if (section === 'prices') return <Prices />;
+  if (section === 'podii' && slug) return <Event slug={slug} />;
   if (section === 'podii') return <Events />;
   if (section === 'gallery') return <Gallery />;
   if (section === 'blog' && slug) return <Article slug={slug} />;

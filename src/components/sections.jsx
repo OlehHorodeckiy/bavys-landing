@@ -108,6 +108,19 @@ export function GalleryBento({ items, className = '', ...rest }) {
   );
 }
 
+/** The gallery's portrait shots: a uniform grid of 3:4 tiles, five across (two on phones). */
+export function GalleryMoments({ items, className = '' }) {
+  return (
+    <ul className={`moments ${className}`} role="list">
+      {items.map((it) => (
+        <li className="moments__tile" key={it.photo}>
+          <Media photo={it.photo} position={it.position} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /* ------------------------------------------------------------- Game card */
 
 /**
@@ -115,8 +128,9 @@ export function GalleryBento({ items, className = '', ...rest }) {
  * photo, name, two lines about the game, a hairline, then the day price and
  * «+ У кошик». The name is the link and covers the whole card; the cart button
  * sits above it. A card whose game is in the cart gets a brown outline.
+ * `text` replaces the game's short line (event pages).
  */
-export function GameCard({ game, headingLevel = 'h3' }) {
+export function GameCard({ game, headingLevel = 'h3', text }) {
   const H = headingLevel;
   const { items } = useCart();
   return (
@@ -130,7 +144,7 @@ export function GameCard({ game, headingLevel = 'h3' }) {
           {game.name}
         </a>
       </H>
-      <p className="game-card__text">{game.short}</p>
+      <p className="game-card__text">{text ?? game.short}</p>
       <div className="game-card__foot">
         <p className="game-card__price">
           <strong>{uah(priceValue(game))}</strong>
@@ -415,7 +429,7 @@ export function UseCasesSection({
             const picks = gamesForOccasion(u.id);
             return (
               <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.4 + i * 0.06}s` }}>
-                <a className="uc-row" href={href('/games', { type: occasionType(u.id) })}>
+                <a className="uc-row" href={u.slug ? href(`/podii/${u.slug}`) : href('/games', { type: occasionType(u.id) })}>
                   <span className="uc-row__thumb">
                     <Media photo={u.photo} alt="" />
                   </span>

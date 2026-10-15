@@ -102,7 +102,41 @@ import evJengaFestival from '../../assets/photos/events/jenga-festival.webp';
 import evKiltsekydRings from '../../assets/photos/events/kiltsekyd-rings.webp';
 import evKiltsekydPines from '../../assets/photos/events/kiltsekyd-pines.webp';
 
+import moment01 from '../../assets/photos/gallery/moment-01.webp';
+import moment02 from '../../assets/photos/gallery/moment-02.webp';
+import moment03 from '../../assets/photos/gallery/moment-03.webp';
+import moment04 from '../../assets/photos/gallery/moment-04.webp';
+import moment05 from '../../assets/photos/gallery/moment-05.webp';
+import moment06 from '../../assets/photos/gallery/moment-06.webp';
+import moment07 from '../../assets/photos/gallery/moment-07.webp';
+import moment08 from '../../assets/photos/gallery/moment-08.webp';
+import moment09 from '../../assets/photos/gallery/moment-09.webp';
+import moment10 from '../../assets/photos/gallery/moment-10.webp';
+import moment11 from '../../assets/photos/gallery/moment-11.webp';
+import moment12 from '../../assets/photos/gallery/moment-12.webp';
+import moment13 from '../../assets/photos/gallery/moment-13.webp';
+import moment14 from '../../assets/photos/gallery/moment-14.webp';
+import moment15 from '../../assets/photos/gallery/moment-15.webp';
+import { podiiPhotos } from './podii-media.js';
+
 export const photos = {
+  ...podiiPhotos,
+  // portrait shots from the events (Figma «Картинки»), the gallery's third block
+  'moment-01': { src: moment01, alt: 'Наречені й гості біля Великої Дженги на весільному святі' },
+  'moment-02': { src: moment02, alt: 'Гості грають у Велику Дженгу на галявині' },
+  'moment-03': { src: moment03, alt: 'Компанія грає в дерев’яні ігри просто неба' },
+  'moment-04': { src: moment04, alt: 'Гості грають у настільну дерев’яну гру на святі під шатром' },
+  'moment-05': { src: moment05, alt: 'Друзі складають Велику Дженгу на галявині' },
+  'moment-06': { src: moment06, alt: 'Гості біля ігрового столика на святі просто неба' },
+  'moment-07': { src: moment07, alt: 'Гості за дерев’яною грою в залі' },
+  'moment-08': { src: moment08, alt: 'Корнхол і кільцекид біля альтанки на галявині' },
+  'moment-09': { src: moment09, alt: 'Гості біля ігрових столиків біля альтанки' },
+  'moment-10': { src: moment10, alt: 'Гості грають у дерев’яні ігри в парку' },
+  'moment-11': { src: moment11, alt: 'Дівчата грають у дерев’яну настільну гру в парку' },
+  'moment-12': { src: moment12, alt: 'Чоловіки грають у дерев’яну настільну гру на траві' },
+  'moment-13': { src: moment13, alt: 'Гості грають у «4 в ряд» на галявині' },
+  'moment-14': { src: moment14, alt: 'Дівчата грають у дерев’яну настільну гру на святі' },
+  'moment-15': { src: moment15, alt: 'Діти грають у дерев’яну настільну гру на святі' },
   // home hero: pure white backdrop (#fff) so it melts into the white hero
   'lawn-white': {
     src: lawnWhite,

@@ -5,6 +5,8 @@ import { CtaBanner, FilterBar, PageTitle, PostCard } from '../components/section
 export default function Blog() {
   const [cat, setCat] = useState('all');
   const list = cat === 'all' ? posts : posts.filter((p) => p.category === cat);
+  // chips only for topics that have articles
+  const topics = blogCategories.filter((c) => c.id === 'all' || posts.some((p) => p.category === c.id));
 
   return (
     <>
@@ -15,7 +17,7 @@ export default function Blog() {
           <div className="blog-layout">
             <aside className="blog-layout__side">
               <h2 className="blog-layout__title">Теми</h2>
-              <FilterBar items={blogCategories} value={cat} onChange={setCat} label="Теми блогу" className="filter-bar--vertical" />
+              <FilterBar items={topics} value={cat} onChange={setCat} label="Теми блогу" className="filter-bar--vertical" />
             </aside>
             <div className="blog-layout__list">
               {list.length ? (

@@ -8,10 +8,11 @@
  * links, absolute share images and sitemap.xml need it; without it they are left out.
  */
 import { company } from './data/site.js';
-import { findGame, gamePrice, games, placeLabel, rental } from './data/games.js';
+import { findGame, gamePrice, games, rental } from './data/games.js';
 import { findPost, posts } from './data/posts.js';
 import { photos } from './data/media.js';
 import { faq } from './data/faq.js';
+import { eventPages, findEvent } from './data/events.js';
 
 export const SITE_URL = (import.meta.env.VITE_SITE_URL || '').replace(/\/$/, '');
 const BRAND = 'Бавись';
@@ -24,6 +25,7 @@ export const allRoutes = () => [
   '/games',
   ...games.map((g) => `/games/${g.slug}`),
   '/podii',
+  ...eventPages.map((e) => `/podii/${e.slug}`),
   '/prices',
   '/gallery',
   '/blog',
@@ -33,9 +35,19 @@ export const allRoutes = () => [
 ];
 
 /** «Велика Дженга … азарт! Ідеальна…» → at most ~160 characters, cut on a word. */
+/** Occasions as people search for them: «весілля чи корпоратив» (at most two). */
+const OCCASION = { wedding: 'весілля', corporate: 'корпоратив', birthday: 'день народження', family: 'сімейне свято', kids: 'дитяче свято', festival: 'фестиваль' };
+const occasions = (g) => {
+  const list = g.events.slice(0, 2).map((e) => OCCASION[e]).filter(Boolean);
+  return list.length > 1 ? `${list.slice(0, -1).join(', ')} чи ${list[list.length - 1]}` : list[0];
+};
+
 const clip = (s, n = 160) => (s.length <= n ? s : `${s.slice(0, s.lastIndexOf(' ', n - 1))}…`);
 
 const MONTHS = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
+/** Questions of a rich article's FAQ block (for the FAQPage markup). */
+const faqBlocks = (p) => (p.blocks || []).filter((b) => b.type === 'faq').flatMap((b) => b.items);
+
 /** «18 вересня 2026» → 2026-09-18 */
 const isoDate = (s) => {
   const [d, m, y] = s.split(' ');
@@ -95,10 +107,15 @@ export function pageMeta(path) {
   if (section === 'games' && slug) {
     const g = findGame(slug);
     if (!g) return notFound(path);
-    const description = clip(`${g.lead} Оренда ${g.name} у Львові: ${gamePrice(g)}, ${g.players} гравців, ${placeLabel[g.place].toLowerCase()}. Доставка по Львову та області.`);
+    // «Гра «В одні ворота» — оренда у Львові від 850 грн/доба»: the search phrase, the price, the occasions
+    const price = parseInt(gamePrice(g), 10);
+    const description = clip(`${g.short} Оренда на ${occasions(g)} у Львові: ${price} грн на добу. Доставка по Львову й області.`, 175);
+    const full = `Гра «${g.name}» — оренда у Львові від ${price} грн/доба | ${BRAND}`;
+    // long names: drop «/доба» so the title stays near the ~60 characters a result shows
+    const title = full.length > 64 ? `Гра «${g.name}» — оренда у Львові від ${price} грн | ${BRAND}` : full;
     return {
       ...base,
-      title: `${g.name}: оренда гри у Львові | Бавись`,
+      title,
       description,
       image: img(g.hero || g.photo),
       jsonLd: [
@@ -143,12 +160,32 @@ export function pageMeta(path) {
     };
   }
 
+  if (section === 'podii' && slug) {
+    const e = findEvent(slug);
+    if (!e) return notFound(path);
+    return {
+      ...base,
+      title: `Ігри на ${e.acc} у Львові: оренда дерев’яних ігор | Бавись`,
+      description: clip(`${e.lead} Оренда від ${rental.price}, доставка й встановлення по Львову та області, без передоплати.`),
+      image: img(`podii-${e.slug}-hero`),
+      jsonLd: [
+        business,
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: e.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+        },
+        crumbs([[BRAND, '/'], ['Події', '/podii'], [e.name, path]]),
+      ],
+    };
+  }
+
   if (section === 'podii') {
     return {
       ...base,
       title: 'Ігри на свята у Львові: весілля, корпоративи, дні народження | Бавись',
       description: 'Оренда великих дерев’яних ігор для весіль, корпоративів, тімбілдингів, днів народження, фестивалів і сімейних свят у Львові та області. Доставка, без передоплати.',
-      image: img('ev-wedding-games'),
+      image: img('podii-vesillia-card'),
       jsonLd: [business, crumbs([[BRAND, '/'], ['Події', '/podii']])],
     };
   }
@@ -194,6 +231,9 @@ export function pageMeta(path) {
           publisher: { '@id': abs('/#business') },
           mainEntityOfPage: abs(path),
         },
+        ...(faqBlocks(p).length
+          ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqBlocks(p).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }]
+          : []),
         crumbs([[BRAND, '/'], ['Блог', '/blog'], [p.title, path]]),
       ],
     };

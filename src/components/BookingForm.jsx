@@ -39,7 +39,7 @@ const totalLine = (t) =>
   `${uah(t.total)} за добу: ${summaryRows(t).filter((r) => !r.save).map((r) => `${r.label} ${uah(r.value)}`).join(' + ')}`;
 
 /** One request as the rows of the e-mail table (FormSubmit keeps the key order). */
-function toPayload(v, gameName, honey, cart) {
+function toPayload(v, gameName, honey, cart, event) {
   const t = cart?.total;
   return {
     _subject: `Заявка на оренду ігор: ${v.name}`,
@@ -57,6 +57,7 @@ function toPayload(v, gameName, honey, cart) {
           'Сума за добу': totalLine(t),
         }
       : {}),
+    ...(event ? { 'Тип події': event, 'Кількість гостей': v.guests || 'не вказана', Локація: v.location || 'не вказана' } : {}),
     ...(gameName ? { 'Сторінка гри': gameName } : {}),
     Коментар: v.message || 'без коментаря',
   };
@@ -112,11 +113,13 @@ function Field({ id, label, required, error, icon, children }) {
 /**
  * variant: 'modal' (popup, «Забронювати ігри») | 'page' (contacts, «Надішліть заявку»)
  * onDone: called by the success state's button (the popup closes itself).
+ * event: the event page the request comes from (adds the event type, guests and place to the letter);
+ * head: false hides the form's own heading (the event page has its own).
  */
-export default function BookingForm({ game, variant = 'page', onDone, onEditCart = openCart }) {
+export default function BookingForm({ game, variant = 'page', onDone, event, head = true, onEditCart = openCart }) {
   const cart = useCart();
   const hasCart = cart.items.length > 0;
-  const [values, setValues] = useState({ name: '', phone: '', date: '', message: '' });
+  const [values, setValues] = useState({ name: '', phone: '', date: '', guests: '', location: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const first = useRef(null);
@@ -148,7 +151,7 @@ export default function BookingForm({ game, variant = 'page', onDone, onEditCart
       const res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '', hasCart ? cart : null)),
+        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '', hasCart ? cart : null, event)),
       });
       const data = await res.json().catch(() => ({}));
       // FormSubmit answers 200 with success "false" (e.g. before activation)
@@ -181,16 +184,18 @@ export default function BookingForm({ game, variant = 'page', onDone, onEditCart
 
   return (
     <form className={`booking-form booking-form--${variant}`} onSubmit={onSubmit} noValidate>
-      <div className="booking-form__head">
-        <Heading
-          as="h2"
-          id={modal ? 'booking-title' : undefined}
-          title={modal ? 'Забронювати' : 'Надішліть'}
-          accent={modal ? 'ігри' : 'заявку'}
-          className="booking-form__title"
-        />
-        <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
-      </div>
+      {head ? (
+        <div className="booking-form__head">
+          <Heading
+            as="h2"
+            id={modal ? 'booking-title' : undefined}
+            title={modal ? 'Забронювати' : 'Надішліть'}
+            accent={modal ? 'ігри' : 'заявку'}
+            className="booking-form__title"
+          />
+          <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
+        </div>
+      ) : null}
 
       {hasCart ? <CartPicks cart={cart} onEdit={onEditCart} /> : null}
 
@@ -206,6 +211,16 @@ export default function BookingForm({ game, variant = 'page', onDone, onEditCart
         <Field id={id('date')} label="Дата події" icon="calendar">
           <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} className={values.date ? '' : 'is-empty'} />
         </Field>
+        {event ? (
+          <>
+            <Field id={id('guests')} label="Кількість гостей">
+              <input id={id('guests')} type="number" inputMode="numeric" min="1" placeholder="Приблизно" value={values.guests} onChange={set('guests')} />
+            </Field>
+            <Field id={id('location')} label="Локація" icon="pin">
+              <input id={id('location')} type="text" autoComplete="off" placeholder="Місто, ресторан чи адреса" value={values.location} onChange={set('location')} />
+            </Field>
+          </>
+        ) : null}
         <Field id={id('message')} label="Коментар">
           <textarea id={id('message')} rows={3} placeholder={hasCart ? 'Формат свята, кількість гостей, адреса' : 'Які ігри вас цікавлять, формат свята, побажання щодо часу'} value={values.message} onChange={set('message')} />
         </Field>

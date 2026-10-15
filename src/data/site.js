@@ -63,54 +63,47 @@ export const gameFilters = [
   { id: 'kids', label: 'Для дітей' },
 ];
 
-/** Where the games are used — the "Events" section. */
-/**
- * Photos for the «Події» page cards (Figma «13 Події»): real event photos, framed
- * like the Figma crops (`position` = where the 4:3 window sits on a tall photo).
- */
-export const eventPhotos = {
-  wedding: { photo: 'ev-wedding-games', position: '50% 64%' },
-  corporate: { photo: 'hub-corporate', position: '50% 66%' },
-  birthday: { photo: 'hub-birthday', position: '50% 78%' },
-  festival: { photo: 'ev-jenga-festival' },
-  teambuilding: { photo: 'yd-rybalka-adults' },
-  family: { photo: 'ev-balans-lounge', position: '50% 76%' },
-};
-
+/** Where the games are used — the events list and the home section. Card photos: Figma «Події — список». */
 export const useCases = [
   {
     id: 'wedding',
-    photo: 'occ-wedding',
+    slug: 'vesillia',
+    photo: 'podii-vesillia-card',
     title: 'Весілля',
     note: 'Зона відпочинку для гостей між тостами',
   },
   {
     id: 'corporate',
-    photo: 'occ-corporate',
+    slug: 'korporatyv',
+    photo: 'podii-korporatyv-card',
     title: 'Корпоративи',
     note: 'Командні ігри на 20–300 гостей',
   },
   {
     id: 'birthday',
-    photo: 'occ-birthday',
+    slug: 'den-narodzhennia',
+    photo: 'podii-den-narodzhennia-card',
     title: 'Дні народження',
     note: 'Для дітей і дорослих в одному просторі',
   },
   {
     id: 'festival',
-    photo: 'occ-festival',
+    slug: 'festyval',
+    photo: 'podii-festyval-card',
     title: 'Фестивалі',
     note: 'Ігрові острівці, що збирають натовп',
   },
   {
     id: 'teambuilding',
-    photo: 'occ-teambuilding',
+    slug: 'timbildynh',
+    photo: 'podii-timbildynh-card',
     title: 'Тімбілдинг',
     note: 'Стратегія, азарт і спільна перемога',
   },
   {
     id: 'family',
-    photo: 'occ-family',
+    slug: 'simeini-sviata',
+    photo: 'podii-simeini-sviata-card',
     title: 'Сімейні свята',
     note: 'Ігри, у які грають усі покоління',
   },

@@ -1,8 +1,8 @@
 import Icon from '../components/Icon.jsx';
 import { Media } from '../components/ui.jsx';
-import { CtaBanner, PageTitle, StepsTiles, occasionType } from '../components/sections.jsx';
+import { CtaBanner, PageTitle, StepsTiles } from '../components/sections.jsx';
 import { games } from '../data/games.js';
-import { eventPhotos, useCases } from '../data/site.js';
+import { useCases } from '../data/site.js';
 import { href } from '../router.js';
 
 // real facts only: the catalog size and the shared rental terms
@@ -15,8 +15,7 @@ const facts = [
 /**
  * «Події» (Figma «13 Події»): the title with three facts, six event cards in
  * a 3×2 grid (photo, name with an arrow, one line about it), how to order and
- * the booking banner. Until each event has its own page, a card opens the
- * catalog filtered by that event.
+ * the booking banner. A card opens that event's own page (/podii/:slug).
  */
 export default function Events() {
   return (
@@ -37,9 +36,9 @@ export default function Events() {
           <ul className="event-cards" role="list">
             {useCases.map((u, i) => (
               <li key={u.id} className="rv" data-reveal="90" style={{ '--rv-delay': `${0.2 + (i % 3) * 0.06}s` }}>
-                <a className="event-card" href={href('/games', { type: occasionType(u.id) })}>
+                <a className="event-card" href={href(`/podii/${u.slug}`)}>
                   <span className="event-card__media">
-                    <Media photo={eventPhotos[u.id]?.photo || u.photo} position={eventPhotos[u.id]?.position} alt="" />
+                    <Media photo={u.photo} alt="" />
                   </span>
                   <span className="event-card__head">
                     <h2 className="event-card__title">{u.title}</h2>
