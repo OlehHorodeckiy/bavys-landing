@@ -7,6 +7,7 @@ import './styles/sections.css';
 import './styles/pages.css';
 import './styles/theme-olive.css';
 import './styles/mobile.css';
+import './styles/cart.css';
 import App from './App.jsx';
 import { initAnalytics } from './analytics.js';
 import { interceptLinks } from './router.js';

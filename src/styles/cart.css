@@ -1,0 +1,1007 @@
+/*
+ * The cart: game card with price and «+ У кошик», the header bag, the cart panel
+ * (right edge, 480) and the phone sheet, the phone bar, the picks block in the
+ * booking form. Figma «Картка гри з кошиком · гайд зі станами» (1720:16627) and
+ * the section «Section 1» (1732:17710). Every size is an even pixel.
+ */
+:root {
+  --muted: #9a8a80;       /* «за добу», notes */
+  --brown-dark: #5e2400;  /* hover on a brown «У кошику» */
+  --beige: #efe3d8;       /* pressed */
+  --save: #4f7a3a;        /* «Економія за комплект» */
+}
+
+/* ============================================================ game card */
+
+/* card: 1 px hairline, 28 radius, 20 inside; photo → name 20 → text 8 → 20 → line → 20 → price row */
+.game-card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--stroke);
+  border-radius: 1.75rem;
+  background: var(--white);
+  box-shadow: 0 14px 36px rgba(43, 16, 3, 0.08);
+  transition:
+    box-shadow 0.3s var(--ease-sine-out),
+    border-color 0.3s var(--ease-sine-out);
+}
+
+.game-card:hover {
+  box-shadow: 0 20px 48px rgba(43, 16, 3, 0.14);
+}
+
+.game-card.is-added {
+  border-color: var(--primary);
+}
+
+.game-card:has(.game-card__link:focus-visible) {
+  outline: 4px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.game-card__media {
+  aspect-ratio: 370 / 300;
+  border: 0;
+  border-radius: 1.25rem;
+  box-shadow: none;
+}
+
+.game-card__title {
+  margin-top: 1.25rem;
+  font-size: var(--fs-h4);
+  --lh: 1.25;
+}
+
+.game-card__link {
+  color: inherit;
+}
+
+.game-card__link:focus-visible {
+  outline: none;
+}
+
+/* the name's link covers the whole card; the cart button sits above it */
+.game-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+/* two lines, always (Figma: the description box is 2 × 24) */
+.game-card__text {
+  display: -webkit-box;
+  min-height: 3rem;
+  margin: 0.5rem 0 1.25rem;
+  overflow: hidden;
+  font-size: 1rem;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  --lh: 1.5;
+}
+
+.game-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--stroke);
+}
+
+.game-card__price strong {
+  display: block;
+  color: var(--deep);
+  font-size: 1.625rem;
+  font-weight: var(--w-bold);
+  --lh: 1.15;
+}
+
+.game-card__price span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.875rem;
+  --lh: 1.15;
+}
+
+/* ===================================================== «+ У кошик» button */
+
+.atc {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  padding: 0 1.625rem;
+  border: 1.5px solid var(--primary);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--primary);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+  --lh: 1.25;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s var(--ease-sine-out),
+    border-color 0.25s var(--ease-sine-out),
+    color 0.25s var(--ease-sine-out),
+    box-shadow 0.25s var(--ease-sine-out);
+}
+
+.atc__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.atc:hover {
+  border-color: var(--brown-dark);
+  background: var(--bg);
+  box-shadow: 0 6px 16px rgba(43, 16, 3, 0.12);
+}
+
+.atc:active {
+  background: var(--beige);
+  box-shadow: none;
+}
+
+.atc:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--accent);
+}
+
+.atc.is-added {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--white);
+}
+
+.atc.is-added:hover {
+  border-color: var(--brown-dark);
+  background: var(--brown-dark);
+}
+
+.atc__state--off {
+  display: none;
+}
+
+@media (hover: hover) {
+  .atc.is-added:hover .atc__state--on {
+    display: none;
+  }
+
+  .atc.is-added:hover .atc__state--off {
+    display: inline-flex;
+  }
+}
+
+.atc__spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--stroke);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: atc-spin 0.8s linear infinite;
+}
+
+@keyframes atc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* own-price cards on the prices page: the button at the bottom, in line across a row */
+.special-card__cart {
+  align-self: flex-start;
+  margin: auto 1rem 0;
+}
+
+/* game page: the one button is white until the game is in the cart */
+.book-game.btn--outline {
+  background: var(--white);
+}
+
+.book-game.btn--outline:hover {
+  background: var(--primary);
+}
+
+/* ========================================================== header bag */
+
+.cart-btn {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.125rem;
+  height: 3.125rem;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--deep);
+  transition: background-color 0.25s var(--ease-sine-out);
+}
+
+.cart-btn:hover {
+  background: var(--bg);
+}
+
+.cart-btn__badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  display: grid;
+  place-items: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.25rem;
+  border-radius: 0.75rem;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: var(--w-bold);
+  --lh: 1;
+}
+
+/* ===================================================== panel (≥ 768) */
+
+.cart {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(43, 16, 3, 0.4);
+  animation: modal-fade 0.3s var(--ease-sine-out);
+}
+
+.cart__panel {
+  display: flex;
+  outline: none;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: min(30rem, 100%);
+  height: 100%;
+  padding: 2rem;
+  border-radius: 2rem 0 0 2rem;
+  background: var(--white);
+  box-shadow: -16px 0 48px rgba(43, 16, 3, 0.16);
+  animation: cart-in 0.4s var(--ease-power3-out);
+}
+
+@keyframes cart-in {
+  from { transform: translateX(100%); }
+}
+
+.cart__head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cart__title {
+  color: var(--deep);
+  font-size: 1.875rem;
+  --lh: 1.2;
+}
+
+.cart__count {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: var(--w-bold);
+  --lh: 1.43;
+}
+
+.cart__close {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: auto;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--deep);
+}
+
+.cart__close:hover {
+  background: var(--stroke);
+}
+
+/* the list scrolls; the foot with the total always shows */
+.cart__items {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 2.5rem;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cart-item + .cart-item {
+  padding-top: 1rem;
+  border-top: 1px solid var(--stroke);
+}
+
+.cart-item__thumb {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.cart-item__name {
+  display: block;
+  color: var(--deep);
+  font-size: 1.125rem;
+  font-weight: var(--w-bold);
+  --lh: 1.33;
+}
+
+.cart-item__name:hover {
+  color: var(--primary);
+}
+
+.cart-item__price {
+  margin-top: 0.25rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  --lh: 1.43;
+}
+
+/* the Beerpong kit: a checkbox under the game */
+.cart-item__addon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: var(--deep);
+  font-size: 0.875rem;
+  --lh: 1.43;
+  cursor: pointer;
+}
+
+.cart-item__addon input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cart-item__check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid var(--primary);
+  border-radius: 0.375rem;
+  color: transparent;
+}
+
+.cart-item__addon input:checked + .cart-item__check {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.cart-item__addon input:focus-visible + .cart-item__check {
+  box-shadow: 0 0 0 4px var(--accent);
+}
+
+.cart-item__addon strong {
+  color: var(--primary);
+}
+
+.cart-item__remove {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--primary);
+}
+
+.cart-item__remove:hover {
+  background: var(--bg);
+}
+
+/* list + side: one column under 920 (the list scrolls, the side stays), two columns from 920 */
+.cart__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 0;
+}
+
+.cart__foot {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart__calc,
+.cart__end {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* the folded total is for phones */
+.cart-fold {
+  display: none;
+}
+
+/* two columns (Figma 1732:23722): games | hairline | table, summary at the top, note and buttons at the bottom */
+@media (min-width: 920px) {
+  .cart__panel {
+    width: min(55rem, 100%);
+  }
+
+  /* the empty cart stays 480 (Figma 1732:18332) */
+  .cart__panel:has(.cart__empty) {
+    width: 30rem;
+  }
+
+  .cart__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22.5rem;
+    gap: 2rem;
+  }
+
+  .cart__items {
+    height: 100%;
+  }
+
+  .cart__foot {
+    justify-content: space-between;
+    min-height: 0;
+    padding-left: 2rem;
+    overflow-y: auto;
+    border-left: 1px solid var(--stroke);
+  }
+}
+
+/* table stepper */
+.cart-addon {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--stroke);
+  border-radius: 1.25rem;
+}
+
+.cart-addon__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cart-addon__name {
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+  --lh: 1.25;
+}
+
+.cart-addon__note {
+  margin-top: 0.125rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  --lh: 1.43;
+}
+
+.stepper {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-pill);
+}
+
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--primary);
+}
+
+.stepper button:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+.stepper button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.stepper output {
+  min-width: 1.25rem;
+  color: var(--deep);
+  font-weight: var(--w-bold);
+  text-align: center;
+}
+
+/* summary: compact, as on the phone (Figma 1732:22850) */
+.cart-sum {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--bg);
+}
+
+.cart-sum__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.875rem;
+  --lh: 1.43;
+}
+
+.cart-sum__row dt {
+  color: var(--ink);
+}
+
+.cart-sum__row dd {
+  margin: 0;
+  color: var(--deep);
+  font-weight: var(--w-bold);
+  white-space: nowrap;
+}
+
+.cart-sum__row.is-save dd {
+  color: var(--save);
+}
+
+.cart-sum__total dt {
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+  --lh: 1.5;
+}
+
+.cart-sum__total dd {
+  font-size: 1.25rem;
+  --lh: 1.2;
+}
+
+.cart__note {
+  color: var(--muted);
+  font-size: 0.75rem;
+  --lh: 1.5;
+}
+
+.cart__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cart__btn {
+  height: 3.5rem;
+  border: 1px solid var(--stroke);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--primary);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+  --lh: 1.25;
+  transition: background-color 0.25s var(--ease-sine-out);
+}
+
+.cart__btn:hover {
+  background: var(--bg);
+}
+
+.cart__btn--primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 10px 24px rgba(134, 100, 82, 0.28);
+}
+
+.cart__btn--primary:hover {
+  background: var(--brown-dark);
+}
+
+.cart__btn:focus-visible,
+.cart__close:focus-visible,
+.cart-item__remove:focus-visible,
+.stepper button:focus-visible,
+.cart-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--accent);
+}
+
+/* empty cart: bag in a cream circle, title, hint, «До каталогу» */
+.cart__empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.cart__empty-icon {
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--primary);
+}
+
+.cart__empty-title {
+  color: var(--deep);
+  font-size: 1.5rem;
+  font-weight: var(--w-bold);
+  --lh: 1.25;
+}
+
+.cart__empty-text {
+  max-width: 20rem;
+  margin-top: -0.5rem;
+  color: var(--ink);
+  font-size: 1rem;
+  --lh: 1.5;
+}
+
+/* ================================================ booking form: picks */
+
+/* «6 ігор · 6 990 грн / доба» + «Змінити», then a white chip per game (Figma 1732:19083) */
+.form-cart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: var(--bg);
+}
+
+.form-cart__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.form-cart__sum {
+  color: var(--deep);
+  font-size: 1rem;
+  font-weight: var(--w-bold);
+  --lh: 1.25;
+}
+
+.form-cart__edit {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: var(--w-bold);
+  --lh: 1.43;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.form-cart__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.form-cart__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  color: var(--deep);
+  font-size: 0.875rem;
+  --lh: 1.43;
+}
+
+.form-cart__thumb {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+/* the total on the button: phones only */
+.cart__btn-sum {
+  display: none;
+}
+
+/* the phone bar is phones only */
+.cart-bar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart,
+  .cart__panel,
+  .atc__spinner {
+    animation: none;
+  }
+}
+
+/* ============================================ one column (under 920): the total folded */
+
+@media (max-width: 919px) {
+  /* the total in one line; «Деталі» opens the rows above it (Figma 1732:24018) */
+  .cart-fold {
+    order: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background: var(--bg);
+  }
+
+  .cart-fold__label {
+    color: var(--deep);
+    font-size: 1rem;
+    --lh: 1.25;
+  }
+
+  .cart-fold__sum {
+    justify-self: end;
+    color: var(--deep);
+    font-size: 1.25rem;
+    --lh: 1.2;
+    white-space: nowrap;
+  }
+
+  .cart-fold__save {
+    color: var(--save);
+    font-size: 0.75rem;
+    --lh: 1.33;
+  }
+
+  .cart-fold__more {
+    grid-column: 2;
+    justify-self: end;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary);
+    font-size: 0.875rem;
+    font-weight: var(--w-bold);
+    --lh: 1.43;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cart-sum {
+    display: none;
+  }
+
+  .cart-sum.is-open {
+    display: flex;
+  }
+
+  .cart-sum.is-open .cart-sum__total {
+    display: none;
+  }
+
+  .cart__note {
+    display: none;
+  }
+}
+
+/* ================================================================ phones */
+
+@media (max-width: 640px) {
+  .game-card__title {
+    font-size: 1.375rem;
+    --lh: 1.27;
+  }
+
+  .game-card__text {
+    font-size: 0.875rem;
+    --lh: 1.71;
+  }
+}
+
+@media (max-width: 767px) {
+  /* the sheet from the bottom (Figma 1728:17569): 32 top corners, grabber, 24 sides */
+  .cart {
+    align-items: flex-end;
+    justify-content: stretch;
+  }
+
+  .cart__panel {
+    gap: 1rem;
+    width: 100%;
+    height: auto;
+    max-height: calc(100% - 4.5rem);
+    padding: 0.75rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: none;
+    animation-name: sheet-rise;
+  }
+
+  .cart__panel::before {
+    content: '';
+    flex: none;
+    align-self: center;
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 0.125rem;
+    background: var(--stroke);
+  }
+
+  .cart__title {
+    font-size: 1.75rem;
+    --lh: 1.29;
+  }
+
+  .cart__items {
+    gap: 0.75rem;
+  }
+
+  .cart-item {
+    grid-template-columns: 4rem minmax(0, 1fr) 2.5rem;
+  }
+
+  .cart-item + .cart-item {
+    padding-top: 0.75rem;
+  }
+
+  .cart-item__thumb {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .cart-item__addon {
+    align-items: flex-start;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    --lh: 1.67;
+  }
+
+  .cart__foot {
+    gap: 0.75rem;
+  }
+
+  /* one scroll for the games, the table and the total; «Оформити заявку · сума» stays at the bottom (Figma 1732:24018) */
+  .cart__body {
+    gap: 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .cart__items {
+    flex: none;
+    overflow: visible;
+  }
+
+  /* the foot's two groups join the scroll, so the button can stick to its bottom */
+  .cart__foot {
+    display: contents;
+  }
+
+  .cart__end {
+    position: sticky;
+    bottom: 0;
+    padding-top: 0.75rem;
+    background: var(--white);
+    box-shadow: 0 -12px 16px var(--white);
+  }
+
+  .cart__btn--more {
+    display: none;
+  }
+
+  .cart__btn-sum {
+    display: inline;
+  }
+
+  .cart-addon {
+    flex-wrap: wrap;
+  }
+
+  .cart__empty {
+    min-height: 22.5rem;
+  }
+
+  /* «Обрано N ігор / сума / Оформити» in place of «Забронювати + Instagram» */
+  .cart-bar {
+    position: fixed;
+    right: 1.25rem;
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    left: 1.25rem;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    height: 4.25rem;
+    padding: 0 0.5rem 0 1.5rem;
+    border-radius: var(--r-pill);
+    background: var(--deep);
+    box-shadow: 0 12px 40px rgba(43, 16, 3, 0.24);
+    animation: sheet-rise 0.4s var(--ease-power3-out);
+  }
+
+  .cart-bar__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--white);
+    text-align: left;
+  }
+
+  .cart-bar__count {
+    font-size: 1rem;
+    font-weight: var(--w-bold);
+    --lh: 1.25;
+  }
+
+  .cart-bar__sum {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    --lh: 1.14;
+  }
+
+  .cart-bar__btn {
+    flex: none;
+    height: 3rem;
+    padding: 0 1.375rem;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--white);
+    color: var(--deep);
+    font-size: 1rem;
+    font-weight: var(--w-bold);
+    --lh: 1.25;
+  }
+}

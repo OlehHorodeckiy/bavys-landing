@@ -3,8 +3,10 @@
  * (Calmlyss) and is reused across pages rather than rebuilt per page.
  */
 import { useId, useState } from 'react';
-import { company, eventType, stats as defaultStats, steps as defaultSteps, advantages as defaultAdvantages, useCases as defaultUseCases } from '../data/site.js';
-import { findGame, games as allGames } from '../data/games.js';
+import { company, stats as defaultStats, steps as defaultSteps, advantages as defaultAdvantages, useCases as defaultUseCases } from '../data/site.js';
+import { findGame, games as allGames, priceValue } from '../data/games.js';
+import { uah, useCart } from '../cart.js';
+import { AddToCart } from './AddToCart.jsx';
 import { CountUp } from './motion.jsx';
 import { blogCategory } from '../data/posts.js';
 import { faq as defaultFaq } from '../data/faq.js';
@@ -108,33 +110,45 @@ export function GalleryBento({ items, className = '', ...rest }) {
 
 /* ------------------------------------------------------------- Game card */
 
-/** `event`: the catalog filter; the card's event chip then names it instead of the game's main event. */
-export function GameCard({ game, headingLevel = 'h3', event }) {
+/**
+ * Game card with the cart (Figma guide «Картка гри з кошиком», варіант C):
+ * photo, name, two lines about the game, a hairline, then the day price and
+ * «+ У кошик». The name is the link and covers the whole card; the cart button
+ * sits above it. A card whose game is in the cart gets a brown outline.
+ */
+export function GameCard({ game, headingLevel = 'h3' }) {
   const H = headingLevel;
-  const primary = eventType(event && game.tags.includes(event) ? event : game.events[0]);
+  const { items } = useCart();
   return (
-    <a className="game-card" href={href(`/games/${game.slug}`)}>
+    <article className={`game-card ${items.includes(game.slug) ? 'is-added' : ''}`}>
       <div className="game-card__media">
         <GameMedia game={game} alt="" />
         {game.isNew ? <span className="game-card__badge">Новинка</span> : null}
-        <div className="game-card__chips">
-          <Chip dot={primary?.dot}>{primary?.label}</Chip>
-          <Chip icon="users">{game.players}</Chip>
-        </div>
       </div>
-      <H className="game-card__title">{game.name}</H>
+      <H className="game-card__title">
+        <a className="game-card__link" href={href(`/games/${game.slug}`)}>
+          {game.name}
+        </a>
+      </H>
       <p className="game-card__text">{game.short}</p>
-    </a>
+      <div className="game-card__foot">
+        <p className="game-card__price">
+          <strong>{uah(priceValue(game))}</strong>
+          <span>за добу</span>
+        </p>
+        <AddToCart game={game} />
+      </div>
+    </article>
   );
 }
 
 /** `delay`: when the first row starts rising (0.4s on page load, sooner after a filter change). */
-export function GameGrid({ games, headingLevel, event, delay = 0.4 }) {
+export function GameGrid({ games, headingLevel, delay = 0.4 }) {
   return (
     <ul className="game-grid" role="list">
       {games.map((g, i) => (
         <li key={g.slug} className="rv" data-reveal="90" style={{ '--rv-delay': `${delay + (i % 3) * 0.06}s` }}>
-          <GameCard game={g} headingLevel={headingLevel} event={event} />
+          <GameCard game={g} headingLevel={headingLevel} />
         </li>
       ))}
     </ul>

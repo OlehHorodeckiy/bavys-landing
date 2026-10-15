@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon.jsx';
 import BookingForm from './BookingForm.jsx';
 import { onBooking } from './booking.js';
+import { openCart } from '../cart.js';
 import { track } from '../analytics.js';
+import { lockScroll, unlockScroll } from './scrollLock.js';
 
 /**
  * The booking popup: a 640px card over a dimmed, blurred page. Opens from every
@@ -10,15 +12,15 @@ import { track } from '../analytics.js';
  * close it; focus returns to the button that opened it.
  */
 export default function BookingModal() {
-  const [state, setState] = useState(null); // { game } while open
+  const [state, setState] = useState(null); // { game, cart } while open
   const back = useRef(null);
   const card = useRef(null);
 
   useEffect(
     () =>
-      onBooking(({ game }) => {
+      onBooking(({ game, cart }) => {
         back.current = document.activeElement;
-        setState({ game, key: Date.now() });
+        setState({ game, cart, key: Date.now() });
         track('booking_open', { game: game || '' });
       }),
     [],
@@ -28,12 +30,8 @@ export default function BookingModal() {
 
   useEffect(() => {
     if (!state) return undefined;
-    // iOS Safari ignores overflow:hidden on body: pin the page in place instead,
-    // so it does not scroll under the sheet and the toolbar does not move it
-    const y = window.scrollY;
-    const { body } = document;
-    body.classList.add('modal-open');
-    body.style.top = `-${y}px`;
+    // iOS Safari ignores overflow:hidden on body: pin the page in place instead
+    lockScroll();
     const onKey = (e) => {
       if (e.key === 'Escape') close();
       if (e.key !== 'Tab' || !card.current) return;
@@ -45,9 +43,7 @@ export default function BookingModal() {
     };
     document.addEventListener('keydown', onKey);
     return () => {
-      body.classList.remove('modal-open');
-      body.style.top = '';
-      window.scrollTo(0, y);
+      unlockScroll();
       document.removeEventListener('keydown', onKey);
       back.current?.focus?.({ preventScroll: true });
     };
@@ -60,7 +56,16 @@ export default function BookingModal() {
         <button type="button" className="modal__close" aria-label="Закрити" onClick={close}>
           <Icon name="close" size={18} />
         </button>
-        <BookingForm key={state.key} variant="modal" game={state.game} onDone={close} />
+        <BookingForm
+          key={state.key}
+          variant="modal"
+          game={state.game}
+          onDone={close}
+          onEditCart={() => {
+            close();
+            openCart();
+          }}
+        />
       </div>
     </div>
   );

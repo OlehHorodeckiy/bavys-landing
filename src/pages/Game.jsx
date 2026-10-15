@@ -4,6 +4,7 @@ import Icon from '../components/Icon.jsx';
 import { Button, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
 import { CtaBanner, FaqSection, GameGrid } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
+import { BookGameButton } from '../components/AddToCart.jsx';
 
 /** "Велика Дженга" + accent "Дженга" → ["Велика", "Дженга"]. */
 function splitName(game) {
@@ -16,8 +17,8 @@ const placeIcon = (p) => (p === 'outdoor' ? 'sun' : p === 'indoor' ? 'home' : 'h
 
 /**
  * Light first screen: white backdrop with a lawn strip along the bottom, text
- * on the left (label, two-tone name, lead, four facts in a 2×2 grid, one booking
- * button) and the game photo on the right in a 1554:1402 box, centred on the text.
+ * on the left (label, two-tone name, lead, four facts in a 2×2 grid, one button
+ * that puts the game in the cart) and the game photo on the right in a 1554:1402 box, centred on the text.
  */
 function GameHero({ game }) {
   const [title, accent] = splitName(game);
@@ -45,9 +46,7 @@ function GameHero({ game }) {
               </li>
             ))}
           </ul>
-          <Button book={game.slug} className="game-hero__cta">
-            Забронювати цю гру
-          </Button>
+          <BookGameButton game={game} className="game-hero__cta" />
         </div>
         <div className="game-hero__photo">
           <Media

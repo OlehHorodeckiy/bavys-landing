@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Icon from './Icon.jsx';
+import { lockScroll, unlockScroll } from './scrollLock.js';
 
 /**
  * Full video over a dimmed page (Figma «Про нас: відео відкрите»): the video
@@ -14,10 +15,7 @@ export default function VideoModal({ src, poster, label, onClose }) {
 
   useEffect(() => {
     const back = document.activeElement;
-    const y = window.scrollY;
-    const { body } = document;
-    body.classList.add('modal-open');
-    body.style.top = `-${y}px`;
+    lockScroll();
     close.current?.focus();
     const onKey = (e) => {
       if (e.key === 'Escape') onClose();
@@ -32,9 +30,7 @@ export default function VideoModal({ src, poster, label, onClose }) {
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
-      body.classList.remove('modal-open');
-      body.style.top = '';
-      window.scrollTo(0, y);
+      unlockScroll();
       back?.focus?.({ preventScroll: true });
     };
   }, [onClose]);

@@ -2,14 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import { findGame } from '../data/games.js';
 import { company } from '../data/site.js';
 import Icon from './Icon.jsx';
-import { Button, Heading } from './ui.jsx';
+import { Button, GameMedia, Heading } from './ui.jsx';
 import { track } from '../analytics.js';
+import { clearCart, openCart, summaryRows, uah, useCart } from '../cart.js';
+import { gamesWord } from './sections.jsx';
 
 /**
  * Booking request form: the one conversion of the whole site, used in the
  * booking popup and on the contacts page. Name, phone, date and a free comment;
- * no game picker (the comment asks which games). When the form is opened from a
- * game page that game is quietly added to the request.
+ * the games come from the cart (shown above the fields, with «Змінити» back to
+ * the cart). When the form is opened from a game page that game is quietly
+ * added to the request.
  *
  * Delivery: the request is posted as JSON to FormSubmit, which e-mails it to
  * company.leadsEmail as a table (no account or key; the very first request sends
@@ -31,8 +34,13 @@ function validate(v) {
   return errors;
 }
 
+/** «2 850 грн за добу: Комплект із 2 ігор 1 650 грн + Велика Дженга 1 200 грн» for the e-mail. */
+const totalLine = (t) =>
+  `${uah(t.total)} за добу: ${summaryRows(t).filter((r) => !r.save).map((r) => `${r.label} ${uah(r.value)}`).join(' + ')}`;
+
 /** One request as the rows of the e-mail table (FormSubmit keeps the key order). */
-function toPayload(v, gameName, honey) {
+function toPayload(v, gameName, honey, cart) {
+  const t = cart?.total;
   return {
     _subject: `Заявка на оренду ігор: ${v.name}`,
     _template: 'table',
@@ -41,9 +49,44 @@ function toPayload(v, gameName, honey) {
     'Ім’я': v.name,
     Телефон: v.phone,
     'Дата події': formatDate(v.date),
+    ...(t && t.items.length
+      ? {
+          'Обрані ігри': t.items.map((g) => g.name).join(', '),
+          ...(t.kit ? { 'Комплект для Бірпонгу': 'так' } : {}),
+          ...(t.tables ? { 'Столи для ігор': String(t.tables) } : {}),
+          'Сума за добу': totalLine(t),
+        }
+      : {}),
     ...(gameName ? { 'Сторінка гри': gameName } : {}),
     Коментар: v.message || 'без коментаря',
   };
+}
+
+/** The games from the cart above the fields: count and day total, «Змінити», then a small chip per game. */
+function CartPicks({ cart, onEdit }) {
+  const t = cart.total;
+  return (
+    <div className="form-cart">
+      <div className="form-cart__top">
+        <p className="form-cart__sum">
+          {gamesWord(t.items.length)} · {uah(t.total)} / доба
+        </p>
+        <button type="button" className="form-cart__edit" onClick={onEdit}>
+          Змінити
+        </button>
+      </div>
+      <ul className="form-cart__chips" role="list">
+        {t.items.map((g) => (
+          <li key={g.slug} className="form-cart__chip">
+            <span className="form-cart__thumb" aria-hidden="true">
+              <GameMedia game={g} alt="" />
+            </span>
+            {g.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 function Field({ id, label, required, error, icon, children }) {
@@ -70,7 +113,9 @@ function Field({ id, label, required, error, icon, children }) {
  * variant: 'modal' (popup, «Забронювати ігри») | 'page' (contacts, «Надішліть заявку»)
  * onDone: called by the success state's button (the popup closes itself).
  */
-export default function BookingForm({ game, variant = 'page', onDone }) {
+export default function BookingForm({ game, variant = 'page', onDone, onEditCart = openCart }) {
+  const cart = useCart();
+  const hasCart = cart.items.length > 0;
   const [values, setValues] = useState({ name: '', phone: '', date: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
@@ -103,13 +148,14 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
       const res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '')),
+        body: JSON.stringify(toPayload(values, gameName, honey.current?.value || '', hasCart ? cart : null)),
       });
       const data = await res.json().catch(() => ({}));
       // FormSubmit answers 200 with success "false" (e.g. before activation)
       if (!res.ok || String(data.success) === 'false') throw new Error(data.message || String(res.status));
       setStatus('sent');
-      track('generate_lead', { form: variant, game: gameName || '' });
+      track('generate_lead', { form: variant, game: gameName || '', games: cart.items.length, value: hasCart ? cart.total.total : 0, currency: 'UAH' });
+      if (hasCart) clearCart();
     } catch {
       setStatus('error');
     }
@@ -146,6 +192,8 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
         <p>Без передоплати. Адміністратор зателефонує протягом доби й уточнить деталі.</p>
       </div>
 
+      {hasCart ? <CartPicks cart={cart} onEdit={onEditCart} /> : null}
+
       <input ref={honey} type="text" name="_honey" className="visually-hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
       <div className="booking-form__grid">
@@ -159,7 +207,7 @@ export default function BookingForm({ game, variant = 'page', onDone }) {
           <input id={id('date')} type="date" min={minDate} value={values.date} onChange={set('date')} className={values.date ? '' : 'is-empty'} />
         </Field>
         <Field id={id('message')} label="Коментар">
-          <textarea id={id('message')} rows={3} placeholder="Які ігри вас цікавлять, формат свята, побажання щодо часу" value={values.message} onChange={set('message')} />
+          <textarea id={id('message')} rows={3} placeholder={hasCart ? 'Формат свята, кількість гостей, адреса' : 'Які ігри вас цікавлять, формат свята, побажання щодо часу'} value={values.message} onChange={set('message')} />
         </Field>
       </div>
 

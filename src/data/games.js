@@ -43,6 +43,45 @@ export const rental = {
 /** The game's price per day: its own one or the shared one. */
 export const gamePrice = (g) => g.price || rental.price;
 
+/** The same as a number of hryvnias: 1200 for «1200 грн / доба», 850 for the shared price. */
+export const priceValue = (g) => (g.price ? parseInt(g.price.replace(/\D+/g, ''), 10) : PACKAGES[0][1]);
+
+/** Cart add-ons (the prices page): a table for table games, the Beerpong kit. */
+export const addons = { table: 120, kit: 500 };
+
+/** The day price of `n` shared-price games: the package price, then +800 for each one after four. */
+export const bundlePrice = (n) => {
+  if (!n) return 0;
+  const last = PACKAGES[PACKAGES.length - 1];
+  return n <= last[0] ? PACKAGES[n - 1][1] : last[1] + (n - last[0]) * NEXT;
+};
+
+/**
+ * The cart's day total. Shared-price games go as one package, own-price games
+ * (Велика Дженга, Бірпонг, Морський бій) on top at their price, then the tables
+ * and the Beerpong kit. `save` is what the package saves against 850 each.
+ */
+export const cartTotal = (slugs, { tables = 0, kit = false } = {}) => {
+  const items = slugs.map(findGame).filter(Boolean);
+  const shared = items.filter((g) => !g.price);
+  const own = items.filter((g) => g.price).map((g) => ({ slug: g.slug, name: g.name, price: priceValue(g) }));
+  const bundle = bundlePrice(shared.length);
+  const hasKit = kit && items.some((g) => g.addon);
+  const extras = tables * addons.table + (hasKit ? addons.kit : 0);
+  return {
+    items,
+    bundleCount: shared.length,
+    bundle,
+    own,
+    tables,
+    tablesPrice: tables * addons.table,
+    kit: hasKit,
+    save: shared.length * PACKAGES[0][1] - bundle,
+    total: bundle + own.reduce((s, o) => s + o.price, 0) + extras,
+    needsTable: items.filter((g) => g.table).length,
+  };
+};
+
 export const games = [
   {
     slug: 'velyka-dzhenga',
@@ -107,7 +146,7 @@ export const games = [
     photo: 'card-kornkhol',
     hero: null,
     gallery: [],
-    short: 'Кидай мішечки, влучай у ціль і перемагай!',
+    short: 'Кидай мішечки в дошку з отвором і першим набери 21 очко.',
     lead: 'Кидай мішечки, влучай у ціль і перемагай! Можна грати 1 на 1 або команда на команду — хто перший збере 21 очко, той виграв.',
     about: [
       'Гравці по черзі кидають мішечки з піском у дошку з отвором. Кожному гравцю чи команді дається 4 мішечки свого кольору, а бали рахують після кожного раунду.',
@@ -315,7 +354,7 @@ export const games = [
     heroPosition: '50% 30%',
     hero: null,
     gallery: [],
-    short: 'Розгойдуй кільце й чіпляй його за гачок.',
+    short: 'Розгойдуй кільце на мотузці й чіпляй його за гачок.',
     lead: 'Учасники розгойдують кільце, щоб зачепити його за гачок. Кожне влучання рухає фішку на полі вперед — хто першим дійде до фінішу, той переміг.',
     about: [
       'Кільце висить на мотузці, і щоб зачепити його за гачок, потрібні точний рух і трохи терпіння. Кожне влучання просуває фішку на полі вперед.',
@@ -343,7 +382,7 @@ export const games = [
     hero: null,
     gallery: [],
     isNew: true,
-    short: 'Розстав кораблі на великому дерев’яному полі й топи флот суперника.',
+    short: 'Розстав кораблі на дерев’яному полі й топи флот суперника.',
     lead: 'Легендарна гра у великому дерев’яному форматі! Розстав кораблі, називай клітинки й топи флот суперника.',
     about: [
       'Два гравці розставляють кораблі на своїх полях 10 × 10 і по черзі називають клітинки суперника. Влучив — ставиш кілочок, і хід знову твій.',

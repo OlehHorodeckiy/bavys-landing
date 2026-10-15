@@ -2,6 +2,7 @@ import { findGame, rental } from '../data/games.js';
 import { href } from '../router.js';
 import { Button, Heading, Media, Pill } from '../components/ui.jsx';
 import { CtaBanner, FaqSection } from '../components/sections.jsx';
+import { AddToCart } from '../components/AddToCart.jsx';
 
 /** «850 грн», with a no-break space so the number keeps its word. */
 const uah = (n) => `${n} грн`;
@@ -96,6 +97,7 @@ export default function Prices() {
                     </div>
                   ) : null}
                 </div>
+                {s.href ? <AddToCart game={findGame(s.key)} className="special-card__cart" /> : null}
               </li>
             ))}
           </ul>

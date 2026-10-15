@@ -7,6 +7,8 @@ import Header, { MobileBar } from './components/Header.jsx';
 import { useScrollReveal } from './components/motion.jsx';
 import Footer from './components/Footer.jsx';
 import BookingModal from './components/BookingModal.jsx';
+import CartDrawer, { CartBar } from './components/CartDrawer.jsx';
+import { openCart, useCart } from './cart.js';
 import Home from './pages/Home.jsx';
 import Games from './pages/Games.jsx';
 import Game from './pages/Game.jsx';
@@ -57,6 +59,8 @@ export default function App() {
   // Booking buttons on a game page quietly add that game to the request.
   const bookGame = section === 'games' && findGame(slug) ? slug : true;
   const pageKey = route.path + JSON.stringify(route.query);
+  // phones: while the cart has games its bar takes the place of «Забронювати + Instagram»
+  const cartCount = useCart().items.length;
   useScrollReveal(pageKey);
 
   useEffect(() => {
@@ -80,8 +84,9 @@ export default function App() {
         {page}
       </main>
       <Footer />
-      <MobileBar path={route.path} book={bookGame} />
+      {cartCount && !route.path.startsWith('/contacts') ? <CartBar onOpen={openCart} /> : <MobileBar path={route.path} book={bookGame} />}
       <BookingModal />
+      <CartDrawer />
     </>
   );
 }
