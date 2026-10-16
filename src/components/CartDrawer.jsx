@@ -144,7 +144,7 @@ export default function CartDrawer() {
                 <div className="cart-fold">
                   <strong className="cart-fold__label">За добу</strong>
                   <strong className="cart-fold__sum">{uah(t.total)}</strong>
-                  {t.save > 0 ? <span className="cart-fold__save">економія −{uah(t.save)}</span> : null}
+                  {t.save > 0 ? <span className="cart-fold__save">знижка −{uah(t.save)}</span> : null}
                   <button type="button" className="cart-fold__more" aria-expanded={details} aria-controls="cart-sum" onClick={() => setDetails((d) => !d)}>
                     {details ? 'Згорнути' : 'Деталі'}
                   </button>

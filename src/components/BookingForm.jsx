@@ -34,9 +34,11 @@ function validate(v) {
   return errors;
 }
 
-/** «2 850 грн за добу: Комплект із 2 ігор 1 650 грн + Велика Дженга 1 200 грн» for the e-mail. */
+/** «2 850 грн за добу: 2 гри по 850 грн 1 700 грн + Велика Дженга 1 200 грн − Знижка за комплект 50 грн» for the e-mail. */
 const totalLine = (t) =>
-  `${uah(t.total)} за добу: ${summaryRows(t).filter((r) => !r.save).map((r) => `${r.label} ${uah(r.value)}`).join(' + ')}`;
+  `${uah(t.total)} за добу: ${summaryRows(t)
+    .map((r, i) => `${i ? (r.value < 0 ? ' − ' : ' + ') : ''}${r.label} ${uah(Math.abs(r.value))}`)
+    .join('')}`;
 
 /** One request as the rows of the e-mail table (FormSubmit keeps the key order). */
 function toPayload(v, gameName, honey, cart, event) {

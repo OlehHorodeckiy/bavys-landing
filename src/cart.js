@@ -11,8 +11,10 @@
  * table per table game (cartState()).
  */
 import { useSyncExternalStore } from 'react';
-import { addons, cartTotal, findGame } from './data/games.js';
+import { addons, bundlePrice, cartTotal, findGame } from './data/games.js';
 import { track } from './analytics.js';
+
+const PER_GAME = bundlePrice(1);
 
 const KEY = 'bavys-cart';
 const EMPTY = Object.freeze({ items: [], tables: null, kit: false });
@@ -74,17 +76,20 @@ export function cartState(s) {
 }
 
 /**
- * The summary rows of a cart total, in the Figma order: the package (or the one
- * shared-price game), own-price games, the kit, the tables, then the saving.
+ * The summary rows of a cart total, in the Figma order. They add up to the
+ * total: the shared-price games at 850 each, own-price games, the kit, the
+ * tables, then the package discount as a minus.
  */
 export function summaryRows(t) {
   const rows = [];
-  if (t.bundleCount > 1) rows.push({ label: `Комплект із ${t.bundleCount} ігор`, value: t.bundle });
-  else if (t.bundleCount === 1) rows.push({ label: t.items.find((g) => !g.price).name, value: t.bundle });
+  const n = t.bundleCount;
+  const full = n * PER_GAME;
+  if (n > 1) rows.push({ label: `${n} ${n < 5 ? 'гри' : 'ігор'} по ${uah(PER_GAME)}`, value: full });
+  else if (n === 1) rows.push({ label: t.items.find((g) => !g.price).name, value: full });
   t.own.forEach((o) => rows.push({ label: o.name, value: o.price }));
   if (t.kit) rows.push({ label: 'Комплект для Бірпонгу', value: addons.kit });
   if (t.tables) rows.push({ label: `Столи для ігор × ${t.tables}`, value: t.tablesPrice });
-  if (t.save > 0) rows.push({ label: 'Економія за комплект', value: -t.save, save: true });
+  if (t.save > 0) rows.push({ label: 'Знижка за комплект', value: -t.save, save: true });
   return rows;
 }
 
