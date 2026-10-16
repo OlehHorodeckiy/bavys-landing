@@ -8,6 +8,7 @@ import './styles/pages.css';
 import './styles/theme-olive.css';
 import './styles/mobile.css';
 import './styles/cart.css';
+import './styles/game-play.css';
 import App from './App.jsx';
 import { initAnalytics } from './analytics.js';
 import { interceptLinks } from './router.js';

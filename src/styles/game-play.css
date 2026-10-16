@@ -1,0 +1,163 @@
+/*
+ * Game page: «Правила за одну хвилину» (Figma 1741:26598, варіант 1): the
+ * heading in the middle, three step cards, then «Що в комплекті» and «Що варто
+ * знати» as white cards with icon rows. Replaces «Що це за гра?» and the detail
+ * tiles: the hero already has the players, price and place, the FAQ the terms.
+ */
+.game-play {
+  background: var(--bg);
+}
+
+.game-play__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.game-play__title {
+  font-size: var(--fs-h2);
+}
+
+.game-play__head p {
+  color: var(--muted);
+  font-size: 1rem;
+  --lh: 1.5;
+}
+
+.game-play__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.play-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  border-radius: 1.5rem;
+  background: var(--white);
+}
+
+.play-step__no {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: var(--w-bold);
+  --lh: 1.2;
+}
+
+.play-step h3 {
+  color: var(--deep);
+  font-size: 1.25rem;
+  --lh: 1.4;
+}
+
+.play-step p {
+  margin-top: 0.5rem;
+  color: var(--ink);
+  font-size: 1rem;
+  --lh: 1.5;
+}
+
+.game-play__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.play-card {
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: var(--white);
+}
+
+.play-card h3 {
+  color: var(--deep);
+  font-size: 1.5rem;
+  --lh: 1.33;
+}
+
+.play-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.play-card li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--deep);
+  font-size: 1rem;
+  --lh: 1.5;
+}
+
+.play-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.875rem;
+  background: var(--bg);
+  color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+  .game-play__steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .game-play__head {
+    margin-bottom: 2rem;
+  }
+
+  .game-play__cards {
+    grid-template-columns: 1fr;
+    margin-top: 1rem;
+  }
+
+  .play-step {
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .play-step__no {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.125rem;
+  }
+
+  .play-step h3 {
+    font-size: 1.125rem;
+    --lh: 1.33;
+  }
+
+  .play-card {
+    padding: 1.5rem;
+  }
+
+  .play-card h3 {
+    font-size: 1.25rem;
+    --lh: 1.4;
+  }
+}

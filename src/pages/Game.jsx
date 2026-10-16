@@ -1,8 +1,8 @@
 import { findGame, gamePrice, games, placeLabel, rental } from '../data/games.js';
 import { eventType } from '../data/site.js';
 import Icon from '../components/Icon.jsx';
-import { Button, Heading, Media, Pill, SectionHead } from '../components/ui.jsx';
-import { CtaBanner, FaqSection, GameGrid } from '../components/sections.jsx';
+import { Button, Heading, Media, Pill } from '../components/ui.jsx';
+import { FaqSection, GameGrid } from '../components/sections.jsx';
 import NotFound from './NotFound.jsx';
 import { BookGameButton } from '../components/AddToCart.jsx';
 
@@ -12,6 +12,10 @@ function splitName(game) {
   if (accent && accent !== name && name.endsWith(accent)) return [name.slice(0, -accent.length).trim(), accent];
   return [name, null];
 }
+
+/** An icon for a kit line: bags and boxes, boards and fields, the pieces themselves. */
+const kitIcon = (k) =>
+  /сумк|мішеч|коробк|кейс/i.test(k) ? 'bag' : /пол|дошк|щит|платформ|рамк|конструкц|доріжк|стіл|підставк/i.test(k) ? 'area' : 'blocks';
 
 const placeIcon = (p) => (p === 'outdoor' ? 'sun' : p === 'indoor' ? 'home' : 'homeSun');
 
@@ -26,7 +30,6 @@ function GameHero({ game }) {
   const facts = [
     { icon: 'users', value: `${game.players} гравців` },
     { icon: 'wallet', value: gamePrice(game) },
-    { icon: 'calendar', value: 'Оренда на добу' },
     { icon: placeIcon(game.place), value: placeLabel[game.place] },
   ];
   return (
@@ -73,74 +76,64 @@ export default function Game({ slug }) {
     .slice(0, 3)
     .map(({ g }) => g);
 
-  // only real facts: the kit sheet, the rules sheet and the shared rental terms; short ones first
-  const specs = [
-    { icon: 'users', label: 'Кількість гравців', value: game.players },
-    { icon: placeIcon(game.place), label: 'Де грати', value: placeLabel[game.place] },
-    { icon: 'truck', label: 'Отримання', value: rental.delivery },
-    { icon: 'tag', label: 'Застава', value: rental.deposit },
-    { icon: 'calendar', label: 'Термін оренди', value: `${rental.term}. ${rental.returnBy}` },
-    { icon: 'blocks', label: 'Комплектація', value: game.kit.join(', ') },
-    { icon: 'wallet', label: 'Вартість оренди', value: game.price || `${rental.price} · ${rental.bundle}` },
-    ...(game.addon ? [{ icon: 'tag', label: game.addon.label, value: game.addon.value }] : []),
-    { icon: 'chat', label: 'Інструктор на події', value: rental.instructor },
-  ];
-
+  // «Що варто знати»: the game's own facts, then the table line for table games
+  const know = [...(game.know || []), ...(game.table ? [{ icon: 'cafeTable', text: `Потрібен стіл. Немає свого? Візьміть наш за ${rental.table}` }] : [])];
   return (
     <>
       <GameHero game={game} />
 
-      {/* ---------------------------------------- What it is + rules card */}
-      <section className="section section--cream game-about">
-        <div className="container game-about__grid">
-          <div className="game-about__main">
-            <Heading as="h2" title="Що це" accent="за гра?" className="game-about__title" />
-            <p className="game-about__lead">{game.short}</p>
-            <div className="game-about__copy">
-              {game.about.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
-            </div>
-          </div>
-          <div className="rules-card" id="rules">
-            <Heading as="h3" title="Правила" accent="за одну хвилину" className="rules-card__title" />
-            <p className="rules-card__note">На місці адміністратор покаже все наживо.</p>
-            <ol className="rules-card__list">
-              {game.rules.map((r, i) => (
-                <li key={r.title}>
-                  <span className="rules-card__no">{String(i + 1).padStart(2, '0')}</span>
-                  <div>
-                    <h4>{r.title}</h4>
-                    <p>{r.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------- Details */}
-      <section className="section game-details">
+      {/* -------------------- Rules, kit and what to know (Figma «Правила за одну хвилину», варіант 1) */}
+      <section className="section section--cream game-play" id="rules">
         <div className="container">
-          <SectionHead label="Деталі гри" labelTone="cream" title="Усе, що варто" accent="знати заздалегідь" br />
-          <dl className="spec-tiles">
-            {specs.map((s) => (
-              <div className="spec-tiles__item" key={s.label}>
-                <span className="spec-tiles__icon">
-                  <Icon name={s.icon} size={20} />
+          <div className="game-play__head">
+            <Heading as="h2" title="Правила" accent="за одну хвилину" className="game-play__title" />
+            <p>На місці адміністратор покаже все наживо.</p>
+          </div>
+          <ol className="game-play__steps" role="list">
+            {game.rules.map((r, i) => (
+              <li key={r.title} className="play-step">
+                <span className="play-step__no" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
                 </span>
-                <dt>{s.label}</dt>
-                <dd>{s.value}</dd>
-              </div>
+                <div>
+                  <h3>{r.title}</h3>
+                  <p>{r.text}</p>
+                </div>
+              </li>
             ))}
-          </dl>
+          </ol>
+          <div className="game-play__cards">
+            <div className="play-card">
+              <h3>Що в комплекті</h3>
+              <ul role="list">
+                {game.kit.map((k) => (
+                  <li key={k}>
+                    <span className="play-card__icon" aria-hidden="true">
+                      <Icon name={kitIcon(k)} size={24} strokeWidth={1.5} />
+                    </span>
+                    {k.charAt(0).toUpperCase() + k.slice(1)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {know.length ? (
+              <div className="play-card">
+                <h3>Що варто знати</h3>
+                <ul role="list">
+                  {know.map((k) => (
+                    <li key={k.text}>
+                      <span className="play-card__icon" aria-hidden="true">
+                        <Icon name={k.icon} size={24} strokeWidth={1.5} />
+                      </span>
+                      {k.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
-
-      <FaqSection book={game.slug} />
-
-      <CtaBanner title="Хочете цю гру" accent="на своїй події?" book={game.slug} tone="cream" />
 
       {/* ---------------------------------------------------- Related */}
       <section className="section game-related">
@@ -154,6 +147,8 @@ export default function Game({ slug }) {
           <GameGrid games={related} />
         </div>
       </section>
+
+      <FaqSection book={game.slug} />
     </>
   );
 }
