@@ -36,11 +36,20 @@ export const rental = {
   returnBy: 'Повернення наступного дня до 12:00',
   delivery: 'Доставка або самовивіз',
   deposit: 'Залежить від кількості ігор',
-  instructor: '400 грн/год, від 3 годин',
+  instructor: 'від 320 грн/год, мінімум 3 години',
   instructorRate: 400,
   instructorHours: 3,
+  /** the longer the booking, the cheaper the hour (Figma «Інструктор на святі») */
+  instructorRates: [
+    { label: 'До 4 годин', from: 1, rate: 400 },
+    { label: 'Від 5 годин', from: 5, rate: 350 },
+    { label: 'Від 8 годин', from: 8, rate: 320 },
+  ],
   table: '120 грн',
 };
+
+/** The instructor's price for `h` hours: the rate of the tier those hours reach. */
+export const instructorPrice = (h) => h * [...rental.instructorRates].reverse().find((t) => h >= t.from).rate;
 
 /** The game's price per day: its own one or the shared one. */
 export const gamePrice = (g) => g.price || rental.price;

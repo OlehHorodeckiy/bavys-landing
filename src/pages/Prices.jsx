@@ -1,4 +1,4 @@
-import { findGame, rental } from '../data/games.js';
+import { findGame, instructorPrice, rental } from '../data/games.js';
 import { href } from '../router.js';
 import { Button, Heading, Media, Pill } from '../components/ui.jsx';
 import { CtaBanner, FaqSection } from '../components/sections.jsx';
@@ -110,7 +110,7 @@ export default function Prices() {
             <div className="instructor-card__text">
               <Heading as="h2" title="Інструктор" accent="на святі" br reveal className="instructor-card__title" />
               <div className="instructor-card__body">
-                <p>Базово до кожної гри додаємо правила. Інструктор поруч, щоб гості не розбиралися самі.</p>
+                <p className="instructor-card__lead">Базово до кожної гри додаємо правила. Інструктор поруч, щоб гості не розбиралися самі.</p>
                 <ul className="instructor-card__points" role="list">
                   {points.map((p, i) => (
                     <li key={p} className="rv" data-reveal="95" style={{ '--rv-delay': `${0.2 + i * 0.08}s` }}>
@@ -120,16 +120,17 @@ export default function Prices() {
                 </ul>
               </div>
               <div className="instructor-card__cta">
-                <div className="instructor-card__price">
-                  <p>
-                    <strong>{uah(rental.instructorRate)}</strong>
-                    <span>за годину</span>
-                  </p>
-                  <p>
-                    <strong>від {rental.instructorHours} годин</strong>
-                    <span>від {uah(rental.instructorRate * rental.instructorHours)} за свято</span>
-                  </p>
-                </div>
+                <dl className="instructor-card__rates">
+                  {rental.instructorRates.map((t) => (
+                    <div key={t.label}>
+                      <dt>{t.label}</dt>
+                      <dd>{uah(t.rate)}/год</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="instructor-card__min">
+                  Мінімум {rental.instructorHours} години · від {`${instructorPrice(rental.instructorHours).toLocaleString('uk-UA').replace(/\s/g, '\u00a0')}\u00a0грн`} за свято
+                </p>
                 <Button book>Замовити інструктора</Button>
               </div>
             </div>
