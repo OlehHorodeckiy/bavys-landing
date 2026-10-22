@@ -19,7 +19,7 @@ const rv = (delay) => ({ className: 'rv', 'data-reveal': '90', style: delay ? { 
 
 const artCards = [
   { icon: 'truck', title: 'Доставка й встановлення', note: 'Львів та область' },
-  { icon: 'whistle', title: 'Інструктор на вечір', note: `${rental.instructor}` },
+  { icon: 'whistle', title: 'Інструктор на вечір', note: `${rental.instructorRate} грн/год, від ${rental.instructorHours} годин` },
 ];
 
 /**
