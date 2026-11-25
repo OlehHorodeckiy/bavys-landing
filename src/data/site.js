@@ -1,3 +1,5 @@
+import { games } from './games.js';
+
 /**
  * Company details, navigation and the shared event taxonomy.
  * Phone, e-mail and Instagram are real. Telegram / Facebook were removed until the
@@ -109,9 +111,9 @@ export const useCases = [
   },
 ];
 
-/** Headline numbers (confirmed by the owner 2026-10-04: 16 games, about 70 events). */
+/** Headline numbers (the owner confirmed about 70 events on 2026-10-04; the game count follows the catalog). */
 export const stats = [
-  { value: '16', suffix: '', title: "Дерев'яні", accent: 'набори', text: 'Ігри для дорослих, дітей і змішаних компаній — від настільних до гігантських.' },
+  { value: String(games.length), suffix: '', title: "Дерев'яні", accent: 'набори', text: 'Ігри для дорослих, дітей і змішаних компаній — від настільних до гігантських.' },
   { value: '70', suffix: '+', title: 'Проведених', accent: 'подій', text: 'Весілля, корпоративи, фестивалі та сімейні свята у Львові й області.' },
   { value: '24', suffix: 'год', title: 'Швидке', accent: 'бронювання', text: 'Підтверджуємо наявність і деталі протягом доби після заявки.' },
 ];

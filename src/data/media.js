@@ -43,6 +43,9 @@ import cardNaHachok from '../../assets/photos/games/card-na-hachok.webp';
 import cardVelykyiMorskyiBii from '../../assets/photos/games/card-velykyi-morskyi-bii.webp';
 import cardVelykaKytaiskaStina from '../../assets/photos/games/card-velyka-kytaiska-stina.webp';
 import cardKulbutto from '../../assets/photos/games/card-kulbutto.webp';
+import cardKorydor from '../../assets/photos/games/card-korydor.webp';
+import cardDesiatka from '../../assets/photos/games/card-desiatka.webp';
+import cardBankopad from '../../assets/photos/games/card-bankopad.webp';
 import cardKiltsekydShchyt from '../../assets/photos/games/card-kiltsekyd-shchyt.webp';
 import cardBirponh from '../../assets/photos/games/card-birponh.webp';
 // game page first screen (Figma 1518:461, 1554×1402)
@@ -201,6 +204,9 @@ export const photos = {
   'card-velykyi-morskyi-bii': { src: cardVelykyiMorskyiBii, alt: 'Гра «Великий морський бій»' },
   'card-velyka-kytaiska-stina': { src: cardVelykaKytaiskaStina, alt: 'Гра «Велика китайська стіна»' },
   'card-kulbutto': { src: cardKulbutto, alt: 'Гра «Кульбутто»' },
+  'card-korydor': { src: cardKorydor, alt: 'Гра «Коридор»: дерев’яна дошка 9 × 9 зі стінками й фішками' },
+  'card-desiatka': { src: cardDesiatka, alt: 'Гра «Десятка»: дошка з цифрами від 1 до 10 і кубиками' },
+  'card-bankopad': { src: cardBankopad, alt: 'Гра «Банкопад»: піраміда з дерев’яних банок на підставці' },
   'card-kiltsekyd-shchyt': { src: cardKiltsekydShchyt, alt: 'Гра «Кільцекид щит»' },
   'card-birponh': { src: cardBirponh, alt: 'Гра «Бірпонг»' },
   'hero-velyka-dzhenga': { src: heroVelykaDzhenga, alt: 'Гра «Велика Дженга»' },
