@@ -52,7 +52,7 @@ export default function Games({ query }) {
         <div className="container">
           {list.length ? (
             <>
-              <GameGrid key={filter} games={list} headingLevel="h2" event={filter === 'all' ? undefined : filter} delay={changed ? 0 : 0.4} />
+              <GameGrid key={filter} games={list} headingLevel="h2" delay={changed ? 0 : 0.4} />
               {!showAll && list.length > FIRST ? (
                 <div className="catalog__more">
                   <Button full onClick={() => setShowAll(true)}>

@@ -11,7 +11,9 @@
  * `hero` is an optional wider photo for the game page's first screen (box 1554:1402);
  * without it the card photo fills that box, cropped at `heroPosition` (default 50% 75%:
  * white sky off the top; tall games use 50% 30% so their tops stay in);
- * `isNew` shows the «Новинка» badge on the card. The arch crops
+ * `isNew` shows the «Новинка» badge on the card. `know`: two or three short facts for
+ * «Що варто знати» on the game page (set-up, what to keep in mind), taken from
+ * `lead`/`about`; a table game also gets the table line there. The arch crops
  * for the hero strip are `game-<slug>` (see data/inventory.js). No game has a
  * `gallery` yet.
  */
@@ -34,14 +36,62 @@ export const rental = {
   returnBy: 'Повернення наступного дня до 12:00',
   delivery: 'Доставка або самовивіз',
   deposit: 'Залежить від кількості ігор',
-  instructor: '400 грн/год, від 3 годин',
+  instructor: 'від 320 грн/год, мінімум 3 години',
   instructorRate: 400,
   instructorHours: 3,
+  /** the longer the booking, the cheaper the hour (Figma «Інструктор на святі») */
+  instructorRates: [
+    { label: 'До 4 годин', from: 1, rate: 400 },
+    { label: 'Від 5 годин', from: 5, rate: 350 },
+    { label: 'Від 8 годин', from: 8, rate: 320 },
+  ],
   table: '120 грн',
 };
 
+/** The instructor's price for `h` hours: the rate of the tier those hours reach. */
+export const instructorPrice = (h) => h * [...rental.instructorRates].reverse().find((t) => h >= t.from).rate;
+
 /** The game's price per day: its own one or the shared one. */
 export const gamePrice = (g) => g.price || rental.price;
+
+/** The same as a number of hryvnias: 1200 for «1200 грн / доба», 850 for the shared price. */
+export const priceValue = (g) => (g.price ? parseInt(g.price.replace(/\D+/g, ''), 10) : PACKAGES[0][1]);
+
+/** Cart add-ons (the prices page): a table for table games, the Beerpong kit. */
+export const addons = { table: 120, kit: 500 };
+
+/** The day price of `n` shared-price games: the package price, then +800 for each one after four. */
+export const bundlePrice = (n) => {
+  if (!n) return 0;
+  const last = PACKAGES[PACKAGES.length - 1];
+  return n <= last[0] ? PACKAGES[n - 1][1] : last[1] + (n - last[0]) * NEXT;
+};
+
+/**
+ * The cart's day total. Shared-price games go as one package, own-price games
+ * (Велика Дженга, Бірпонг, Морський бій) on top at their price, then the tables
+ * and the Beerpong kit. `save` is what the package saves against 850 each.
+ */
+export const cartTotal = (slugs, { tables = 0, kit = false } = {}) => {
+  const items = slugs.map(findGame).filter(Boolean);
+  const shared = items.filter((g) => !g.price);
+  const own = items.filter((g) => g.price).map((g) => ({ slug: g.slug, name: g.name, price: priceValue(g) }));
+  const bundle = bundlePrice(shared.length);
+  const hasKit = kit && items.some((g) => g.addon);
+  const extras = tables * addons.table + (hasKit ? addons.kit : 0);
+  return {
+    items,
+    bundleCount: shared.length,
+    bundle,
+    own,
+    tables,
+    tablesPrice: tables * addons.table,
+    kit: hasKit,
+    save: shared.length * PACKAGES[0][1] - bundle,
+    total: bundle + own.reduce((s, o) => s + o.price, 0) + extras,
+    needsTable: items.filter((g) => g.table).length,
+  };
+};
 
 export const games = [
   {
@@ -65,6 +115,11 @@ export const games = [
       { title: 'Хто програє', text: 'Програє гравець, після ходу якого вежа впала.' },
     ],
     kit: ['78 дерев’яних брусків', 'підставка для гри', '2 сумки для транспортування'],
+    know: [
+      { icon: 'sun', text: 'Ставимо на траву, щоб бруски не пошкодилися при падінні' },
+      { icon: 'check', text: 'На плитці чи асфальті даємо м’яку підкладку безкоштовно' },
+      { icon: 'age', text: 'Гра важка: маленьких дітей поруч не лишайте без нагляду' },
+    ],
     players: '2+',
     place: 'both',
     table: false,
@@ -93,6 +148,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим набере заздалегідь обумовлену суму — наприклад, 100 або 200 балів — за кілька раундів.' },
     ],
     kit: ['7 синіх мотузкових кілець', '7 жовтих мотузкових кілець', 'сумочка для кілець', '2 частини ігрового поля'],
+    know: [
+      { icon: 'area', text: 'Перед грою дві частини поля з’єднують, і можна кидати' },
+      { icon: 'users', text: 'Весело для всіх, від малих до дорослих' },
+    ],
     players: '2+',
     place: 'both',
     table: false,
@@ -107,7 +166,7 @@ export const games = [
     photo: 'card-kornkhol',
     hero: null,
     gallery: [],
-    short: 'Кидай мішечки, влучай у ціль і перемагай!',
+    short: 'Кидай мішечки в дошку з отвором і першим набери 21 очко.',
     lead: 'Кидай мішечки, влучай у ціль і перемагай! Можна грати 1 на 1 або команда на команду — хто перший збере 21 очко, той виграв.',
     about: [
       'Гравці по черзі кидають мішечки з піском у дошку з отвором. Кожному гравцю чи команді дається 4 мішечки свого кольору, а бали рахують після кожного раунду.',
@@ -119,6 +178,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець або команда, яка першою набере 21 очко.' },
     ],
     kit: ['1 ігрова дошка', '4 жовті мішечки', '4 сині мішечки', 'сумочка для мішечків'],
+    know: [
+      { icon: 'users', text: 'Грають 1 на 1 або команда на команду, по двоє гравців' },
+      { icon: 'bag', text: 'Мішечки наповнені піском' },
+    ],
     players: '2 або 4',
     place: 'both',
     table: false,
@@ -146,6 +209,10 @@ export const games = [
       { title: 'Нова партія', text: 'Витягніть утримувальну паличку, щоб фішки впали, і вставте її назад.' },
     ],
     kit: ['22 сині фішки', '22 жовті фішки', 'ігрове поле', 'утримувальна паличка', 'дерев’яний фіксатор', 'коробка з кришкою'],
+    know: [
+      { icon: 'area', text: 'Поле фіксують дерев’яним фіксатором збоку' },
+      { icon: 'check', text: 'Утримувальна паличка внизу тримає фішки під час партії' },
+    ],
     players: '2',
     place: 'both',
     table: true,
@@ -172,6 +239,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець, який останнім залишиться у грі.' },
     ],
     kit: ['підвісна «галактика» з 16 дерев’яних кульок', '28 дерев’яних кульок', '4 дерев’яні палички', 'ігрове поле', 'коробка з кришкою'],
+    know: [
+      { icon: 'area', text: 'Дві довгі планки ставлять у кути поля й з’єднують між собою' },
+      { icon: 'sparkle', text: '«Галактику» з 16 кульок вішають на гачок угорі' },
+    ],
     players: '2–4',
     place: 'both',
     table: true,
@@ -198,6 +269,9 @@ export const games = [
       { title: 'Хто вибуває', text: 'Якщо під час ходу конструкція втратила баланс або впали бруски — гравець вибуває.' },
     ],
     kit: ['110 дерев’яних фігурок', '1 ігровий кубик', 'балансувальна платформа', 'коробка з кришкою'],
+    know: [
+      { icon: 'sparkle', text: 'Платформа висить на ланцюжку, тож кожен брусок її хитає' },
+    ],
     players: '2–4',
     place: 'both',
     table: true,
@@ -223,6 +297,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим заповнить свою базу рибками.' },
     ],
     kit: ['60 дерев’яних «рибок»', '4 вудочки', 'ігрове поле', 'коробка з кришкою'],
+    know: [
+      { icon: 'users', text: 'Усі гравці ловлять одночасно, без черги' },
+      { icon: 'check', text: 'Після гри «рибок» збирають назад у центр поля' },
+    ],
     players: '2–4',
     place: 'both',
     table: true,
@@ -248,6 +326,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим доставить усі свої кульки до центральної секції.' },
     ],
     kit: ['12 дерев’яних кульок у коробочці', '4 палички для гри', 'велике ігрове поле'],
+    know: [
+      { icon: 'target', text: 'Гра на швидкість, точність і координацію' },
+      { icon: 'area', text: 'Велике поле поділене на секції' },
+    ],
     players: 'від 2',
     place: 'both',
     table: true,
@@ -274,6 +356,9 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець, на чиєму боці не залишиться жодної шайби.' },
     ],
     kit: ['14 дерев’яних фішок в окремій коробочці', 'ігрове поле'],
+    know: [
+      { icon: 'users', text: 'Обидва гравці в грі одночасно, без черги й очікування' },
+    ],
     players: '2',
     place: 'both',
     table: true,
@@ -300,6 +385,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим викладе на поле всі свої магніти.' },
     ],
     kit: ['40 магнітів', 'мішечок для магнітів', 'коробка з кришкою'],
+    know: [
+      { icon: 'users', text: 'Грають 1 на 1 або команда на команду' },
+      { icon: 'target', text: 'Що більше камінців на полі, то складніше знайти місце' },
+    ],
     players: 'від 2',
     place: 'both',
     table: true,
@@ -315,7 +404,7 @@ export const games = [
     heroPosition: '50% 30%',
     hero: null,
     gallery: [],
-    short: 'Розгойдуй кільце й чіпляй його за гачок.',
+    short: 'Розгойдуй кільце на мотузці й чіпляй його за гачок.',
     lead: 'Учасники розгойдують кільце, щоб зачепити його за гачок. Кожне влучання рухає фішку на полі вперед — хто першим дійде до фінішу, той переміг.',
     about: [
       'Кільце висить на мотузці, і щоб зачепити його за гачок, потрібні точний рух і трохи терпіння. Кожне влучання просуває фішку на полі вперед.',
@@ -327,6 +416,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець, який першим дійде до фінішу.' },
     ],
     kit: ['ігрова конструкція', 'фішка для гри', 'коробка з кришкою'],
+    know: [
+      { icon: 'area', text: 'Перед грою конструкцію вставляють в отвір посередині поля' },
+      { icon: 'target', text: 'Потрібні точний рух і трохи терпіння' },
+    ],
     players: 'від 2',
     place: 'both',
     table: true,
@@ -342,7 +435,7 @@ export const games = [
     photo: 'card-velykyi-morskyi-bii',
     hero: null,
     gallery: [],
-    short: 'Розстав кораблі на великому дерев’яному полі й топи флот суперника.',
+    short: 'Розстав кораблі на дерев’яному полі й топи флот суперника.',
     lead: 'Легендарна гра у великому дерев’яному форматі! Розстав кораблі, називай клітинки й топи флот суперника.',
     about: [
       'Два гравці розставляють кораблі на своїх полях 10 × 10 і по черзі називають клітинки суперника. Влучив — ставиш кілочок, і хід знову твій.',
@@ -354,6 +447,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим потопить усі кораблі суперника.' },
     ],
     kit: ['дерев’яний кейс з двома полями', 'кораблі', 'кілочки'],
+    know: [
+      { icon: 'bag', text: 'Дерев’яний кейс з ручкою розкривається, як ноутбук' },
+      { icon: 'check', text: 'Стоїть на будь-якому столі' },
+    ],
     players: '2',
     place: 'both',
     table: true,
@@ -381,6 +478,9 @@ export const games = [
       { title: 'Хто програє', text: 'Програє той, чий тигр упав першим.' },
     ],
     kit: ['рамка на ніжках', '70 дерев’яних цеглинок', '2 фігурки тигрів'],
+    know: [
+      { icon: 'target', text: 'Гра на витримку, точність і холодну голову' },
+    ],
     players: '2',
     place: 'both',
     table: true,
@@ -407,6 +507,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець, який набрав більше очок за всі кульки.' },
     ],
     kit: ['ігрова доріжка з мішенню', '10 дерев’яних кульок'],
+    know: [
+      { icon: 'sparkle', text: 'Кульбутто ще називають японським більярдом' },
+      { icon: 'target', text: 'Найцінніша лунка, на 100 очок, біля самого краю' },
+    ],
     players: '1+',
     place: 'both',
     table: true,
@@ -434,6 +538,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто набрав більше очок.' },
     ],
     kit: ['щит із сімома гачками', 'підставка', 'мотузяні кільця'],
+    know: [
+      { icon: 'target', text: 'Біля кожного гачка свої очки: від 10 унизу до 100 у центрі' },
+      { icon: 'users', text: 'Влучність, азарт і веселощі для всіх' },
+    ],
     players: '2+',
     place: 'both',
     table: false,
@@ -462,6 +570,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає команда, яка першою прибере всі стаканчики суперника.' },
     ],
     kit: ['розкладний стіл для гри'],
+    know: [
+      { icon: 'users', text: 'Грають один на один або двоє на двоє' },
+      { icon: 'bag', text: 'Стаканчики й м’ячики можна взяти свої або наш комплект за 500 грн' },
+    ],
     players: '2 або 4',
     place: 'both',
     table: false,
@@ -491,6 +603,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим дійде до протилежного краю дошки. Повністю замурувати шлях суперникові не можна.' },
     ],
     kit: ['дерев’яна дошка 9 × 9 з пазами', 'фішки гравців', 'дерев’яні стінки'],
+    know: [
+      { icon: 'check', text: 'Грають удвох або вчотирьох' },
+      { icon: 'sun', text: 'Працює і надворі, і в приміщенні' },
+    ],
     players: '2–4',
     place: 'both',
     table: true,
@@ -519,6 +635,10 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає той, хто першим закрив усі свої цифри, або той, у кого лишилася найменша сума відкритих.' },
     ],
     kit: ['дерев’яна дошка з цифрами від 1 до 10', 'ігрові кубики'],
+    know: [
+      { icon: 'check', text: 'Грають від двох до чотирьох гравців' },
+      { icon: 'sun', text: 'Підходить і для залу, і для вулиці' },
+    ],
     players: '2–4',
     place: 'both',
     table: true,
@@ -547,6 +667,11 @@ export const games = [
       { title: 'Хто перемагає', text: 'Перемагає гравець або команда, яка збила більше банок за узгоджену кількість кидків.' },
     ],
     kit: ['дерев’яна підставка з тканинною кишенею', 'дерев’яні банки для піраміди', 'м’ячі для кидків'],
+    know: [
+      { icon: 'sun', text: 'Підставка стоїть на траві чи на підлозі' },
+      { icon: 'check', text: 'Збиті банки падають у кишеню, збирати їх по газону не треба' },
+      { icon: 'check', text: 'Грати можна по черзі або командами' },
+    ],
     players: '2+',
     place: 'both',
     table: false,

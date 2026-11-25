@@ -3,6 +3,8 @@ import { nav, company } from '../data/site.js';
 import { href } from '../router.js';
 import Icon from './Icon.jsx';
 import { Button, Logo } from './ui.jsx';
+import { CartButton } from './CartDrawer.jsx';
+import { openCart } from '../cart.js';
 
 const headerNav = nav.filter((item) => item.header !== false);
 const isHere = (current, path) => (path === '/' ? current === '/' : current.startsWith(path));
@@ -10,7 +12,8 @@ const isHere = (current, path) => (path === '/' ? current === '/' : current.star
 /**
  * Floating header over each page's light first screen: logo, the links in one
  * cream capsule (an icon slides in on hover; the current page is a white pill
- * with its icon) and a brown «Забронювати» that opens the booking popup.
+ * with its icon), the cart button (bag + count) and a brown «Забронювати» that
+ * opens the booking popup.
  * Below 1180px the links move into a full-screen panel.
  */
 export default function Header({ path, book }) {
@@ -57,6 +60,7 @@ export default function Header({ path, book }) {
         </nav>
 
         <div className="site-header__actions">
+          <CartButton onOpen={openCart} />
           <Button book={book} variant="nav" className="site-header__cta">
             Забронювати
           </Button>

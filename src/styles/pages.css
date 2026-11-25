@@ -2305,46 +2305,60 @@ body.modal-open {
   gap: 1.5rem;
 }
 
-.instructor-card__price {
-  display: flex;
-  align-items: center;
-}
-
-.instructor-card__price p {
+/* three rates, hairlines between (Figma «Інструктор на святі»): the longer, the cheaper */
+.instructor-card__rates {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 18.75rem;
+  margin: 0;
 }
 
-.instructor-card__price p:first-child strong {
-  color: var(--deep);
-  font-size: 3rem;
-  --lh: 1.17;
+.instructor-card__rates div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.625rem 0;
 }
 
-.instructor-card__price p:first-child span {
+.instructor-card__rates div + div {
+  border-top: 1px solid var(--stroke);
+}
+
+.instructor-card__rates dt {
   color: var(--ink);
-  --lh: 1.63;
+  font-size: 1rem;
+  --lh: 1.5;
 }
 
-.instructor-card__price p + p {
-  min-height: 4rem;
-  margin-left: 1.5rem;
-  padding-left: 1.5rem;
-  border-left: 1px solid var(--dash);
-  gap: 0.125rem;
-}
-
-.instructor-card__price p + p strong {
+.instructor-card__rates dd {
+  margin: 0;
   color: var(--deep);
-  font-size: 1.125rem;
-  --lh: 1.44;
+  font-size: 1.375rem;
+  font-weight: var(--w-bold);
+  --lh: 1.27;
+  white-space: nowrap;
 }
 
-.instructor-card__price p + p span {
+.instructor-card__min {
+  max-width: 18.75rem;
+  margin-top: -0.5rem;
   color: #9a8a80;
   font-size: 0.875rem;
   --lh: 1.43;
+}
+
+/* desktop: the heading in one line and no lead (Figma 12 Ціни — 1440) */
+@media (min-width: 768px) {
+  .instructor-card__lead,
+  .instructor-card__title br {
+    display: none;
+  }
+
+  /* the break is gone, so keep a word space before «на святі» */
+  .instructor-card__title .accent::before {
+    content: ' ';
+  }
 }
 
 .instructor-card__tee {

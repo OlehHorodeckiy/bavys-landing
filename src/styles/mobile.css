@@ -755,30 +755,24 @@
     justify-content: space-between;
   }
 
-  .instructor-card__price p:first-child strong {
-    font-size: 2rem;
-    --lh: 1.25;
+  .instructor-card__rates {
+    width: 100%;
   }
 
-  .instructor-card__price p:first-child span {
+  .instructor-card__rates dt {
     font-size: 0.875rem;
-    --lh: 1.43;
+    --lh: 1.57;
   }
 
-  .instructor-card__price p + p {
-    min-height: 3rem;
-    margin-left: 1rem;
-    padding-left: 1rem;
-  }
-
-  .instructor-card__price p + p strong {
-    font-size: 1rem;
-    --lh: 1.5;
-  }
-
-  .instructor-card__price p + p span {
-    font-size: 0.75rem;
+  .instructor-card__rates dd {
+    font-size: 1.125rem;
     --lh: 1.33;
+  }
+
+  .instructor-card__min {
+    max-width: none;
+    font-size: 0.75rem;
+    --lh: 1.5;
   }
 }
 
